@@ -64,11 +64,14 @@ markup to accommodate different house styles, other than changing
 setup.* Concretely: `\catName{Set}` (or any semantic macro, anywhere
 in the document body) is byte-for-byte identical regardless of the
 target -- arXiv, journal X's house style, journal Y's house style.
-Only the package-load-time *style* changes:
+Only *setup* changes, in either of two equivalent forms:
 
 ```latex
-\usepackage[style=default]{semantic-markup}   % built in, default
-\usepackage[style=plain]{semantic-markup}     % built in, alternate
+\usepackage[style=default]{semantic-markup}   % at load time, built in
+\usepackage[style=plain]{semantic-markup}     % at load time, built in
+```
+```latex
+\setupsemanticmarkup{style=plain}             % anywhere in the body
 ```
 
 `style` defaults to `default` (no options needed at all). Every
@@ -77,13 +80,26 @@ presentation hooks as one coherent bundle -- never a partial patch
 the author assembles by hand -- so adding a real journal's house
 style later means adding one more style, not touching any document
 body. See `semantic-markup.dtx`, "Style switching", for the full
-mechanism (`l3keys2e` package options) and design rationale.
+mechanism (`l3keys2e`) and design rationale.
+
+The runtime form, `\setupsemanticmarkup`, matches an established,
+already-proven pattern already used in the source papers themselves
+(`LCS.arXiv.V2.tex`/`M-atlas.tex`'s own `\setupquant`/`\setupset`
+commands, built on plain `l3keys`, called once in the document body
+separately from every use site) -- not invented from scratch, and
+kept alongside the package-option form since both are legitimate
+(the runtime form additionally works mid-document, where a package
+option cannot).
 
 `test-body.tex` plus `test-style-default.tex` / `test-style-plain.tex`
-/ `test-style-noopts.tex` demonstrate and verify this concretely: the
-same `\input{test-body.tex}` body, unmodified, renders differently
-under each `\usepackage[style=...]` line, and the no-options case
-matches `style=default` exactly.
+/ `test-style-noopts.tex` demonstrate and verify the package-option
+form: the same `\input{test-body.tex}` body, unmodified, renders
+differently under each `\usepackage[style=...]` line, and the
+no-options case matches `style=default` exactly. `test-setup-runtime.tex`
+demonstrates and verifies the runtime form: the same macro use sites
+render under `default`, then `plain`, then back to `default`, purely
+by way of three `\setupsemanticmarkup{...}` calls placed away from
+the use sites, mirroring the papers' own `\setupquant` usage.
 
 ## Building
 
@@ -116,6 +132,7 @@ test-body.tex           -- shared document body for the style tests below
 test-style-default.tex  -- \usepackage[style=default]{semantic-markup} + test-body.tex
 test-style-plain.tex    -- \usepackage[style=plain]{semantic-markup} + test-body.tex
 test-style-noopts.tex   -- \usepackage{semantic-markup} (no options) + test-body.tex
+test-setup-runtime.tex  -- \setupsemanticmarkup{...} called mid-document
 ```
 
 ## Related

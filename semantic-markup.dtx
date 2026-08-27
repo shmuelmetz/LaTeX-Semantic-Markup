@@ -162,6 +162,73 @@
 % touching the public macros or asking a document author to change
 % anything in the body.
 %
+% \begin{quote}
+% \textbf{Correction:} an earlier pass of this design claimed no
+% existing setup/style-switching precedent could be found in the
+% source papers' own preambles. That was wrong --- it was checked for
+% \pkg{l3keys2e}/\pkg{kvoptions}/\cs{DeclareOption} specifically and
+% none of those are present, but the papers do have a real, working,
+% already-proven setup mechanism built directly on plain \pkg{l3keys}
+% (verified directly in \texttt{LCS.arXiv.V2.tex} and
+% \texttt{M-atlas.tex}, identical in both), just not via any of the
+% names checked for. Verbatim, the relevant part of it:
+% \begin{verbatim}
+% \NewDocumentCommand{\equant}{mm}
+%   { \quant:nnn {\exists} {#1} {#2} }
+%
+% \NewDocumentCommand \setupquant {m}
+%   { \keys_set:nn {shmuel / quant} {#1} }
+%
+% \keys_define:nn {shmuel / quant}
+%  {
+%   subscript   .choices:nn = { {none, stacked, multiple} { ... } },
+%   subscript   .default:n = multiple,
+%   subscript   .initial:n = none,
+%   parentheses .choices:nn = { {none, single, multiple} { ... } },
+%   ...
+%  }
+% \end{verbatim}
+% called once, in the document body, separately from every use site:
+% \begin{verbatim}
+% \setupquant {parentheses=multiple,subscript=stacked}
+% \end{verbatim}
+% after which every \cs{equant}/\cs{uquant} call, anywhere in the
+% document, renders accordingly, unchanged at the call site. (The
+% papers have a second, independent instance of the same pattern,
+% \cs{setupset}/\texttt{shmuel / set}, for \cs{set}/\cs{union}/%
+% \cs{intersection}.) This is a genuine, production-proven ``setup,
+% not markup'' mechanism, and it differs from the package-option
+% mechanism above in one respect that matters: it is a \emph{runtime}
+% command, not a package-load-time option, so it can be invoked
+% anywhere a document needs it, not only on the \cs{usepackage} line.
+%
+% Accordingly, this package exposes the same \texttt{style} key at
+% runtime too, via \cs{setupsemanticmarkup}, built the same way
+% \cs{setupquant} is built --- a thin wrapper around \cs{keys_set:nn}
+% on the same key family already defined for package options:
+% \begin{verbatim}
+% \setupsemanticmarkup {style=plain}
+% \end{verbatim}
+% This does not replace the package-option form; both are kept, since
+% both are legitimate and \cs{keys_set:nn} is exactly what
+% \cs{ProcessKeysPackageOptions} already calls internally to apply a
+% package option --- \cs{setupsemanticmarkup} simply makes the same
+% call available at any point in the body, matching the established
+% precedent, rather than only once at load time.
+%
+% This package's styles remain one coherent \texttt{style} bundle
+% covering every macro at once, unlike \cs{setupquant}/\cs{setupset}'s
+% split into independent per-concept-family setup commands: a
+% journal's house style is ordinarily one holistic choice applied
+% consistently everywhere, not an independent axis per semantic
+% family the way quantifier-rendering-taste and set-builder-rendering-%
+% taste are independent of each other for a single author. If a real
+% future style needs finer-grained, per-family control, splitting
+% \texttt{style} into per-family keys (mirroring \texttt{quant}/%
+% \texttt{set} exactly) is a natural extension of this same
+% \pkg{l3keys} foundation, not a different mechanism.
+% \end{quote}
+%
 % \section{Abbreviations used in macro names}
 %
 % Every abbreviated word appearing in a user-level macro name is
@@ -673,14 +740,15 @@
 % \end{macrocode}
 % \end{macro}
 %
-% \subsection{Package options}
+% \subsection{Package options and runtime setup}
 %
 % \begin{macro}{style}
 % A single \texttt{.choice:} key in the \texttt{lsm} key family,
 % defaulting to \texttt{default} via \texttt{.initial:n} (which runs
 % immediately at definition time, so the package works correctly with
 % no options given at all), then re-applied if the author gives an
-% explicit \texttt{style=...} package option.
+% explicit \texttt{style=...} package option, or calls
+% \cs{setupsemanticmarkup} (below) at any later point.
 % \begin{macrocode}
 \keys_define:nn { lsm }
   {
@@ -690,6 +758,18 @@
     style .initial:n = default ,
   }
 \ProcessKeysPackageOptions { lsm }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\setupsemanticmarkup}
+% Runtime counterpart to the package option above, matching the
+% source papers' own \cs{setupquant}/\cs{setupset} precedent
+% (documented above): a thin wrapper around \cs{keys_set:nn} on the
+% same key family, callable anywhere in the document body, not only
+% on the \cs{usepackage} line.
+% \begin{macrocode}
+\NewDocumentCommand \setupsemanticmarkup { m }
+  { \keys_set:nn { lsm } {#1} }
 % \end{macrocode}
 % \end{macro}
 %

@@ -1,0 +1,25 @@
+% Verifies \setupsemanticmarkup, the runtime style-switching command
+% added to match the source papers' own established \setupquant/
+% \setupset precedent (see semantic-markup.dtx, Style switching):
+% called once in the document body, separately from every macro use
+% site, exactly like \setupquant{parentheses=multiple,subscript=stacked}
+% is called once in LCS.arXiv.V2.tex/M-atlas.tex before any \equant/
+% \uquant use.
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{semantic-markup}
+\begin{document}
+Before any setup call, the default style is already active (via
+package-option \texttt{.initial:n}): $\catName{A}$, $\catName{Set}$.
+
+\setupsemanticmarkup{style=plain}
+
+After \texttt{\textbackslash setupsemanticmarkup\{style=plain\}}, called
+here in the body and nowhere near any macro use site, the SAME macros
+render differently: $\catName{A}$, $\catName{Set}$.
+
+\setupsemanticmarkup{style=default}
+
+Switched back to \texttt{default} again, at runtime, mid-document:
+$\catName{A}$, $\catName{Set}$.
+\end{document}
