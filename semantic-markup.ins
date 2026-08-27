@@ -1,0 +1,45 @@
+%%
+%% semantic-markup.ins
+%%
+%% Installation script for the semantic-markup package.
+%% Run with (plain) tex or latex to extract semantic-markup.sty
+%% from semantic-markup.dtx:
+%%
+%%   tex semantic-markup.ins
+%%
+%% This material is subject to the MIT License. See LICENSE in the
+%% root of this distribution.
+%%
+\input docstrip.tex
+\keepsilent
+\askforoverwritefalse
+
+\preamble
+
+This is a generated file.
+
+Copyright (C) 2026 Seymour J. Metz
+
+This material is subject to the MIT License. See the LICENSE file
+in the root of the source distribution, or
+<https://github.com/shmuelmetz/LaTeX-Semantic-Markup>.
+
+\endpreamble
+
+\generate{
+  \file{semantic-markup.sty}{\from{semantic-markup.dtx}{package}}
+}
+
+\obeyspaces
+\Msg{****************************************************************}
+\Msg{*}
+\Msg{* semantic-markup.sty extracted successfully.}
+\Msg{*}
+\Msg{* To install system-wide, move semantic-markup.sty into a}
+\Msg{* directory TeX can find, e.g.}
+\Msg{*   TEXMFHOME/tex/latex/semantic-markup/}
+\Msg{* then run mktexlsr / initexmf --update-fndb as appropriate.}
+\Msg{*}
+\Msg{****************************************************************}
+
+\endbatchfile

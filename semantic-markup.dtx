@@ -1,0 +1,389 @@
+% \iffalse meta-comment
+%%
+%% semantic-markup.dtx
+%%
+%% Copyright (C) 2026 Seymour J. Metz
+%%
+%% This material is subject to the MIT License.
+%% See the LICENSE file in the root of this distribution, or
+%% <https://github.com/shmuelmetz/LaTeX-Semantic-Markup>.
+%%
+%% This is the semantic-markup package, part of the
+%% LaTeX-Semantic-Markup distribution.
+%%
+%<*driver>
+\documentclass[full]{l3doc}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{amssymb}
+\begin{document}
+  \DocInput{semantic-markup.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \title{The \pkg{semantic-markup} package}
+% \author{Shmuel (Seymour J.) Metz \\ \url{https://mason.gmu.edu/~smetz3}}
+% \date{2026-08-27}
+%
+% \maketitle
+%
+% \begin{documentation}
+%
+% \section{Purpose}
+%
+% This package provides macros that record the \emph{semantic role}
+% of a piece of mathematical text --- ``this is the display name of a
+% category,'' ``this is a monomorphism arrow'' --- separately from
+% how that role is \emph{typeset}. An author writing
+% \cs{catName}\Arg{C} is not choosing a font; they are asserting that
+% \texttt{C} names a category, and the package decides (by default,
+% and later by configuration) what a category name looks like.
+%
+% This separation is the entire point of the package: two things
+% that look similar on the page but mean different things
+% mathematically must not share a macro, even if that means near-
+% identical default typesetting for two commands. Conversely, one
+% concept must not be given two names merely because it is
+% occasionally styled differently in context.
+%
+% \section{Internal naming}
+%
+% Package-internal \pkg{expl3} functions use the module prefix
+% \texttt{lsm} (for \emph{latex-semantic-markup}), per the naming
+% convention \texttt{\textbackslash lsm\_}\emph{module}\texttt{\_}%
+% \emph{description}\texttt{:}\emph{args}. These are not intended for
+% direct use in documents.
+%
+% \section{Abbreviations used in macro names}
+%
+% Every abbreviated word appearing in a user-level macro name is
+% spelled out here, once, so no reader has to guess it from context.
+% Family and role prefixes that are already complete English words
+% (\texttt{chart}, \texttt{atlas}, \texttt{name}, \texttt{compose})
+% are not abbreviations and are not listed.
+%
+% \begin{description}
+% \item[\texttt{sem}] Semantic
+% \item[\texttt{cat}] Category
+% \item[\texttt{obj}] Object
+% \item[\texttt{morph}] Morphism
+% \item[\texttt{coord}] Coordinate
+% \item[\texttt{seq}] Sequence (as in \cs{catSeqName}: a
+%   \emph{sequence of} the preceding concept, not that concept itself)
+% \item[\texttt{mono}] Monomorphism
+% \item[\texttt{epi}] Epimorphism
+% \end{description}
+%
+% \section{User-level command families}
+%
+% User-level commands are grouped by the semantic domain they tag,
+% each using its own name prefix:
+% \begin{itemize}
+%   \item \texttt{sem} (Semantic) --- generic / not-yet-classified
+%     semantic text
+%   \item \texttt{cat} (Category) --- categories (in the
+%     category-theoretic sense)
+%   \item \texttt{obj} (Object) --- objects of a category
+%   \item \texttt{morph} (Morphism) --- morphisms between objects
+%   \item \texttt{chart} --- local coordinate charts
+%   \item \texttt{atlas} --- atlases of coordinate charts
+%   \item \texttt{coord} (Coordinate) --- coordinate systems/functions
+% \end{itemize}
+%
+% \subsection{Generic}
+%
+% \DescribeMacro{\semName}
+% \cs{semName}\Arg{text} (Sem = Semantic) tags \texttt{text} as
+% semantically significant without committing to any of the more
+% specific domains below. Use this only as a placeholder until a
+% more specific macro applies, or for genuinely domain-agnostic
+% labels.
+%
+% \subsection{Categories}
+%
+% \DescribeMacro{\catName}
+% \cs{catName}\Arg{text} (Cat = Category) is the display name of a
+% single category. The default presentation (\cs{mathscr}) follows
+% the source papers' own stated convention: ``Upper case Script Latin
+% letters will refer to categories and functors.''
+%
+% \DescribeMacro{\catSeqName}
+% \cs{catSeqName}\Arg{text} (Cat = Category, Seq = Sequence) is the
+% display name of a \emph{sequence or family of categories}, e.g.
+% $(\mathscr{A}_\alpha)_{\alpha \in A}$. This is deliberately a
+% distinct command from \cs{catName}, not a styling variant of it: a
+% sequence of categories is not itself a category, and collapsing the
+% two into one macro differentiated only by an optional ``bold''
+% switch would silently re-introduce the typography/semantics
+% conflation this package exists to remove. The source papers draw
+% the same line themselves, independently, in more than one macro
+% family: their own \texttt{catname}/\texttt{catseqname} pair is
+% introduced under the single comment ``Select font for categories
+% and sequences of categories,'' and separately their
+% \texttt{subcat}/\texttt{SUBCAT} pair is commented ``Subcategory'' /
+% ``Sequence of subcategories.'' The single-vs-sequence distinction
+% is a recurring pattern in the source mathematics, not a one-off.
+%
+% \begin{quote}
+% \textbf{Open question, not yet resolved:} the source papers also
+% use a separate, bold-roman \texttt{cat} macro (distinct from
+% \texttt{catname}) specifically for \emph{standard, well-known}
+% categories --- their own comments say ``Use \cs{cat}\Arg{Top} for
+% the standard category Top'' and likewise for \cs{cat}\Arg{Set}.
+% That is a third role this package does not yet provide for: naming
+% a specific, conventionally-fixed category (Set, Top, \ldots) is
+% arguably semantically different from naming an arbitrary/variable
+% category symbol via \cs{catName}, in the same way that
+% \cs{catSeqName} is different from \cs{catName}. Whether that
+% deserves its own macro (e.g.\ \cs{catStandardName}) or is genuinely
+% just a presentational choice (bold vs.\ script) is left to the
+% author to decide; it is not built here.
+% \end{quote}
+%
+% \subsection{Objects}
+%
+% \DescribeMacro{\objName}
+% \cs{objName}\Arg{text} (Obj = Object) is the display name of an
+% object of a category, corresponding to what the source papers call
+% $\Ob(\catname{C})$ --- ``object of category'' by their own comment,
+% ``all objects of $\catname{C}$'' by their own formal definition.
+% The default presentation is unstyled (objects are typically bare
+% math-mode variables in practice); the macro exists so that document
+% text records the semantic role even when the default rendering does
+% nothing visible yet.
+%
+% \subsection{Morphisms}
+%
+% \DescribeMacro{\morphName}
+% \cs{morphName}\Arg{text} (Morph = Morphism) is the display
+% name/label of a morphism (e.g.\ a function symbol). The
+% \texttt{morph} prefix follows the source papers' own explicit
+% terminology choice: ``This paper uses the term morphism in
+% preference to arrow, but uses the conventional $\Ar$.''
+%
+% \begin{quote}
+% \textbf{Open question, not yet resolved:} the source papers define
+% four related but distinct morphism-level operators that this
+% package does not yet provide: $\Ar(\catname{C})$ and
+% $\Mor(\catname{C})$ (``all morphisms of $\catname{C}$,'' explicitly
+% stated as synonyms of each other), and
+% $\Hom_\catname{C}(a,b)$ (``all morphisms of $\catname{C}$ from $a$
+% to $b$'' --- morphisms between two \emph{specific} objects, a
+% narrower notion than $\Ar$/$\Mor$). These are real, well-defined,
+% distinct mathematical notions in the source and are natural
+% candidates for something like \cs{morphAll} and \cs{morphBetween},
+% but are not built here pending the author's naming preference.
+% Note also a discrepancy in the source itself: the inline comment
+% directly above the papers' \texttt{Mor} definition reads
+% ``Morphisms between two objects'' (i.e.\ the \emph{Hom} reading),
+% while the papers' own later formal prose defines \texttt{Mor} as
+% ``all morphisms of $\catname{C}$, synonymous with $\Ar$'' (i.e.\
+% \emph{not} the Hom reading). This looks like a stray/copy-pasted
+% comment in the source rather than a real ambiguity in the
+% mathematics, but it is flagged here rather than silently resolved
+% either way.
+% \end{quote}
+%
+% \DescribeMacro{\morphMono}
+% \cs{morphMono} (Mono = Monomorphism) is the arrow symbol for a
+% monomorphism, corresponding to the source papers' \texttt{into}.
+%
+% \DescribeMacro{\morphEpi}
+% \cs{morphEpi} (Epi = Epimorphism) is the arrow symbol for an
+% epimorphism, corresponding to the source papers' \texttt{onto}.
+% This is kept distinct from \cs{morphMono} because mono/epi is a
+% real mathematical distinction (injective vs.\ surjective in the
+% relevant sense), not a choice of arrowhead glyph.
+%
+% \DescribeMacro{\morphCompose}
+% \cs{morphCompose} is the general morphism-composition operator
+% (default $\circ$). An optional argument
+% \cs{morphCompose}\oarg{label} places \texttt{label} over the
+% operator, mirroring how composition is annotated in the source
+% papers.
+%
+% \begin{quote}
+% \textbf{Open question, not yet resolved:} the source papers define
+% \emph{three} composition operators under the comment ``Extended
+% composition operators for function sequences'' --- plain
+% composition, ``Compose head,'' and ``Compose tail'' --- each with
+% its own default glyph ($\circ$, $\odot$, $\cdot$). The papers'
+% own wording (``for function sequences,'' ``head,'' ``tail'') reads
+% as describing composition specifically along a \emph{sequence} of
+% functions, composing from one end or the other, which suggests
+% these may be exactly as mathematically distinct from plain
+% composition as \cs{catSeqName} is from \cs{catName} --- i.e.\ they
+% may need their own macros precisely \emph{because} sequence
+% composition is a different operation from pairwise composition.
+% But this is not certain from the comments alone. Suggestively, the
+% papers also contain a disabled (commented-out) \texttt{funcname}/
+% \texttt{funcseqname} pair under the comment ``Select font for
+% functions and sequences of functions'' --- the same
+% single-vs.-sequence split found in the category macros, just never
+% finished for functions/morphisms. That is further (if inconclusive)
+% evidence that a \cs{morphSeqName} sibling to \cs{morphName}, and/or
+% \cs{morphComposeHead}/\cs{morphComposeTail} siblings to
+% \cs{morphCompose}, may belong in this package. None of that is
+% built here; only \cs{morphCompose} is provided for now, pending the
+% author's mathematical judgment rather than a guess.
+% \end{quote}
+%
+% \subsection{Charts, atlases, and coordinates}
+%
+% \DescribeMacro{\chartName}
+% \cs{chartName}\Arg{text} is the display name of a local coordinate
+% chart.
+%
+% \DescribeMacro{\atlasName}
+% \cs{atlasName}\Arg{text} is the display name of an atlas of charts.
+%
+% \DescribeMacro{\coordName}
+% \cs{coordName}\Arg{text} (Coord = Coordinate) is the display name
+% of a coordinate system or coordinate function.
+%
+% \begin{quote}
+% \textbf{Placeholder, thin evidence:} the source papers use only a
+% predicate \texttt{isAtl} (``Propositional function isAtl(A,E,C)'')
+% and an untyped \texttt{Atl} macro (``Category of atlases from E to
+% C'') for this cluster --- there is no existing inline precedent for
+% chart/atlas/coordinate \emph{naming} to generalize from, unlike the
+% category and morphism families above. These three commands are
+% provided as minimal, unstyled hooks (default presentation is a
+% no-op) so the semantic distinction exists in document markup from
+% the start. Whether ``coordinate'' needs sub-kinds (e.g.\ a
+% coordinate \emph{function} vs.\ a coordinate \emph{value} vs.\ a
+% coordinate \emph{index}) is open and should be settled against real
+% usage
+% before this cluster is trusted as final.
+% \end{quote}
+%
+% \end{documentation}
+%
+% \begin{implementation}
+%
+% \section{Implementation}
+%
+%<*package>
+% \begin{macrocode}
+\ProvidesExplPackage{semantic-markup}{2026-08-27}{0.1.0}
+  {Semantic markup macros for LaTeX (LSM)}
+\RequirePackage{xparse}
+\RequirePackage{mathrsfs}
+\RequirePackage{bm}
+\RequirePackage{amssymb}
+% \end{macrocode}
+%
+% \subsection{Generic}
+%
+% \begin{macro}{\lsm_sem_name:n}
+% Default presentation: unstyled.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_sem_name:n #1 { #1 }
+\NewDocumentCommand \semName { m } { \lsm_sem_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \subsection{Categories}
+%
+% \begin{macro}{\lsm_cat_name:n}
+% Default presentation: script, via \cs{mathscr}.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_cat_name:n #1 { \mathscr{#1} }
+\NewDocumentCommand \catName { m } { \lsm_cat_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_cat_seqname:n}
+% A genuinely distinct function from \cs{lsm_cat_name:n}, not a
+% call to it with a different flag: see the documentation above.
+% Default presentation: bold script, via \cs{bm} and \cs{mathscr}.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_cat_seqname:n #1 { \bm{\mathscr{#1}} }
+\NewDocumentCommand \catSeqName { m } { \lsm_cat_seqname:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \subsection{Objects}
+%
+% \begin{macro}{\lsm_obj_name:n}
+% Default presentation: unstyled (see documentation).
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_obj_name:n #1 { #1 }
+\NewDocumentCommand \objName { m } { \lsm_obj_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \subsection{Morphisms}
+%
+% \begin{macro}{\lsm_morph_name:n}
+% Default presentation: unstyled.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_morph_name:n #1 { #1 }
+\NewDocumentCommand \morphName { m } { \lsm_morph_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_morph_mono:}
+% Default presentation: \cs{hookrightarrow} (from \pkg{amssymb}).
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_morph_mono: { \hookrightarrow }
+\NewDocumentCommand \morphMono { } { \lsm_morph_mono: }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_morph_epi:}
+% Default presentation: \cs{twoheadrightarrow} (from \pkg{amssymb}).
+% Kept as a distinct function from \cs{lsm_morph_mono:}: see the
+% documentation above.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
+\NewDocumentCommand \morphEpi { } { \lsm_morph_epi: }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_morph_compose:n}
+% Default presentation: $\circ$, or $\circ$ with an overset label
+% when a label is supplied. See the open question in the
+% documentation before adding head/tail variants.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_morph_compose:n #1
+  {
+    \tl_if_empty:nTF {#1}
+      { \mathbin{\circ} }
+      { \mathbin{\overset{#1}{\circ}} }
+  }
+\NewDocumentCommand \morphCompose { O{} } { \lsm_morph_compose:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \subsection{Charts, atlases, and coordinates}
+%
+% \begin{macro}{\lsm_chart_name:n}
+% Placeholder presentation: unstyled. See the documentation above.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_chart_name:n #1 { #1 }
+\NewDocumentCommand \chartName { m } { \lsm_chart_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_atlas_name:n}
+% Placeholder presentation: unstyled. See the documentation above.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_atlas_name:n #1 { #1 }
+\NewDocumentCommand \atlasName { m } { \lsm_atlas_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_coord_name:n}
+% Placeholder presentation: unstyled. See the documentation above.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_coord_name:n #1 { #1 }
+\NewDocumentCommand \coordName { m } { \lsm_coord_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+%</package>
+% \end{implementation}
+%
+% \PrintIndex

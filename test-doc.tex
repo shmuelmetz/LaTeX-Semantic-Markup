@@ -1,0 +1,29 @@
+% Manual smoke test for semantic-markup.sty -- exercises every macro
+% currently defined in semantic-markup.dtx. Not a CTAN test suite;
+% just a quick "does it still compile and render sanely" check.
+% Requires semantic-markup.sty on TEXINPUTS (e.g. run
+% `tex semantic-markup.ins` in this directory first).
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{semantic-markup}
+\begin{document}
+Category name: $\catName{A}$.
+
+Sequence of categories: $\catSeqName{A}$.
+
+(They render differently: $\catName{A}$ vs.\ $\catSeqName{A}$, and are
+different macros, not the same macro with a flag.)
+
+Object name: $\objName{x}$.
+
+Morphism: $\morphName{f} \colon \objName{x} \morphMono \objName{y}$,
+and $\objName{x} \morphEpi \objName{y}$.
+
+Composition: $\morphName{g} \morphCompose \morphName{f}$ and
+$\morphName{g} \morphCompose[\text{def}] \morphName{f}$.
+
+Chart/atlas/coordinate: $\chartName{U}$, $\atlasName{\mathcal{A}}$,
+$\coordName{x}$.
+
+Generic: \semName{plain text}.
+\end{document}

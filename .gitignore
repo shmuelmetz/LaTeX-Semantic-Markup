@@ -31,6 +31,11 @@
 # Uncomment to ignore PDFs:
 # *.pdf
 
+# Files generated from .dtx by docstrip (tex *.ins) -- not source,
+# regenerate instead of editing directly
+*.sty
+texput.log
+
 # Editor files
 .DS_Store
 Thumbs.db
