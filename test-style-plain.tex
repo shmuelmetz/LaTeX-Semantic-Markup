@@ -1,0 +1,10 @@
+% Journal-portability smoke test, "plain" style.
+% See test-style-default.tex: the ONLY difference between that file
+% and this one is the \usepackage line below. \input{test-body.tex}
+% is byte-for-byte identical in both.
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[style=plain]{semantic-markup}
+\begin{document}
+\input{test-body.tex}
+\end{document}

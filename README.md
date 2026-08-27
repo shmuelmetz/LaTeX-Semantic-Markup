@@ -45,8 +45,9 @@ $\catName{A}$        % display name of a category
 $\catSeqName{A}$      % display name of a sequence/family of categories
 $\objName{x}$        % display name of an object
 $\morphName{f}$      % display name of a morphism
+$\morphSeqName{f}$   % display name of a sequence/tuple of morphisms
 $\morphMono$ $\morphEpi$  % monomorphism / epimorphism arrows
-$\morphCompose$ or $\morphCompose[label]$  % composition, plain or labeled
+$\morphCompose$ / $\morphComposeHead$ / $\morphComposeTail$  % composition (plain / head / tail; each also takes [label])
 $\chartName{U}$ $\atlasName{A}$ $\coordName{x}$  % coordinate charts/atlases/coordinates
 ```
 
@@ -54,6 +55,35 @@ The full macro set, including which abbreviations each name uses and
 several open mathematical questions not yet settled, is documented
 in `semantic-markup.dtx` (build the typeset manual, once the local
 toolchain issue below is resolved, with `pdflatex semantic-markup.dtx`).
+
+## Design goal: house-style portability
+
+The package's actual purpose, in the author's words: *if you submit
+a paper to different journals, you shouldn't have to change your
+markup to accommodate different house styles, other than changing
+setup.* Concretely: `\catName{Set}` (or any semantic macro, anywhere
+in the document body) is byte-for-byte identical regardless of the
+target -- arXiv, journal X's house style, journal Y's house style.
+Only the package-load-time *style* changes:
+
+```latex
+\usepackage[style=default]{semantic-markup}   % built in, default
+\usepackage[style=plain]{semantic-markup}     % built in, alternate
+```
+
+`style` defaults to `default` (no options needed at all). Every
+built-in style reassigns the package's complete set of internal
+presentation hooks as one coherent bundle -- never a partial patch
+the author assembles by hand -- so adding a real journal's house
+style later means adding one more style, not touching any document
+body. See `semantic-markup.dtx`, "Style switching", for the full
+mechanism (`l3keys2e` package options) and design rationale.
+
+`test-body.tex` plus `test-style-default.tex` / `test-style-plain.tex`
+/ `test-style-noopts.tex` demonstrate and verify this concretely: the
+same `\input{test-body.tex}` body, unmodified, renders differently
+under each `\usepackage[style=...]` line, and the no-options case
+matches `style=default` exactly.
 
 ## Building
 
@@ -79,9 +109,13 @@ and has been verified to compile and run correctly in a real document.
 ## Repository structure
 
 ```
-semantic-markup.dtx   -- documented source (macros + documentation)
-semantic-markup.ins   -- docstrip installer; extracts the .sty
-test-doc.tex           -- manual smoke test exercising every macro
+semantic-markup.dtx    -- documented source (macros + documentation)
+semantic-markup.ins    -- docstrip installer; extracts the .sty
+test-doc.tex            -- manual smoke test exercising every macro
+test-body.tex           -- shared document body for the style tests below
+test-style-default.tex  -- \usepackage[style=default]{semantic-markup} + test-body.tex
+test-style-plain.tex    -- \usepackage[style=plain]{semantic-markup} + test-body.tex
+test-style-noopts.tex   -- \usepackage{semantic-markup} (no options) + test-body.tex
 ```
 
 ## Related

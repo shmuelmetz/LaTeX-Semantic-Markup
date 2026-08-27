@@ -37,15 +37,49 @@
 % category,'' ``this is a monomorphism arrow'' --- separately from
 % how that role is \emph{typeset}. An author writing
 % \cs{catName}\Arg{C} is not choosing a font; they are asserting that
-% \texttt{C} names a category, and the package decides (by default,
-% and later by configuration) what a category name looks like.
+% \texttt{C} names a category, and the package decides what a
+% category name looks like.
 %
-% This separation is the entire point of the package: two things
-% that look similar on the page but mean different things
-% mathematically must not share a macro, even if that means near-
-% identical default typesetting for two commands. Conversely, one
-% concept must not be given two names merely because it is
-% occasionally styled differently in context.
+% \begin{quote}
+% \textbf{The package's actual design goal}, in the author's own
+% words: ``My intention is that if you submit a paper to different
+% journals, you shouldn't have to change your markup to accommodate
+% different house styles, other than changing setup.'' Concretely:
+% \cs{catName}\Arg{Set} (or any semantic macro, anywhere in the
+% document body) must be byte-for-byte identical whether the target
+% is arXiv, journal~X's house style, or journal~Y's house style. Only
+% package-load-time \emph{setup} (\cs{usepackage}\oarg{style=...}%
+% \Arg{semantic-markup}; see \S\ref{sec:style-switching}) may differ
+% --- never anything in the body text itself.
+%
+% This is not just an API-ergonomics nicety; it is the whole point of
+% the package, and it generalizes the ``macros do the heavy lifting''
+% principle used throughout the design decisions below into a
+% concrete, checkable test:
+% \textbf{the journal-portability test} --- \emph{if satisfying a
+% house-style change would ever require touching anything in the
+% document body (as opposed to the preamble/setup), the design is
+% wrong.} Every design question in this package, past and future, is
+% judged against this test.
+% \end{quote}
+%
+% Two consequences follow directly from the test above, and both are
+% enforced throughout this package:
+% \begin{enumerate}
+% \item Two things that look similar on the page but mean different
+%   things mathematically must not share a macro, even if that means
+%   near-identical default typesetting for two commands (otherwise a
+%   house style that \emph{does} want them to look different could
+%   not ask for that without editing the body).
+% \item One concept must not be given two names merely because it is
+%   styled differently in different contexts (otherwise the author
+%   would have to choose between the two names based on a
+%   presentation decision, rather than on what they mean) --- and, as
+%   of this design pass, no macro's presentation may be hard-coded at
+%   all: every macro's actual rendering is decided by the active
+%   \emph{style} (\S\ref{sec:style-switching}), set once at
+%   \cs{usepackage} time, never per use.
+% \end{enumerate}
 %
 % \section{Internal naming}
 %
@@ -54,6 +88,79 @@
 % convention \texttt{\textbackslash lsm\_}\emph{module}\texttt{\_}%
 % \emph{description}\texttt{:}\emph{args}. These are not intended for
 % direct use in documents.
+%
+% \section{Style switching}
+% \label{sec:style-switching}
+%
+% Every semantic macro in this package (\cs{catName}, \cs{morphMono},
+% \ldots) is a thin public wrapper around an internal \pkg{expl3}
+% function of the same shape (\cs{lsm_cat_name:n}, \cs{lsm_morph_mono:%
+% }, \ldots) that does the actual typesetting. Those internal
+% functions are not fixed: each one is a \emph{presentation hook},
+% (re)definable as a group, all at once, by a named \emph{style}. This
+% hook architecture is not new machinery bolted on for style
+% switching; it already existed, one hook per macro, from the first
+% version of this package (motivated by the same
+% typography/semantics separation), and style switching is built as a
+% dispatch layer on top of exactly those existing hooks, rather than
+% as some separate mechanism.
+%
+% A style is selected once, as a package option:
+% \begin{verbatim}
+% \usepackage[style=default]{semantic-markup}   % built in, default
+% \usepackage[style=plain]{semantic-markup}     % built in, alternate
+% \end{verbatim}
+% and nowhere else. The document body --- every \cs{catName}, every
+% \cs{morphCompose}, everything --- is written exactly once and never
+% varies with the chosen style; only the single \texttt{style=...}
+% key on the \cs{usepackage} line changes between, say, an arXiv
+% upload and a journal submission. This is the direct, literal
+% implementation of the journal-portability test in \S1.
+%
+% The mechanism is \pkg{l3keys2e} package-option processing (the
+% standard modern \pkg{expl3} idiom for \texttt{key=value}
+% \cs{usepackage} options; the same mechanism many CTAN packages use
+% for exactly this ``pick a coherent bundle of choices at once''
+% pattern), with a single \texttt{.choice:} key, \texttt{style}, in
+% the key family \texttt{lsm}. Each choice's code is one function
+% (\cs{lsm_style_default:}, \cs{lsm_style_plain:}) that reassigns
+% \emph{every} presentation hook in the package in one place, so a
+% style is always a complete, coherent bundle --- never a partial
+% patch the author has to assemble by hand from individual macro
+% redefinitions. \texttt{style} defaults to \texttt{default} via
+% \texttt{.initial:n} (confirmed against the current \pkg{l3keys}
+% source: \texttt{.initial:n} runs the named choice's code
+% immediately at \cs{keys_define:nn} time, so the package works with
+% no options at all) and any explicit \texttt{style=...} package
+% option is applied afterward via \cs{ProcessKeysPackageOptions}.
+%
+% Only two styles are built in for now, both illustrating the
+% mechanism rather than encoding any real journal's house style yet:
+% \begin{description}
+% \item[\texttt{default}] The presentation choices already justified,
+%   macro by macro, in the sections below (script/bold-upright
+%   auto-detected category names, bold sequence names, hook/twohead
+%   arrows for mono/epi, \ldots).
+% \item[\texttt{plain}] Every \texttt{*Name} family macro
+%   (\cs{semName}, \cs{catName}, \cs{catSeqName}, \cs{objName},
+%   \cs{morphName}, \cs{morphSeqName}, \cs{chartName}, \cs{atlasName},
+%   \cs{coordName}) renders completely unstyled, ambient math
+%   typeface --- no script, no bold, no auto-detection. The
+%   mono/epi arrows and the compose/compose-head/compose-tail glyphs
+%   are left as in \texttt{default}: those are closer to fixed
+%   mathematical convention (an arrow shape for a monomorphism,
+%   distinct glyphs for three distinct composition operations) than
+%   to journal-specific name typography, so a demonstration ``plain''
+%   style does not touch them --- a real house-style-specific style
+%   built later might, but that is a further design question, not
+%   answered here.
+% \end{description}
+% Adding a further style (a real journal's house style, once one is
+% specified) means adding one more \texttt{style / \meta{name}
+% .code:n} choice and one more \cs{lsm_style_\meta{name}:} function
+% that reassigns the same complete set of hooks; it never means
+% touching the public macros or asking a document author to change
+% anything in the body.
 %
 % \section{Abbreviations used in macro names}
 %
@@ -90,6 +197,11 @@
 %   \item \texttt{atlas} --- atlases of coordinate charts
 %   \item \texttt{coord} (Coordinate) --- coordinate systems/functions
 % \end{itemize}
+% What follows documents what each macro \emph{means} and why it is
+% (or is not) distinct from its neighbors --- that does not change
+% with the active style. What each macro actually renders as, under
+% each built-in style, is in \S\ref{sec:style-switching} and the
+% Implementation section below.
 %
 % \subsection{Generic}
 %
@@ -162,8 +274,9 @@
 % \begin{verbatim}
 % Upright Latin letters will be used for long names.
 % \end{verbatim}
-% (immediately followed, in the source, by the $\Ar$/$\Hom$/$\Mor$/
-% $\Ob$ definitions and by ``$\cat{Set}$ and $\cat{Top}$ are the
+% (immediately followed, in the source, by the \texttt{Ar}/%
+% \texttt{Hom}/\texttt{Mor}/\texttt{Ob} definitions and by
+% ``\texttt{cat}\Arg{Set} and \texttt{cat}\Arg{Top} are the
 % conventional categories of sets and topological spaces''). So
 % \texttt{Set}/\texttt{Top} are bold-upright because they are
 % \emph{long} (multi-character) names, not because they are a
@@ -174,23 +287,25 @@
 % chooses between, it is \emph{one} macro that measures the argument's
 % length (via \texttt{xstring}'s \texttt{\textbackslash StrLen}) and
 % picks the typeface itself. That settles the design question for
-% this package too, on a general principle: \emph{the author should
-% not be expected to implement typographic convention; the macros
-% should do the heavy lifting.} Since ``long vs.\ short'' here is a
-% mechanical convention with no underlying semantic distinction (it is
-% not really ``standard category'' vs.\ ``arbitrary category''),
-% offering two macros (\cs{catName} and, say, \cs{catStandardName})
-% would force the author to decide a typographic question --- ``is
-% this name long enough to count as `standard'?'' --- as a separate
-% step from expressing what they mean, exactly the conflation this
-% package exists to remove. The correct design is therefore a
-% \emph{single} macro, \cs{catName}, that auto-detects: the author
-% writes \cs{catName}\Arg{Set} or \cs{catName}\Arg{C} identically and
-% never chooses upright vs.\ script. It is implemented via
+% this package too, on the journal-portability test in \S1: since
+% ``long vs.\ short'' here is a mechanical convention with no
+% underlying semantic distinction (it is not really ``standard
+% category'' vs.\ ``arbitrary category''), offering two macros
+% (\cs{catName} and, say, \cs{catStandardName}) would force the
+% author to decide a typographic question --- ``is this name long
+% enough to count as `standard'?'' --- as a separate step from
+% expressing what they mean, exactly the conflation this package
+% exists to remove. The correct design is therefore a \emph{single}
+% macro, \cs{catName}, that auto-detects: the author writes
+% \cs{catName}\Arg{Set} or \cs{catName}\Arg{C} identically and never
+% chooses upright vs.\ script. It is implemented via
 % \cs{tl_if_single:nTF} (an \pkg{expl3}-native single-token/-item
 % test, avoiding an \pkg{xstring} dependency): a single-token argument
 % (an ordinary bare-symbol category name) renders in script; anything
-% longer renders bold upright.
+% longer renders bold upright, under the \texttt{default} style ---
+% see \S\ref{sec:style-switching} for how even \emph{that} choice is
+% swapped as a unit by a different style, without the author touching
+% \cs{catName}\Arg{Set} itself.
 % \end{quote}
 %
 % \subsection{Objects}
@@ -198,7 +313,7 @@
 % \DescribeMacro{\objName}
 % \cs{objName}\Arg{text} (Obj = Object) is the display name of an
 % object of a category, corresponding to what the source papers call
-% $\Ob(\catname{C})$. Verbatim, from the source:
+% \texttt{Ob}\Arg{catname\Arg{C}}. Verbatim, from the source:
 % \begin{verbatim}
 % %Object of category
 % \newcommand \Ob {\mathrm{Ob}}
@@ -208,10 +323,10 @@
 % \item[$\Ob(\catname{C})$]
 % All objects of $\catname{C}$
 % \end{verbatim}
-% The default presentation is unstyled (objects are typically bare
-% math-mode variables in practice); the macro exists so that document
-% text records the semantic role even when the default rendering does
-% nothing visible yet.
+% Under the \texttt{default} style the presentation is unstyled
+% (objects are typically bare math-mode variables in practice); the
+% macro exists so that document text records the semantic role even
+% when the current style's rendering does nothing visible.
 %
 % \subsection{Morphisms}
 %
@@ -284,7 +399,8 @@
 % \DescribeMacro{\morphSeqName}
 % \cs{morphSeqName}\Arg{text} (Morph = Morphism, Seq = Sequence) is
 % the display name of a \emph{sequence or tuple of morphisms/%
-% functions}, e.g.\ $\bm{f} \defeq (f_1, f_2)$. Like \cs{catSeqName}
+% functions}, e.g.\ $\bm{f} \mathrel{:=} (f_1, f_2)$. Like
+% \cs{catSeqName}
 % vs.\ \cs{catName}, this is a genuinely distinct \pkg{expl3} function
 % from \cs{morphName} (\cs{lsm_morph_seqname:n}, not
 % \cs{lsm_morph_name:n} with a flag): a sequence of functions is not
@@ -401,13 +517,16 @@
 % C'') for this cluster --- there is no existing inline precedent for
 % chart/atlas/coordinate \emph{naming} to generalize from, unlike the
 % category and morphism families above. These three commands are
-% provided as minimal, unstyled hooks (default presentation is a
-% no-op) so the semantic distinction exists in document markup from
-% the start. Whether ``coordinate'' needs sub-kinds (e.g.\ a
-% coordinate \emph{function} vs.\ a coordinate \emph{value} vs.\ a
-% coordinate \emph{index}) is open and should be settled against real
-% usage
-% before this cluster is trusted as final.
+% provided as minimal, unstyled hooks under the \texttt{default} style
+% so the semantic distinction exists in document markup from the
+% start; being ordinary presentation hooks like every other macro in
+% this package, they already participate correctly in style switching
+% (\S\ref{sec:style-switching}) with no further work needed on that
+% front. Whether ``coordinate'' needs sub-kinds (e.g.\ a coordinate
+% \emph{function} vs.\ a coordinate \emph{value} vs.\ a coordinate
+% \emph{index}) is a separate, still-open semantic question and should
+% be settled against real usage before this cluster is trusted as
+% final.
 % \end{quote}
 %
 % \end{documentation}
@@ -418,171 +537,159 @@
 %
 %<*package>
 % \begin{macrocode}
-\ProvidesExplPackage{semantic-markup}{2026-08-27}{0.1.0}
+\ProvidesExplPackage{semantic-markup}{2026-08-27}{0.2.0}
   {Semantic markup macros for LaTeX (LSM)}
 \RequirePackage{xparse}
 \RequirePackage{mathrsfs}
 \RequirePackage{bm}
 \RequirePackage{amssymb}
+\RequirePackage{l3keys2e}
 % \end{macrocode}
 %
-% \subsection{Generic}
+% \subsection{Public commands}
 %
-% \begin{macro}{\lsm_sem_name:n}
-% Default presentation: unstyled.
+% Every user-level command is declared once, unconditionally, here.
+% None of them change between styles: each is a fixed, thin wrapper
+% around an internal presentation-hook function of the same shape,
+% and it is only those internal functions that a style reassigns
+% (\S\ref{sec:style-switching} above; \S\ref{sec:style-impl} below).
+% \begin{macro}{\semName, \catName, \catSeqName, \objName, \morphName,
+%   \morphSeqName, \morphMono, \morphEpi, \morphCompose,
+%   \morphComposeHead, \morphComposeTail, \chartName, \atlasName,
+%   \coordName}
 % \begin{macrocode}
-\cs_new_protected:Npn \lsm_sem_name:n #1 { #1 }
 \NewDocumentCommand \semName { m } { \lsm_sem_name:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \subsection{Categories}
-%
-% \begin{macro}{\lsm_cat_name:n}
-% Default presentation: automatic, not author-chosen -- see the
-% documentation above. A single-token name (e.g.\ a bare letter, the
-% ordinary case of an arbitrary/variable category symbol) is set in
-% script via \cs{mathscr}; anything longer (e.g.\ a conventional name
-% like \texttt{Set} or \texttt{Top}) is set bold upright via
-% \cs{mathbf}, matching the source papers' own \texttt{cat} macro.
-% The author writes \cs{catName}\Arg{Set} or \cs{catName}\Arg{C}
-% exactly alike and never chooses a typeface.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_cat_name:n #1
-  {
-    \tl_if_single:nTF {#1}
-      { \mathscr{#1} }
-      { \mathbf{#1} }
-  }
 \NewDocumentCommand \catName { m } { \lsm_cat_name:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_cat_seqname:n}
-% A genuinely distinct function from \cs{lsm_cat_name:n}, not a
-% call to it with a different flag: see the documentation above.
-% Default presentation: bold script, via \cs{bm} and \cs{mathscr}.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_cat_seqname:n #1 { \bm{\mathscr{#1}} }
 \NewDocumentCommand \catSeqName { m } { \lsm_cat_seqname:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \subsection{Objects}
-%
-% \begin{macro}{\lsm_obj_name:n}
-% Default presentation: unstyled (see documentation).
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_obj_name:n #1 { #1 }
 \NewDocumentCommand \objName { m } { \lsm_obj_name:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \subsection{Morphisms}
-%
-% \begin{macro}{\lsm_morph_name:n}
-% Default presentation: unstyled.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_morph_name:n #1 { #1 }
 \NewDocumentCommand \morphName { m } { \lsm_morph_name:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_morph_seqname:n}
-% A genuinely distinct function from \cs{lsm_morph_name:n}, not a
-% call to it with a different flag: see the documentation above.
-% Default presentation: bold, via \cs{bm}.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_morph_seqname:n #1 { \bm{#1} }
 \NewDocumentCommand \morphSeqName { m } { \lsm_morph_seqname:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_morph_mono:}
-% Default presentation: \cs{hookrightarrow} (from \pkg{amssymb}).
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_morph_mono: { \hookrightarrow }
 \NewDocumentCommand \morphMono { } { \lsm_morph_mono: }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_morph_epi:}
-% Default presentation: \cs{twoheadrightarrow} (from \pkg{amssymb}).
-% Kept as a distinct function from \cs{lsm_morph_mono:}: see the
-% documentation above.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
 \NewDocumentCommand \morphEpi { } { \lsm_morph_epi: }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_morph_compose:n}
-% Default presentation: $\circ$, or $\circ$ with an overset label
-% when a label is supplied. A genuinely distinct function from
-% \cs{lsm_morph_compose_head:n} and \cs{lsm_morph_compose_tail:n}
-% below, not one function with a flag: see the documentation above.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_morph_compose:n #1
-  {
-    \tl_if_empty:nTF {#1}
-      { \mathbin{\circ} }
-      { \mathbin{\overset{#1}{\circ}} }
-  }
 \NewDocumentCommand \morphCompose { O{} } { \lsm_morph_compose:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_morph_compose_head:n}
-% Default presentation: $\odot$, or $\odot$ with an overset label.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_morph_compose_head:n #1
-  {
-    \tl_if_empty:nTF {#1}
-      { \mathbin{\odot} }
-      { \mathbin{\overset{#1}{\odot}} }
-  }
 \NewDocumentCommand \morphComposeHead { O{} }
   { \lsm_morph_compose_head:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_morph_compose_tail:n}
-% Default presentation: $\cdot$, or $\cdot$ with an overset label.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_morph_compose_tail:n #1
-  {
-    \tl_if_empty:nTF {#1}
-      { \mathbin{\cdot} }
-      { \mathbin{\overset{#1}{\cdot}} }
-  }
 \NewDocumentCommand \morphComposeTail { O{} }
   { \lsm_morph_compose_tail:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \subsection{Charts, atlases, and coordinates}
-%
-% \begin{macro}{\lsm_chart_name:n}
-% Placeholder presentation: unstyled. See the documentation above.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_chart_name:n #1 { #1 }
 \NewDocumentCommand \chartName { m } { \lsm_chart_name:n {#1} }
-% \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\lsm_atlas_name:n}
-% Placeholder presentation: unstyled. See the documentation above.
-% \begin{macrocode}
-\cs_new_protected:Npn \lsm_atlas_name:n #1 { #1 }
 \NewDocumentCommand \atlasName { m } { \lsm_atlas_name:n {#1} }
+\NewDocumentCommand \coordName { m } { \lsm_coord_name:n {#1} }
 % \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\lsm_coord_name:n}
-% Placeholder presentation: unstyled. See the documentation above.
+% \subsection{Style implementations}
+% \label{sec:style-impl}
+%
+% Each style is one function that reassigns \emph{every} presentation
+% hook in the package via \cs{cs_set_protected:Npn} (not
+% \cs{cs_new_protected:Npn}: styles overwrite, they do not merely
+% declare, and no pre-existence check is wanted since more than one
+% style will assign the same hook name). A style is applied by
+% calling its function, never by patching individual hooks.
+%
+% \begin{macro}{\lsm_style_default:}
+% The \texttt{default} style: the presentation choices justified,
+% macro by macro, in the documentation above.
 % \begin{macrocode}
-\cs_new_protected:Npn \lsm_coord_name:n #1 { #1 }
-\NewDocumentCommand \coordName { m } { \lsm_coord_name:n {#1} }
+\cs_new_protected:Npn \lsm_style_default:
+  {
+    \cs_set_protected:Npn \lsm_sem_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_cat_name:n ##1
+      {
+        \tl_if_single:nTF {##1}
+          { \mathscr{##1} }
+          { \mathbf{##1} }
+      }
+    \cs_set_protected:Npn \lsm_cat_seqname:n ##1 { \bm{\mathscr{##1}} }
+    \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_morph_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_morph_seqname:n ##1 { \bm{##1} }
+    \cs_set_protected:Npn \lsm_morph_mono: { \hookrightarrow }
+    \cs_set_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
+    \cs_set_protected:Npn \lsm_morph_compose:n ##1
+      {
+        \tl_if_empty:nTF {##1}
+          { \mathbin{\circ} }
+          { \mathbin{\overset{##1}{\circ}} }
+      }
+    \cs_set_protected:Npn \lsm_morph_compose_head:n ##1
+      {
+        \tl_if_empty:nTF {##1}
+          { \mathbin{\odot} }
+          { \mathbin{\overset{##1}{\odot}} }
+      }
+    \cs_set_protected:Npn \lsm_morph_compose_tail:n ##1
+      {
+        \tl_if_empty:nTF {##1}
+          { \mathbin{\cdot} }
+          { \mathbin{\overset{##1}{\cdot}} }
+      }
+    \cs_set_protected:Npn \lsm_chart_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_atlas_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_coord_name:n ##1 { ##1 }
+  }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_style_plain:}
+% The \texttt{plain} style: every \texttt{*Name} family macro
+% unstyled; mono/epi/compose glyphs unchanged from \texttt{default}
+% (see the documentation above for why). Demonstrates that a style is
+% a real, independent, complete bundle, not a variant of
+% \cs{lsm_style_default:}.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_style_plain:
+  {
+    \cs_set_protected:Npn \lsm_sem_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_cat_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_cat_seqname:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_morph_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_morph_seqname:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_morph_mono: { \hookrightarrow }
+    \cs_set_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
+    \cs_set_protected:Npn \lsm_morph_compose:n ##1
+      {
+        \tl_if_empty:nTF {##1}
+          { \mathbin{\circ} }
+          { \mathbin{\overset{##1}{\circ}} }
+      }
+    \cs_set_protected:Npn \lsm_morph_compose_head:n ##1
+      {
+        \tl_if_empty:nTF {##1}
+          { \mathbin{\odot} }
+          { \mathbin{\overset{##1}{\odot}} }
+      }
+    \cs_set_protected:Npn \lsm_morph_compose_tail:n ##1
+      {
+        \tl_if_empty:nTF {##1}
+          { \mathbin{\cdot} }
+          { \mathbin{\overset{##1}{\cdot}} }
+      }
+    \cs_set_protected:Npn \lsm_chart_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_atlas_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \lsm_coord_name:n ##1 { ##1 }
+  }
+% \end{macrocode}
+% \end{macro}
+%
+% \subsection{Package options}
+%
+% \begin{macro}{style}
+% A single \texttt{.choice:} key in the \texttt{lsm} key family,
+% defaulting to \texttt{default} via \texttt{.initial:n} (which runs
+% immediately at definition time, so the package works correctly with
+% no options given at all), then re-applied if the author gives an
+% explicit \texttt{style=...} package option.
+% \begin{macrocode}
+\keys_define:nn { lsm }
+  {
+    style .choice: ,
+    style / default .code:n = { \lsm_style_default: } ,
+    style / plain .code:n = { \lsm_style_plain: } ,
+    style .initial:n = default ,
+  }
+\ProcessKeysPackageOptions { lsm }
 % \end{macrocode}
 % \end{macro}
 %
