@@ -104,9 +104,12 @@
 %
 % \DescribeMacro{\catName}
 % \cs{catName}\Arg{text} (Cat = Category) is the display name of a
-% single category. The default presentation (\cs{mathscr}) follows
-% the source papers' own stated convention: ``Upper case Script Latin
-% letters will refer to categories and functors.''
+% single category, whether an arbitrary/variable category symbol
+% (e.g.\ \cs{catName}\Arg{C}) or a long, conventionally-fixed name
+% (e.g.\ \cs{catName}\Arg{Set}). The author writes the same macro
+% either way and never separately decides a typeface: see the
+% ``resolved'' discussion below for why this is one auto-detecting
+% macro rather than two.
 %
 % \DescribeMacro{\catSeqName}
 % \cs{catSeqName}\Arg{text} (Cat = Category, Seq = Sequence) is the
@@ -137,8 +140,8 @@
 % source mathematics, not just an inferred pattern.
 %
 % \begin{quote}
-% \textbf{Open question, not fully resolved:} the source papers also
-% use a separate, bold-roman \texttt{cat} macro (distinct from
+% \textbf{cat vs.\ catname (resolved):} the source papers also use a
+% separate, bold-roman \texttt{cat} macro (distinct from
 % \texttt{catname}) for names like \texttt{Set} and \texttt{Top}.
 % Verbatim, from the source, the macro itself:
 % \begin{verbatim}
@@ -150,12 +153,12 @@
 % %Use \cat{Top} for the standard category Top.
 % %Use \cat{Set} for the standard category Set.
 % \end{verbatim}
-% The same formal Conventions/Nomenclature section cited above gives
-% the actual governing rule, verbatim, and it is more general than
-% ``standard vs.\ arbitrary category'': it is a rule about name
-% \emph{length}, already used elsewhere in the source (see the
-% \texttt{mathvarname} comment, ``Set long names upright, short names
-% italic''), here applied specifically to categories:
+% The formal Conventions/Nomenclature section cited above gives the
+% actual governing rule, verbatim, and it is not ``standard vs.\
+% arbitrary category'': it is a rule about name \emph{length}, already
+% used elsewhere in the source (see the \texttt{mathvarname} comment,
+% ``Set long names upright, short names italic''), here applied
+% specifically to categories:
 % \begin{verbatim}
 % Upright Latin letters will be used for long names.
 % \end{verbatim}
@@ -164,17 +167,30 @@
 % conventional categories of sets and topological spaces''). So
 % \texttt{Set}/\texttt{Top} are bold-upright because they are
 % \emph{long} (multi-character) names, not because they are a
-% distinct semantic kind of category in their own right --- the same
-% general convention that already governs \cs{objName}/\cs{morphName}
-% defaulting to plain, ambient math italic for ordinary short symbols.
-% Whether this package should therefore (a) not add a separate macro
-% at all and instead let \cs{catName} auto-detect long vs.\ short
-% input (mirroring the source's own \texttt{mathvarname}), or (b)
-% still give it a distinct macro (e.g.\ \cs{catStandardName}) because
-% ``long, conventionally-fixed name'' is a meaningfully different
-% authoring intent from ``arbitrary short symbol'' even if the source
-% treats it as pure typography, is left to the author to decide; it
-% is not built here.
+% distinct semantic kind of category in their own right.
+%
+% Crucially, the source itself already treats this as mechanical, not
+% authorial: \texttt{mathvarname} is not two macros the paper author
+% chooses between, it is \emph{one} macro that measures the argument's
+% length (via \texttt{xstring}'s \texttt{\textbackslash StrLen}) and
+% picks the typeface itself. That settles the design question for
+% this package too, on a general principle: \emph{the author should
+% not be expected to implement typographic convention; the macros
+% should do the heavy lifting.} Since ``long vs.\ short'' here is a
+% mechanical convention with no underlying semantic distinction (it is
+% not really ``standard category'' vs.\ ``arbitrary category''),
+% offering two macros (\cs{catName} and, say, \cs{catStandardName})
+% would force the author to decide a typographic question --- ``is
+% this name long enough to count as `standard'?'' --- as a separate
+% step from expressing what they mean, exactly the conflation this
+% package exists to remove. The correct design is therefore a
+% \emph{single} macro, \cs{catName}, that auto-detects: the author
+% writes \cs{catName}\Arg{Set} or \cs{catName}\Arg{C} identically and
+% never chooses upright vs.\ script. It is implemented via
+% \cs{tl_if_single:nTF} (an \pkg{expl3}-native single-token/-item
+% test, avoiding an \pkg{xstring} dependency): a single-token argument
+% (an ordinary bare-symbol category name) renders in script; anything
+% longer renders bold upright.
 % \end{quote}
 %
 % \subsection{Objects}
@@ -423,9 +439,21 @@
 % \subsection{Categories}
 %
 % \begin{macro}{\lsm_cat_name:n}
-% Default presentation: script, via \cs{mathscr}.
+% Default presentation: automatic, not author-chosen -- see the
+% documentation above. A single-token name (e.g.\ a bare letter, the
+% ordinary case of an arbitrary/variable category symbol) is set in
+% script via \cs{mathscr}; anything longer (e.g.\ a conventional name
+% like \texttt{Set} or \texttt{Top}) is set bold upright via
+% \cs{mathbf}, matching the source papers' own \texttt{cat} macro.
+% The author writes \cs{catName}\Arg{Set} or \cs{catName}\Arg{C}
+% exactly alike and never chooses a typeface.
 % \begin{macrocode}
-\cs_new_protected:Npn \lsm_cat_name:n #1 { \mathscr{#1} }
+\cs_new_protected:Npn \lsm_cat_name:n #1
+  {
+    \tl_if_single:nTF {#1}
+      { \mathscr{#1} }
+      { \mathbf{#1} }
+  }
 \NewDocumentCommand \catName { m } { \lsm_cat_name:n {#1} }
 % \end{macrocode}
 % \end{macro}
