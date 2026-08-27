@@ -116,20 +116,31 @@
 % sequence of categories is not itself a category, and collapsing the
 % two into one macro differentiated only by an optional ``bold''
 % switch would silently re-introduce the typography/semantics
-% conflation this package exists to remove. The source papers draw
-% the same line themselves, independently, in more than one macro
-% family: their own \texttt{catname}/\texttt{catseqname} pair is
-% introduced under the single comment ``Select font for categories
-% and sequences of categories,'' and separately their
-% \texttt{subcat}/\texttt{SUBCAT} pair is commented ``Subcategory'' /
-% ``Sequence of subcategories.'' The single-vs-sequence distinction
-% is a recurring pattern in the source mathematics, not a one-off.
+% conflation this package exists to remove.
+%
+% This is exactly the distinction the source papers' own formal
+% Conventions/Nomenclature section (\texttt{LCS.arXiv.V2.tex}, the
+% \texttt{\textbackslash part\{Conventions\}} beginning at its
+% \texttt{part:conv} label; identical in \texttt{M-atlas.tex}) draws,
+% verbatim:
+% \begin{verbatim}
+% Bold upper case script letters will refer to
+% sequences of categories, e.g.,
+%     $\catseqname{A} \defeq (\catname{A}_\alpha, \alpha \in \Alpha)$.
+% \end{verbatim}
+% Supporting inline evidence, at the macro definitions themselves: the
+% papers' \texttt{catname}/\texttt{catseqname} pair is introduced
+% under the single comment ``Select font for categories and sequences
+% of categories,'' and separately their \texttt{subcat}/\texttt{SUBCAT}
+% pair is commented ``Subcategory'' / ``Sequence of subcategories.''
+% The single-vs-sequence distinction is a formally stated rule in the
+% source mathematics, not just an inferred pattern.
 %
 % \begin{quote}
-% \textbf{Open question, not yet resolved:} the source papers also
+% \textbf{Open question, not fully resolved:} the source papers also
 % use a separate, bold-roman \texttt{cat} macro (distinct from
-% \texttt{catname}) specifically for \emph{standard, well-known}
-% categories. Verbatim, from the source, the macro itself:
+% \texttt{catname}) for names like \texttt{Set} and \texttt{Top}.
+% Verbatim, from the source, the macro itself:
 % \begin{verbatim}
 % % Names of standard categories
 % \newcommand \cat [1] {\mathbf{#1}}
@@ -139,14 +150,31 @@
 % %Use \cat{Top} for the standard category Top.
 % %Use \cat{Set} for the standard category Set.
 % \end{verbatim}
-% That is a third role this package does not yet provide for: naming
-% a specific, conventionally-fixed category (Set, Top, \ldots) is
-% arguably semantically different from naming an arbitrary/variable
-% category symbol via \cs{catName}, in the same way that
-% \cs{catSeqName} is different from \cs{catName}. Whether that
-% deserves its own macro (e.g.\ \cs{catStandardName}) or is genuinely
-% just a presentational choice (bold vs.\ script) is left to the
-% author to decide; it is not built here.
+% The same formal Conventions/Nomenclature section cited above gives
+% the actual governing rule, verbatim, and it is more general than
+% ``standard vs.\ arbitrary category'': it is a rule about name
+% \emph{length}, already used elsewhere in the source (see the
+% \texttt{mathvarname} comment, ``Set long names upright, short names
+% italic''), here applied specifically to categories:
+% \begin{verbatim}
+% Upright Latin letters will be used for long names.
+% \end{verbatim}
+% (immediately followed, in the source, by the $\Ar$/$\Hom$/$\Mor$/
+% $\Ob$ definitions and by ``$\cat{Set}$ and $\cat{Top}$ are the
+% conventional categories of sets and topological spaces''). So
+% \texttt{Set}/\texttt{Top} are bold-upright because they are
+% \emph{long} (multi-character) names, not because they are a
+% distinct semantic kind of category in their own right --- the same
+% general convention that already governs \cs{objName}/\cs{morphName}
+% defaulting to plain, ambient math italic for ordinary short symbols.
+% Whether this package should therefore (a) not add a separate macro
+% at all and instead let \cs{catName} auto-detect long vs.\ short
+% input (mirroring the source's own \texttt{mathvarname}), or (b)
+% still give it a distinct macro (e.g.\ \cs{catStandardName}) because
+% ``long, conventionally-fixed name'' is a meaningfully different
+% authoring intent from ``arbitrary short symbol'' even if the source
+% treats it as pure typography, is left to the author to decide; it
+% is not built here.
 % \end{quote}
 %
 % \subsection{Objects}
@@ -237,6 +265,15 @@
 % preference on naming.
 % \end{quote}
 %
+% \DescribeMacro{\morphSeqName}
+% \cs{morphSeqName}\Arg{text} (Morph = Morphism, Seq = Sequence) is
+% the display name of a \emph{sequence or tuple of morphisms/%
+% functions}, e.g.\ $\bm{f} \defeq (f_1, f_2)$. Like \cs{catSeqName}
+% vs.\ \cs{catName}, this is a genuinely distinct \pkg{expl3} function
+% from \cs{morphName} (\cs{lsm_morph_seqname:n}, not
+% \cs{lsm_morph_name:n} with a flag): a sequence of functions is not
+% itself a function. See the resolved discussion below.
+%
 % \DescribeMacro{\morphMono}
 % \cs{morphMono} (Mono = Monomorphism) is the arrow symbol for a
 % monomorphism, corresponding to the source papers' \texttt{into}.
@@ -302,20 +339,30 @@
 % \end{quote}
 %
 % \begin{quote}
-% \textbf{Open question, not yet resolved:} separately from the
-% compose/compose-head/compose-tail resolution above, the source
-% papers also contain a disabled (commented-out) pair, verbatim:
+% \textbf{morphSeqName vs.\ morphName (resolved):} per the author, a
+% sequence of functions is not a function, the same principle as the
+% \cs{catSeqName}/\cs{catName} and compose/compose-head/compose-tail
+% rulings above. This is also the most directly authoritative finding
+% in the source: it is not only an inference from scattered inline
+% comments or disabled code, but a rule stated outright in the source
+% papers' own formal Conventions/Nomenclature section
+% (\texttt{\textbackslash part\{Conventions\}}, label
+% \texttt{part:conv}; identical text in both \texttt{LCS.arXiv.V2.tex}
+% and \texttt{M-atlas.tex}), verbatim:
 % \begin{verbatim}
-% % Select font for functions and sequences of functions
-% % \newcommand \funcname [1] {\mathit{#1}}
-% % \newcommand \funcseqname [1] {\bm{#1}}
+% Bold lower case italic letters will refer to sets, sequences and
+% tuples of functions, e.g.,
+%     $\funcseqname{f} \defeq (\funcname{f}_1, \funcname{f}_2)$.
 % \end{verbatim}
-% --- the same single-vs.-sequence split found in the category
-% macros (\cs{catName}/\cs{catSeqName}), just never finished for
-% functions/morphisms. Whether \cs{morphName} likewise needs a
-% \cs{morphSeqName} sibling (a display name for a \emph{sequence} of
-% morphisms, as distinct from a single morphism) is not resolved and
-% is not built here, pending the author's mathematical judgment.
+% i.e.\ \texttt{funcname} (a single function) and \texttt{funcseqname}
+% (a sequence/tuple of functions) are explicitly distinguished as
+% different kinds of object, bold vs.\ not, in the papers' own stated
+% rules --- not merely by the disabled macro pair found earlier
+% (``Select font for functions and sequences of functions''
+% commenting \texttt{funcname}/\texttt{funcseqname}, never actually
+% enabled). \cs{morphSeqName} is built accordingly as a genuinely
+% distinct \pkg{expl3} function, \cs{lsm_morph_seqname:n}, not
+% \cs{lsm_morph_name:n} called with a different flag.
 % \end{quote}
 %
 % \subsection{Charts, atlases, and coordinates}
@@ -410,6 +457,16 @@
 % \begin{macrocode}
 \cs_new_protected:Npn \lsm_morph_name:n #1 { #1 }
 \NewDocumentCommand \morphName { m } { \lsm_morph_name:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_morph_seqname:n}
+% A genuinely distinct function from \cs{lsm_morph_name:n}, not a
+% call to it with a different flag: see the documentation above.
+% Default presentation: bold, via \cs{bm}.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_morph_seqname:n #1 { \bm{#1} }
+\NewDocumentCommand \morphSeqName { m } { \lsm_morph_seqname:n {#1} }
 % \end{macrocode}
 % \end{macro}
 %
