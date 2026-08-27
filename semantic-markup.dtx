@@ -255,8 +255,17 @@
 % operator, mirroring how composition is annotated in the source
 % papers.
 %
+% \DescribeMacro{\morphComposeHead}
+% \cs{morphComposeHead} (default $\odot$) is composition taken from
+% the head of a sequence of functions.
+%
+% \DescribeMacro{\morphComposeTail}
+% \cs{morphComposeTail} (default $\cdot$) is composition taken from
+% the tail of a sequence of functions. Both take the same optional
+% label argument as \cs{morphCompose}.
+%
 % \begin{quote}
-% \textbf{Open question, not yet resolved:} the source papers define
+% \textbf{Confirmed distinct (resolved):} the source papers define
 % \emph{three} composition operators, verbatim:
 % \begin{verbatim}
 % % Extended composition operators for function sequences
@@ -280,14 +289,21 @@
 %        {\mathbin{\overset{#1} {\cdot}}}
 %    }
 % \end{verbatim}
-% The papers' own wording (``for function sequences,'' ``head,''
-% ``tail'') reads as describing composition specifically along a
-% \emph{sequence} of functions, composing from one end or the other,
-% which suggests these may be exactly as mathematically distinct from
-% plain composition as \cs{catSeqName} is from \cs{catName} --- i.e.\
-% they may need their own macros precisely \emph{because} sequence
-% composition is a different operation from pairwise composition.
-% But this is not certain from the comments alone. Suggestively, the
+% Per the author: plain composition, ``compose head,'' and ``compose
+% tail'' are genuinely different mathematical operations, not
+% glyph/styling variants of one operation. They are built accordingly
+% as three separate \pkg{expl3} functions ---
+% \cs{lsm_morph_compose:n}, \cs{lsm_morph_compose_head:n},
+% \cs{lsm_morph_compose_tail:n} --- each with its own presentation
+% hook, the same treatment already given to \cs{catName}/
+% \cs{catSeqName} (\cs{lsm_cat_name:n}/\cs{lsm_cat_seqname:n}): one
+% function with a flag would have re-introduced the
+% typography/semantics conflation this package exists to remove.
+% \end{quote}
+%
+% \begin{quote}
+% \textbf{Open question, not yet resolved:} separately from the
+% compose/compose-head/compose-tail resolution above, the source
 % papers also contain a disabled (commented-out) pair, verbatim:
 % \begin{verbatim}
 % % Select font for functions and sequences of functions
@@ -295,13 +311,11 @@
 % % \newcommand \funcseqname [1] {\bm{#1}}
 % \end{verbatim}
 % --- the same single-vs.-sequence split found in the category
-% macros, just never finished for functions/morphisms. That is
-% further (if inconclusive) evidence that a \cs{morphSeqName} sibling
-% to \cs{morphName}, and/or \cs{morphComposeHead}/
-% \cs{morphComposeTail} siblings to \cs{morphCompose}, may belong in
-% this package. None of that is built here; only \cs{morphCompose} is
-% provided for now, pending the author's mathematical judgment rather
-% than a guess.
+% macros (\cs{catName}/\cs{catSeqName}), just never finished for
+% functions/morphisms. Whether \cs{morphName} likewise needs a
+% \cs{morphSeqName} sibling (a display name for a \emph{sequence} of
+% morphisms, as distinct from a single morphism) is not resolved and
+% is not built here, pending the author's mathematical judgment.
 % \end{quote}
 %
 % \subsection{Charts, atlases, and coordinates}
@@ -419,8 +433,9 @@
 %
 % \begin{macro}{\lsm_morph_compose:n}
 % Default presentation: $\circ$, or $\circ$ with an overset label
-% when a label is supplied. See the open question in the
-% documentation before adding head/tail variants.
+% when a label is supplied. A genuinely distinct function from
+% \cs{lsm_morph_compose_head:n} and \cs{lsm_morph_compose_tail:n}
+% below, not one function with a flag: see the documentation above.
 % \begin{macrocode}
 \cs_new_protected:Npn \lsm_morph_compose:n #1
   {
@@ -429,6 +444,34 @@
       { \mathbin{\overset{#1}{\circ}} }
   }
 \NewDocumentCommand \morphCompose { O{} } { \lsm_morph_compose:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_morph_compose_head:n}
+% Default presentation: $\odot$, or $\odot$ with an overset label.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_morph_compose_head:n #1
+  {
+    \tl_if_empty:nTF {#1}
+      { \mathbin{\odot} }
+      { \mathbin{\overset{#1}{\odot}} }
+  }
+\NewDocumentCommand \morphComposeHead { O{} }
+  { \lsm_morph_compose_head:n {#1} }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lsm_morph_compose_tail:n}
+% Default presentation: $\cdot$, or $\cdot$ with an overset label.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_morph_compose_tail:n #1
+  {
+    \tl_if_empty:nTF {#1}
+      { \mathbin{\cdot} }
+      { \mathbin{\overset{#1}{\cdot}} }
+  }
+\NewDocumentCommand \morphComposeTail { O{} }
+  { \lsm_morph_compose_tail:n {#1} }
 % \end{macrocode}
 % \end{macro}
 %
