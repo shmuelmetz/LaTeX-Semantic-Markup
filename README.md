@@ -138,6 +138,12 @@ test-catname-decoration.tex -- regression test for \catName's auto-detection
                              papers (17 unique arguments, 3413 call sites)
 test-morphname-decoration.tex -- same regression test for \morphName/
                              \morphSeqName (11 unique arguments, 5409 calls)
+scripts/check_arg_consistency.py -- reusable tool: given a macro name and
+                             one or more real .tex files, checks every
+                             unique real argument against
+                             \lsm_if_arbitrary_symbol:nTF before trusting a
+                             rename or a heuristic change (this is the tool
+                             that found the \catName/\morphName bugs above)
 ```
 
 ## Related
