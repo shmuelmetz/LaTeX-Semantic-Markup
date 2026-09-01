@@ -697,13 +697,34 @@
 %
 %<*package>
 % \begin{macrocode}
-\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.4.0}
+\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.5.0}
   {Semantic markup macros for LaTeX (LSM)}
 \RequirePackage{xparse}
-\RequirePackage{mathrsfs}
 \RequirePackage{bm}
-\RequirePackage{amssymb}
 \RequirePackage{l3keys2e}
+% \end{macrocode}
+%
+% \subsection{Font packages: load only if genuinely needed}
+%
+% \cs{mathscr} (needed by \cs{catName}/\cs{catSeqName}) and
+% \cs{twoheadrightarrow} (needed by \cs{morphEpi}) are what this
+% package actually uses from \pkg{mathrsfs}/\pkg{amssymb} respectively
+% --- \cs{hookrightarrow} (for \cs{morphMono}) is already a base LaTeX
+% symbol, needing neither. Found the hard way: unconditionally
+% requiring both packages, as an earlier version of this file did,
+% broke real-world use --- a document already using a comprehensive
+% OpenType math font package (\pkg{stix2}, confirmed directly: it
+% already defines both \cs{mathscr} and \cs{twoheadrightarrow} on its
+% own) hit LaTeX's ``Too many symbol fonts declared'' hard limit the
+% moment \pkg{amsfonts} (pulled in by \pkg{amssymb}) tried to declare
+% its own two symbol fonts on top of everything \pkg{stix2} had
+% already declared. Guarded with \cs{ifdefined} (a plain \TeX{}
+% primitive, unaffected by this file's own \pkg{expl3} catcode regime)
+% so a paper that already has an equivalent font package never pays
+% for these two a second time.
+% \begin{macrocode}
+\ifdefined\mathscr\else\RequirePackage{mathrsfs}\fi
+\ifdefined\twoheadrightarrow\else\RequirePackage{amssymb}\fi
 % \end{macrocode}
 %
 % \subsection{Internal variables}
