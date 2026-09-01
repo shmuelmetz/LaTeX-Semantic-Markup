@@ -133,6 +133,9 @@ test-style-default.tex  -- \usepackage[style=default]{semantic-markup} + test-bo
 test-style-plain.tex    -- \usepackage[style=plain]{semantic-markup} + test-body.tex
 test-style-noopts.tex   -- \usepackage{semantic-markup} (no options) + test-body.tex
 test-setup-runtime.tex  -- \setupsemanticmarkup{...} called mid-document
+test-catname-decoration.tex -- regression test for \catName's auto-detection
+                             against every real argument found in the source
+                             papers (17 unique arguments, 3413 call sites)
 ```
 
 ## Related

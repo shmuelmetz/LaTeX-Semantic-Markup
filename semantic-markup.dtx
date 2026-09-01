@@ -24,7 +24,7 @@
 %
 % \title{The \pkg{semantic-markup} package}
 % \author{Shmuel (Seymour J.) Metz \\ \url{https://mason.gmu.edu/~smetz3}}
-% \date{2026-08-27}
+% \date{2026-09-01}
 %
 % \maketitle
 %
@@ -375,6 +375,45 @@
 % \cs{catName}\Arg{Set} itself.
 % \end{quote}
 %
+% \begin{quote}
+% \textbf{Tightened, 2026-09-01:} a single-token test alone is too
+% narrow a proxy for the source papers' actual convention. Checked
+% directly, not assumed: every \texttt{catname}/\texttt{cat} call site
+% in both source papers (3413 calls, 17 distinct arguments after
+% deduplication) was run through the real \cs{tl_if_single:nTF} test
+% via a standalone \pkg{expl3} harness. All twelve single-letter
+% arguments (\texttt{A}, \texttt{B}, \ldots) and both long names
+% (\texttt{Set}, \texttt{Top}) classified as the papers' own macro
+% choice would predict --- but three arguments did not:
+% \texttt{catname\{C\^{}2\}}, \texttt{catname\{E\^{}i\}} (one call
+% site each), and \texttt{catname\{XY\}} (44 call sites combined,
+% denoting a product-space category \(X \times Y\)) are all called via
+% \texttt{catname} --- the papers' own ``arbitrary symbol'' choice ---
+% yet none is a single token, so a single-token-only test would
+% silently flip all 46 of these sites to bold upright under
+% \cs{catName}, a real rendering change the auto-detection is supposed
+% to prevent.
+%
+% What actually distinguishes these three from \texttt{Set}/\texttt{Top}
+% is not token count, it is whether the argument reads as a
+% \emph{decorated or concatenated symbol} (a base letter carrying a
+% sub/superscript, or two symbol-like letters standing for a product)
+% versus a genuine multi-letter \emph{word}. \cs{catName} now tests, in
+% order: (1) does the argument contain \texttt{\^{}} or \texttt{\_{}}
+% (a sub/superscript decoration) --- if so, script, regardless of what
+% the decoration itself contains (this is why \texttt{E\^{}i}'s
+% lower-case \texttt{i} never has to be examined: the whole argument
+% is already settled as ``decorated symbol'' by the presence of
+% \texttt{\^{}} alone); (2) is it a single token --- if so, script, as
+% before; (3) is every letter in the argument already upper case ---
+% if so, script (this is what catches \texttt{XY}: two upper-case
+% letters standing for a product, not a lower-case-bearing word); (4)
+% otherwise, bold upright. Re-run against the same 3413 real call
+% sites after this change: all of them, including the 46 that were
+% wrong before, now classify exactly as the papers' own macro choice
+% would predict.
+% \end{quote}
+%
 % \subsection{Objects}
 %
 % \DescribeMacro{\objName}
@@ -604,7 +643,7 @@
 %
 %<*package>
 % \begin{macrocode}
-\ProvidesExplPackage{semantic-markup}{2026-08-27}{0.2.0}
+\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.3.0}
   {Semantic markup macros for LaTeX (LSM)}
 \RequirePackage{xparse}
 \RequirePackage{mathrsfs}
@@ -612,6 +651,18 @@
 \RequirePackage{amssymb}
 \RequirePackage{l3keys2e}
 % \end{macrocode}
+%
+% \subsection{Internal variables}
+%
+% \begin{variable}{\l_lsm_cat_str_tl, \l_lsm_cat_upper_tl}
+% Scratch variables used by \cs{lsm_cat_name:n}'s auto-detection
+% (\S\ref{sec:style-impl}) to hold a category-name argument's
+% detokenized string and its uppercased form, for comparison.
+% \begin{macrocode}
+\tl_new:N \l_lsm_cat_str_tl
+\tl_new:N \l_lsm_cat_upper_tl
+% \end{macrocode}
+% \end{variable}
 %
 % \subsection{Public commands}
 %
@@ -663,9 +714,24 @@
     \cs_set_protected:Npn \lsm_sem_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_cat_name:n ##1
       {
-        \tl_if_single:nTF {##1}
+        \str_if_in:nnTF {##1} { ^ }
           { \mathscr{##1} }
-          { \mathbf{##1} }
+          {
+            \str_if_in:nnTF {##1} { _ }
+              { \mathscr{##1} }
+              {
+                \tl_if_single:nTF {##1}
+                  { \mathscr{##1} }
+                  {
+                    \tl_set:Nx \l_lsm_cat_str_tl { \tl_to_str:n {##1} }
+                    \tl_set:Nx \l_lsm_cat_upper_tl
+                      { \str_uppercase:f { \tl_to_str:n {##1} } }
+                    \tl_if_eq:NNTF \l_lsm_cat_str_tl \l_lsm_cat_upper_tl
+                      { \mathscr{##1} }
+                      { \mathbf{##1} }
+                  }
+              }
+          }
       }
     \cs_set_protected:Npn \lsm_cat_seqname:n ##1 { \bm{\mathscr{##1}} }
     \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }

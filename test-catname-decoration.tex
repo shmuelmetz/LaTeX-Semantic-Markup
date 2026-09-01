@@ -1,0 +1,81 @@
+% Regression test for \catName's auto-detection heuristic, tightened
+% 2026-09-01 (see semantic-markup.dtx, the "Tightened" correction
+% under "cat vs. catname (resolved)"). A single-token test alone
+% mis-classified real arguments from the source papers -- decorated
+% symbols (\catname{C^2}, \catname{E^i}) and a two-letter product-
+% category symbol (\catname{XY}, 44 real call sites) -- as bold
+% upright rather than script, because none of them is a single token
+% even though the papers call all three via \catname (the "arbitrary
+% symbol" choice), never \cat (the "long name" choice).
+%
+% Verifies, for every distinct argument actually found in
+% LCS.arXiv.V2.tex/M-atlas.tex's \catname/\cat call sites (17 unique
+% arguments across all 3413 calls), that \catName reproduces the
+% papers' own existing choice: script for everything called via
+% \catname, bold upright for everything called via \cat. Fails hard
+% (raises a LaTeX error) on any mismatch rather than requiring visual
+% inspection, since this is exactly the kind of silent typeface flip
+% a future edit to the heuristic could reintroduce.
+\documentclass{article}
+\usepackage{semantic-markup}
+
+\ExplSyntaxOn
+
+\let\reservedmathscr\mathscr
+\let\reservedmathbf\mathbf
+\tl_new:N \l_lsmtest_got_tl
+\renewcommand{\mathscr}[1]{\tl_gset:Nn \l_lsmtest_got_tl {script} \reservedmathscr{#1}}
+\renewcommand{\mathbf}[1]{\tl_gset:Nn \l_lsmtest_got_tl {bold} \reservedmathbf{#1}}
+
+% #1 = argument, #2 = expected (script|bold)
+\cs_new_protected:Npn \lsmtestCatName #1#2
+  {
+    \tl_clear:N \l_lsmtest_got_tl
+    \hbox{$\catName{#1}$}
+    \tl_if_eq:NnTF \l_lsmtest_got_tl {#2}
+      { \iow_term:x { ok~~catName\{ \tl_to_str:n{#1} \}~~->~~#2 } }
+      {
+        \iow_term:x
+          { FAIL~~catName\{ \tl_to_str:n{#1} \}~~expected~#2~~got~
+            \l_lsmtest_got_tl }
+        \msg_error:nnxx { lsmtest } { mismatch }
+          { \tl_to_str:n{#1} } {#2}
+      }
+  }
+\msg_new:nnn { lsmtest } { mismatch }
+  { catName\{#1\}~expected~#2~but~did~not~get~it. }
+
+\ExplSyntaxOff
+
+\begin{document}
+
+% The 12 plain single-letter arguments actually used (called via
+% \catname in the source papers -- expect script).
+\lsmtestCatName{A}{script}
+\lsmtestCatName{B}{script}
+\lsmtestCatName{C}{script}
+\lsmtestCatName{E}{script}
+\lsmtestCatName{G}{script}
+\lsmtestCatName{M}{script}
+\lsmtestCatName{S}{script}
+\lsmtestCatName{T}{script}
+\lsmtestCatName{U}{script}
+\lsmtestCatName{V}{script}
+\lsmtestCatName{X}{script}
+\lsmtestCatName{Y}{script}
+
+% The two long, conventional category names (called via \cat --
+% expect bold upright).
+\lsmtestCatName{Set}{bold}
+\lsmtestCatName{Top}{bold}
+
+% The three decorated/concatenated symbols that a single-token-only
+% test gets wrong (called via \catname despite not being single
+% tokens -- expect script; this is the actual regression being
+% guarded).
+\lsmtestCatName{C^2}{script}
+\lsmtestCatName{E^i}{script}
+\lsmtestCatName{XY}{script}
+
+All 17 real-world arguments classified correctly.
+\end{document}
