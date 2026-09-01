@@ -136,6 +136,8 @@ test-setup-runtime.tex  -- \setupsemanticmarkup{...} called mid-document
 test-catname-decoration.tex -- regression test for \catName's auto-detection
                              against every real argument found in the source
                              papers (17 unique arguments, 3413 call sites)
+test-morphname-decoration.tex -- same regression test for \morphName/
+                             \morphSeqName (11 unique arguments, 5409 calls)
 ```
 
 ## Related

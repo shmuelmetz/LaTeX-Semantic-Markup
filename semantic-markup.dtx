@@ -376,6 +376,7 @@
 % \end{quote}
 %
 % \begin{quote}
+% \label{sec:cat-tightened}
 % \textbf{Tightened, 2026-09-01:} a single-token test alone is too
 % narrow a proxy for the source papers' actual convention. Checked
 % directly, not assumed: every \texttt{catname}/\texttt{cat} call site
@@ -447,13 +448,40 @@
 % \end{verbatim}
 %
 % \begin{quote}
+% \textbf{Correction, 2026-09-01:} an earlier pass of this
+% documentation claimed the source papers have no active macro for a
+% single morphism's display name at all --- only a disabled, pre-%
+% \pkg{expl3}-era pair (\texttt{\% \textbackslash newcommand
+% \textbackslash funcname [1] \{\textbackslash mathit\{\#1\}\}}), so
+% \cs{morphName} was built with no reference implementation to match.
+% That was wrong: a \emph{second}, active, genuinely \pkg{expl3}-based
+% definition exists further down in both source papers (verbatim,
+% identical in \texttt{LCS.arXiv.V2.tex} and \texttt{M-atlas.tex}):
+% \begin{verbatim}
+% \NewDocumentCommand{\funcname}{m} { \funcname:n {#1} }
+% \cs_new:Npn \funcname:n #1
+%   {
+%     \int_compare:nTF {\tl_count:n{#1} > 1}
+%       { {\mathrm{#1}} }
+%       { {\mathit{#1}} }
+%   }
+% \end{verbatim}
+% --- genuinely used throughout both papers (4265 real call sites
+% combined), not a disabled placeholder. It auto-detects exactly the
+% way \cs{catName} does: a single-token argument (an ordinary function
+% symbol, e.g.\ \cs{funcname}\Arg{f}) renders in \emph{italic}; a
+% multi-token argument renders \emph{upright}. \cs{morphName} is built
+% to match this real, active convention, not to leave it unstyled.
+% \end{quote}
+%
+% \begin{quote}
 % \textbf{A morphism vs.\ the class of all morphisms (resolved):} by
 % the standard definition, a single morphism always has a specific
 % source and target --- it is an element of a particular Hom-set.
 % That is a different notion from ``the class of all morphisms/arrows
 % in a category,'' which has no reference to specific endpoints.
 % \cs{morphName} (a label for one morphism, e.g.\ $f$) is already
-% built around the correct, standard reading and needs no change.
+% built around the correct, standard reading.
 %
 % The source papers name both notions but are, in one place,
 % internally inconsistent about which name goes with which. Their
@@ -502,6 +530,28 @@
 % preference on naming.
 % \end{quote}
 %
+% \begin{quote}
+% \textbf{Tightened, 2026-09-01:} same lesson as \cs{catName}
+% (\S\ref{sec:cat-tightened}), applied to \cs{morphName}/%
+% \cs{morphSeqName} before trusting a single-token test for them
+% either: every \texttt{funcname}/\texttt{funcseqname} call site in
+% both source papers (4265 + 1144 calls, 11 distinct arguments after
+% dedup) was checked. Ten classify exactly as \cs{tl_if_single:nTF}
+% predicts (\texttt{F}, \texttt{G}, \texttt{f}, \texttt{g}, \texttt{i},
+% \texttt{m}, \texttt{s}, \texttt{t} --- single tokens, including two
+% single-\emph{control-sequence} arguments, \(\pi\) and \(\rho\), which
+% are one token each regardless of how many characters their names
+% have) --- but one is not: \texttt{funcseqname\{f\^{}2\}} (a single
+% real call site) is called via \texttt{funcseqname}, the papers' own
+% ``arbitrary symbol'' choice, despite \texttt{f\^{}2} not being a
+% single token, for the same reason \texttt{catname\{C\^{}2\}} wasn't:
+% a decorated base symbol is still an arbitrary symbol, not a name.
+% \cs{morphName}/\cs{morphSeqName} use the same tightened test as
+% \cs{catName} (\S\ref{sec:cat-tightened}): decoration (\texttt{\^{}}/%
+% \texttt{\_{}}) or single token or all-upper-case letters -> italic
+% (or bold italic); otherwise -> upright (or bold upright).
+% \end{quote}
+%
 % \DescribeMacro{\morphSeqName}
 % \cs{morphSeqName}\Arg{text} (Morph = Morphism, Seq = Sequence) is
 % the display name of a \emph{sequence or tuple of morphisms/%
@@ -510,7 +560,11 @@
 % vs.\ \cs{catName}, this is a genuinely distinct \pkg{expl3} function
 % from \cs{morphName} (\cs{lsm_morph_seqname:n}, not
 % \cs{lsm_morph_name:n} with a flag): a sequence of functions is not
-% itself a function. See the resolved discussion below.
+% itself a function. Auto-detects the same way \cs{morphName} does
+% (matching the source papers' active \texttt{funcseqname}, which
+% applies the identical test as \texttt{funcname} but bold throughout
+% --- see the "Tightened" note above). See the resolved discussion
+% below.
 %
 % \DescribeMacro{\morphMono}
 % \cs{morphMono} (Mono = Monomorphism) is the arrow symbol for a
@@ -643,7 +697,7 @@
 %
 %<*package>
 % \begin{macrocode}
-\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.3.0}
+\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.4.0}
   {Semantic markup macros for LaTeX (LSM)}
 \RequirePackage{xparse}
 \RequirePackage{mathrsfs}
@@ -654,15 +708,54 @@
 %
 % \subsection{Internal variables}
 %
-% \begin{variable}{\l_lsm_cat_str_tl, \l_lsm_cat_upper_tl}
-% Scratch variables used by \cs{lsm_cat_name:n}'s auto-detection
-% (\S\ref{sec:style-impl}) to hold a category-name argument's
-% detokenized string and its uppercased form, for comparison.
+% \begin{variable}{\l_lsm_str_tl, \l_lsm_upper_tl}
+% Scratch variables used by \cs{lsm_if_arbitrary_symbol:nTF} (below)
+% to hold an argument's detokenized string and its uppercased form,
+% for comparison.
 % \begin{macrocode}
-\tl_new:N \l_lsm_cat_str_tl
-\tl_new:N \l_lsm_cat_upper_tl
+\tl_new:N \l_lsm_str_tl
+\tl_new:N \l_lsm_upper_tl
 % \end{macrocode}
 % \end{variable}
+%
+% \begin{macro}{\lsm_if_arbitrary_symbol:nTF}
+% Shared classification test behind \cs{catName}'s and
+% \cs{morphName}/\cs{morphSeqName}'s auto-detection
+% (\S\ref{sec:style-impl}): is \texttt{\#1} an \emph{arbitrary symbol}
+% (an ordinary bare-symbol name, however decorated) as opposed to a
+% genuine multi-letter \emph{word}? Tightened, 2026-09-01
+% (\S\ref{sec:cat-tightened}), from an initial single-token-only test:
+% true if the argument contains \texttt{\^{}} or \texttt{\_{}} (a
+% sub/superscript decoration, regardless of what the decoration itself
+% contains), or is a single token, or consists entirely of upper-case
+% letters; false otherwise. A hand-written manual conditional (not
+% declared via \cs{prg_new_conditional:Npnn}, which would need a
+% \texttt{p} outcome this test never requires) since its branches are
+% used exactly like an ordinary \texttt{TF} conditional's.
+% \begin{macrocode}
+\cs_new_protected:Npn \lsm_if_arbitrary_symbol:nTF #1#2#3
+  {
+    \str_if_in:nnTF {#1} { ^ }
+      {#2}
+      {
+        \str_if_in:nnTF {#1} { _ }
+          {#2}
+          {
+            \tl_if_single:nTF {#1}
+              {#2}
+              {
+                \tl_set:Nx \l_lsm_str_tl { \tl_to_str:n {#1} }
+                \tl_set:Nx \l_lsm_upper_tl
+                  { \str_uppercase:f { \tl_to_str:n {#1} } }
+                \tl_if_eq:NNTF \l_lsm_str_tl \l_lsm_upper_tl
+                  {#2}
+                  {#3}
+              }
+          }
+      }
+  }
+% \end{macrocode}
+% \end{macro}
 %
 % \subsection{Public commands}
 %
@@ -714,29 +807,24 @@
     \cs_set_protected:Npn \lsm_sem_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_cat_name:n ##1
       {
-        \str_if_in:nnTF {##1} { ^ }
+        \lsm_if_arbitrary_symbol:nTF {##1}
           { \mathscr{##1} }
-          {
-            \str_if_in:nnTF {##1} { _ }
-              { \mathscr{##1} }
-              {
-                \tl_if_single:nTF {##1}
-                  { \mathscr{##1} }
-                  {
-                    \tl_set:Nx \l_lsm_cat_str_tl { \tl_to_str:n {##1} }
-                    \tl_set:Nx \l_lsm_cat_upper_tl
-                      { \str_uppercase:f { \tl_to_str:n {##1} } }
-                    \tl_if_eq:NNTF \l_lsm_cat_str_tl \l_lsm_cat_upper_tl
-                      { \mathscr{##1} }
-                      { \mathbf{##1} }
-                  }
-              }
-          }
+          { \mathbf{##1} }
       }
     \cs_set_protected:Npn \lsm_cat_seqname:n ##1 { \bm{\mathscr{##1}} }
     \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_morph_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_morph_seqname:n ##1 { \bm{##1} }
+    \cs_set_protected:Npn \lsm_morph_name:n ##1
+      {
+        \lsm_if_arbitrary_symbol:nTF {##1}
+          { \mathit{##1} }
+          { \mathrm{##1} }
+      }
+    \cs_set_protected:Npn \lsm_morph_seqname:n ##1
+      {
+        \lsm_if_arbitrary_symbol:nTF {##1}
+          { \bm{\mathit{##1}} }
+          { \bm{\mathrm{##1}} }
+      }
     \cs_set_protected:Npn \lsm_morph_mono: { \hookrightarrow }
     \cs_set_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
     \cs_set_protected:Npn \lsm_morph_compose:n ##1

@@ -1,0 +1,78 @@
+% Regression test for \morphName/\morphSeqName's auto-detection,
+% mirroring test-catname-decoration.tex. Covers every distinct
+% argument actually found in LCS.arXiv.V2.tex/M-atlas.tex's
+% funcname/funcseqname call sites (11 unique arguments across 5409
+% combined calls) -- including funcseqname{f^2}, the one real site a
+% single-token-only test would have mis-classified (see
+% semantic-markup.dtx, the "Tightened, 2026-09-01" correction under
+% \morphName's documentation).
+\documentclass{article}
+\usepackage{semantic-markup}
+
+\ExplSyntaxOn
+
+\let\reservedmathit\mathit
+\let\reservedmathrm\mathrm
+\tl_new:N \l_lsmtest_got_tl
+\renewcommand{\mathit}[1]{\tl_gset:Nn \l_lsmtest_got_tl {italic} \reservedmathit{#1}}
+\renewcommand{\mathrm}[1]{\tl_gset:Nn \l_lsmtest_got_tl {roman} \reservedmathrm{#1}}
+% \bm (from the bm package) does its own internal re-scanning of its
+% argument that doesn't tolerate the side-effecting \mathit/\mathrm
+% redefinitions above -- irrelevant to what this test actually checks
+% (which branch \lsm_if_arbitrary_symbol:nTF took), so bypass it with
+% a transparent pass-through for the duration of this test only.
+\renewcommand{\bm}[1]{#1}
+
+% #1 = macro to call (morphName or morphSeqName), #2 = argument,
+% #3 = expected (italic|roman)
+\cs_new_protected:Npn \lsmtestMorph #1#2#3
+  {
+    \tl_clear:N \l_lsmtest_got_tl
+    \hbox{$#1{#2}$}
+    \tl_if_eq:NnTF \l_lsmtest_got_tl {#3}
+      {
+        \iow_term:x
+          { ok~~ \tl_to_str:n{#1} \{ \tl_to_str:n{#2} \}~~->~~#3 }
+      }
+      {
+        \iow_term:x
+          { FAIL~~ \tl_to_str:n{#1} \{ \tl_to_str:n{#2} \}~~expected~#3~~got~
+            \l_lsmtest_got_tl }
+        \msg_error:nnxx { lsmtest } { mismatch }
+          { \tl_to_str:n{#2} } {#3}
+      }
+  }
+\msg_new:nnn { lsmtest } { mismatch }
+  { morph\{#1\}~expected~#2~but~did~not~get~it. }
+
+\ExplSyntaxOff
+
+\begin{document}
+
+% Single-token arguments (called via funcname and/or funcseqname in
+% the papers -- expect italic / bold italic), including the two
+% single-control-sequence arguments \pi and \rho.
+\lsmtestMorph{\morphName}{F}{italic}
+\lsmtestMorph{\morphSeqName}{F}{italic}
+\lsmtestMorph{\morphSeqName}{G}{italic}
+\lsmtestMorph{\morphName}{\pi}{italic}
+\lsmtestMorph{\morphSeqName}{\pi}{italic}
+\lsmtestMorph{\morphSeqName}{\rho}{italic}
+\lsmtestMorph{\morphName}{f}{italic}
+\lsmtestMorph{\morphSeqName}{f}{italic}
+\lsmtestMorph{\morphName}{g}{italic}
+\lsmtestMorph{\morphSeqName}{g}{italic}
+\lsmtestMorph{\morphName}{i}{italic}
+\lsmtestMorph{\morphName}{m}{italic}
+\lsmtestMorph{\morphSeqName}{m}{italic}
+\lsmtestMorph{\morphName}{s}{italic}
+\lsmtestMorph{\morphName}{t}{italic}
+
+% The decorated symbol that a single-token-only test gets wrong
+% (called via funcseqname despite not being a single token -- expect
+% italic; this is the actual regression being guarded).
+\lsmtestMorph{\morphSeqName}{f^2}{italic}
+
+All 11 real-world arguments classified correctly (16 calls across
+morphName/morphSeqName as actually used in the source papers).
+\end{document}
