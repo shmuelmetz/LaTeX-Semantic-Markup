@@ -570,6 +570,29 @@
 % \cs{morphMono} (Mono = Monomorphism) is the arrow symbol for a
 % monomorphism, corresponding to the source papers' \texttt{into}.
 %
+% \begin{quote}
+% \textbf{Corrected, 2026-09-01:} originally rendered as
+% \cs{hookrightarrow} (↪). Wrong, per the source papers' own explicit
+% Conventions section, quoted verbatim: ``One with a hook
+% ($A \hookrightarrow B$) represents an inclusion map. One with a
+% tail ($A \rightarrowtail B$) represents a monomorphism.'' These are
+% two genuinely distinct notions with two distinct dedicated symbols
+% in the papers (every inclusion is a monomorphism, but not every
+% monomorphism is an inclusion) --- conflating them under one glyph is
+% exactly the kind of typography/semantics conflation this package
+% exists to prevent, and \cs{hookrightarrow} is specifically the
+% papers' \emph{inclusion} symbol, not their monomorphism one.
+% \cs{morphMono} now renders as \cs{rightarrowtail} (↣, from
+% \pkg{amssymb} --- already guarded for, see \S\ref{sec:font-guard}),
+% matching the papers' own \texttt{into} (a thin tail-arrow from
+% \pkg{xy}, confirmed visually near-identical to \cs{rightarrowtail}
+% and not to \cs{hookrightarrow}) and the wider category-theory
+% convention that also draws this same hook-vs-tail distinction.
+% \cs{hookrightarrow} is not otherwise used by this package; a
+% dedicated \cs{morphInclusion} for the separate ``inclusion map''
+% concept is a natural future addition, not built here.
+% \end{quote}
+%
 % \DescribeMacro{\morphEpi}
 % \cs{morphEpi} (Epi = Epimorphism) is the arrow symbol for an
 % epimorphism, corresponding to the source papers' \texttt{onto}.
@@ -697,7 +720,7 @@
 %
 %<*package>
 % \begin{macrocode}
-\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.5.0}
+\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.6.0}
   {Semantic markup macros for LaTeX (LSM)}
 \RequirePackage{xparse}
 \RequirePackage{bm}
@@ -705,12 +728,17 @@
 % \end{macrocode}
 %
 % \subsection{Font packages: load only if genuinely needed}
+% \label{sec:font-guard}
 %
 % \cs{mathscr} (needed by \cs{catName}/\cs{catSeqName}) and
-% \cs{twoheadrightarrow} (needed by \cs{morphEpi}) are what this
-% package actually uses from \pkg{mathrsfs}/\pkg{amssymb} respectively
-% --- \cs{hookrightarrow} (for \cs{morphMono}) is already a base LaTeX
-% symbol, needing neither. Found the hard way: unconditionally
+% \cs{twoheadrightarrow}/\cs{rightarrowtail} (needed by \cs{morphEpi}/
+% \cs{morphMono} respectively) are what this package actually uses
+% from \pkg{mathrsfs}/\pkg{amssymb}. Checking either one of
+% \cs{twoheadrightarrow}/\cs{rightarrowtail} is enough to guard both,
+% since both are amssymb-only symbols (confirmed: neither is defined
+% by \pkg{amsmath} alone) that any font package providing one of them
+% is overwhelmingly likely to also provide the other. Found the hard
+% way: unconditionally
 % requiring both packages, as an earlier version of this file did,
 % broke real-world use --- a document already using a comprehensive
 % OpenType math font package (\pkg{stix2}, confirmed directly: it
@@ -846,7 +874,7 @@
           { \bm{\mathit{##1}} }
           { \bm{\mathrm{##1}} }
       }
-    \cs_set_protected:Npn \lsm_morph_mono: { \hookrightarrow }
+    \cs_set_protected:Npn \lsm_morph_mono: { \rightarrowtail }
     \cs_set_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
     \cs_set_protected:Npn \lsm_morph_compose:n ##1
       {
@@ -888,7 +916,7 @@
     \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_morph_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_morph_seqname:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_morph_mono: { \hookrightarrow }
+    \cs_set_protected:Npn \lsm_morph_mono: { \rightarrowtail }
     \cs_set_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
     \cs_set_protected:Npn \lsm_morph_compose:n ##1
       {
