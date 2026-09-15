@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %%
-%% semantic-markup.dtx
+%% shmuelsemtex.dtx
 %%
 %% Copyright (C) 2026 Seymour J. Metz
 %%
@@ -8,7 +8,7 @@
 %% See the LICENSE file in the root of this distribution, or
 %% <https://github.com/shmuelmetz/LaTeX-Semantic-Markup>.
 %%
-%% This is the semantic-markup package, part of the
+%% This is the shmuelsemtex package, part of the
 %% LaTeX-Semantic-Markup distribution.
 %%
 %<*driver>
@@ -17,12 +17,12 @@
 \usepackage{bm}
 \usepackage{amssymb}
 \begin{document}
-  \DocInput{semantic-markup.dtx}
+  \DocInput{shmuelsemtex.dtx}
 \end{document}
 %</driver>
 % \fi
 %
-% \title{The \pkg{semantic-markup} package}
+% \title{The \pkg{shmuelsemtex} package}
 % \author{Shmuel (Seymour J.) Metz \\ \url{https://mason.gmu.edu/~smetz3}}
 % \date{2026-09-01}
 %
@@ -40,6 +40,14 @@
 % \texttt{C} names a category, and the package decides what a
 % category name looks like.
 %
+% The category-theory naming layer above (\cs{catName}, \cs{morphName},
+% \cs{morphMono}/\cs{morphEpi}, etc.) is only part of the package.
+% Quantifiers (\cs{equant}/\cs{uquant}) and set-builder notation
+% (\cs{set}/\cs{union}/\cs{intersection}), documented in
+% \S\ref{sec:quant-set} below, are general first-order-logic and
+% set-theory constructs, not specific to category theory, and are
+% equally usable in any mathematical document.
+%
 % \begin{quote}
 % \textbf{The package's actual design goal}, in the author's own
 % words: ``My intention is that if you submit a paper to different
@@ -49,7 +57,7 @@
 % document body) must be byte-for-byte identical whether the target
 % is arXiv, journal~X's house style, or journal~Y's house style. Only
 % package-load-time \emph{setup} (\cs{usepackage}\oarg{style=...}%
-% \Arg{semantic-markup}; see \S\ref{sec:style-switching}) may differ
+% \Arg{shmuelsemtex}; see \S\ref{sec:style-switching}) may differ
 % --- never anything in the body text itself.
 %
 % This is not just an API-ergonomics nicety; it is the whole point of
@@ -84,7 +92,7 @@
 % \section{Internal naming}
 %
 % Package-internal \pkg{expl3} functions use the module prefix
-% \texttt{lsm} (for \emph{latex-semantic-markup}), per the naming
+% \texttt{lsm} (for \emph{latex-shmuelsemtex}), per the naming
 % convention \texttt{\textbackslash lsm\_}\emph{module}\texttt{\_}%
 % \emph{description}\texttt{:}\emph{args}. These are not intended for
 % direct use in documents.
@@ -107,8 +115,8 @@
 %
 % A style is selected once, as a package option:
 % \begin{verbatim}
-% \usepackage[style=default]{semantic-markup}   % built in, default
-% \usepackage[style=plain]{semantic-markup}     % built in, alternate
+% \usepackage[style=default]{shmuelsemtex}   % built in, default
+% \usepackage[style=plain]{shmuelsemtex}     % built in, alternate
 % \end{verbatim}
 % and nowhere else. The document body --- every \cs{catName}, every
 % \cs{morphCompose}, everything --- is written exactly once and never
@@ -720,7 +728,7 @@
 %
 %<*package>
 % \begin{macrocode}
-\ProvidesExplPackage{semantic-markup}{2026-09-01}{0.6.0}
+\ProvidesExplPackage{shmuelsemtex}{2026-09-01}{0.6.0}
   {Semantic markup macros for LaTeX (LSM)}
 \RequirePackage{xparse}
 \RequirePackage{bm}
@@ -1003,7 +1011,7 @@
 % are removed. Four other commands originally living in the same
 % bracketed region of the papers (\cs{Id}, \cs{ID}, \cs{pagecrefn},
 % \cs{donotbreak}/\cs{nobreaks}) are \emph{not} part of this move --
-% they are not semantic-markup macros (identity-function rendering
+% they are not shmuelsemtex macros (identity-function rendering
 % and line-break/pageref formatting utilities, respectively) and stay
 % in the papers as paper-local commands.
 %

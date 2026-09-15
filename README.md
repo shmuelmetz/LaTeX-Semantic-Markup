@@ -11,7 +11,12 @@ This package provides macros that separate semantic intent from
 typographic presentation in LaTeX documents, in the spirit of the
 expl3 programming layer. Rather than writing `\mathscr{A}` directly
 whenever a symbol names a category, an author writes `\catName{A}`
-and the presentation is defined separately.
+and the presentation is defined separately. This category-theory
+naming layer (`\catName`, `\morphName`, `\morphMono`/`\morphEpi`,
+etc.) is only part of the package: quantifiers (`\equant`/`\uquant`)
+and set-builder notation (`\set`/`\union`/`\intersection`) are
+general first-order-logic and set-theory constructs, not specific to
+category theory, and are equally usable in any mathematical document.
 
 ## Requirements
 
@@ -30,14 +35,14 @@ Copy the `.sty` file(s) into your project directory.
 ### System-wide (TeX Live)
 
 ```sh
-cp *.sty $(kpsewhich -var-value TEXMFHOME)/tex/latex/semantic-markup/
+cp *.sty $(kpsewhich -var-value TEXMFHOME)/tex/latex/shmuelsemtex/
 mktexlsr
 ```
 
 ## Usage
 
 ```latex
-\usepackage{semantic-markup}
+\usepackage{shmuelsemtex}
 ```
 
 ```latex
@@ -53,8 +58,8 @@ $\chartName{U}$ $\atlasName{A}$ $\coordName{x}$  % coordinate charts/atlases/coo
 
 The full macro set, including which abbreviations each name uses and
 several open mathematical questions not yet settled, is documented
-in `semantic-markup.dtx` (build the typeset manual, once the local
-toolchain issue below is resolved, with `pdflatex semantic-markup.dtx`).
+in `shmuelsemtex.dtx` (build the typeset manual, once the local
+toolchain issue below is resolved, with `pdflatex shmuelsemtex.dtx`).
 
 ## Design goal: house-style portability
 
@@ -67,8 +72,8 @@ target -- arXiv, journal X's house style, journal Y's house style.
 Only *setup* changes, in either of two equivalent forms:
 
 ```latex
-\usepackage[style=default]{semantic-markup}   % at load time, built in
-\usepackage[style=plain]{semantic-markup}     % at load time, built in
+\usepackage[style=default]{shmuelsemtex}   % at load time, built in
+\usepackage[style=plain]{shmuelsemtex}     % at load time, built in
 ```
 ```latex
 \setupsemanticmarkup{style=plain}             % anywhere in the body
@@ -79,7 +84,7 @@ built-in style reassigns the package's complete set of internal
 presentation hooks as one coherent bundle -- never a partial patch
 the author assembles by hand -- so adding a real journal's house
 style later means adding one more style, not touching any document
-body. See `semantic-markup.dtx`, "Style switching", for the full
+body. See `shmuelsemtex.dtx`, "Style switching", for the full
 mechanism (`l3keys2e`) and design rationale.
 
 The runtime form, `\setupsemanticmarkup`, matches an established,
@@ -104,34 +109,34 @@ the use sites, mirroring the papers' own `\setupquant` usage.
 ## Building
 
 ```sh
-tex semantic-markup.ins      # extracts semantic-markup.sty from the .dtx
-pdflatex semantic-markup.dtx # typesets the documentation PDF
+tex shmuelsemtex.ins      # extracts shmuelsemtex.sty from the .dtx
+pdflatex shmuelsemtex.dtx # typesets the documentation PDF
 ```
 
-The generated `semantic-markup.sty` is not committed to this
+The generated `shmuelsemtex.sty` is not committed to this
 repository (see `.gitignore`) -- it is reproducible from
-`semantic-markup.dtx` via the `.ins` file above, per standard
+`shmuelsemtex.dtx` via the `.ins` file above, per standard
 practice for `.dtx`-based packages.
 
 As of this writing, the documentation-PDF build
-(`pdflatex semantic-markup.dtx`) fails on at least one local MiKTeX
+(`pdflatex shmuelsemtex.dtx`) fails on at least one local MiKTeX
 installation with `! File ended while scanning use of \xmacro@code.`,
 reproducible even with a trivial `\begin{macrocode}\relax\end{macrocode}`
 under plain `ltxdoc` -- i.e. it is a local `doc.sty` (v3.0r,
 2026-03-13) issue, not a problem in this package's `.dtx` content.
-`tex semantic-markup.ins` (the actual `.sty` extraction) is unaffected
+`tex shmuelsemtex.ins` (the actual `.sty` extraction) is unaffected
 and has been verified to compile and run correctly in a real document.
 
 ## Repository structure
 
 ```
-semantic-markup.dtx    -- documented source (macros + documentation)
-semantic-markup.ins    -- docstrip installer; extracts the .sty
+shmuelsemtex.dtx    -- documented source (macros + documentation)
+shmuelsemtex.ins    -- docstrip installer; extracts the .sty
 test-doc.tex            -- manual smoke test exercising every macro
 test-body.tex           -- shared document body for the style tests below
-test-style-default.tex  -- \usepackage[style=default]{semantic-markup} + test-body.tex
-test-style-plain.tex    -- \usepackage[style=plain]{semantic-markup} + test-body.tex
-test-style-noopts.tex   -- \usepackage{semantic-markup} (no options) + test-body.tex
+test-style-default.tex  -- \usepackage[style=default]{shmuelsemtex} + test-body.tex
+test-style-plain.tex    -- \usepackage[style=plain]{shmuelsemtex} + test-body.tex
+test-style-noopts.tex   -- \usepackage{shmuelsemtex} (no options) + test-body.tex
 test-setup-runtime.tex  -- \setupsemanticmarkup{...} called mid-document
 test-catname-decoration.tex -- regression test for \catName's auto-detection
                              against every real argument found in the source

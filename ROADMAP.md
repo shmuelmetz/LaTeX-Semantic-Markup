@@ -29,7 +29,7 @@ as well as or better than a solo submission of this package. Before
 investing in CTAN-readiness work for this repo specifically, check
 whether such a package already exists on CTAN.
 
-- **CTAN**: a separate repo, `ctan-semantic-markup`, was planned back
+- **CTAN**: a separate repo, `ctan-shmuelsemtex`, was planned back
   in 2026-05 as the actual CTAN-ready package location, distinct from
   this dev repo. It was never created — confirmed 2026-09-15
   (`gh repo view` returns not found). All real development has
