@@ -19,6 +19,16 @@ digging through an old chat export.
 
 ## Publication / distribution
 
+**Goal, stated explicitly by the user 2026-09-15**: the ultimate aim
+is for semantic markup — the *idea*, separating semantic intent from
+typographic presentation in LaTeX — to be a first-class citizen of
+the CTAN world. That is the goal, not "get this specific package onto
+CTAN." If an existing CTAN package already does this well, or does it
+better, contributing to or merging with that effort serves the goal
+as well as or better than a solo submission of this package. Before
+investing in CTAN-readiness work for this repo specifically, check
+whether such a package already exists on CTAN.
+
 - **CTAN**: a separate repo, `ctan-semantic-markup`, was planned back
   in 2026-05 as the actual CTAN-ready package location, distinct from
   this dev repo. It was never created — confirmed 2026-09-15
