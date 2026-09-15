@@ -976,6 +976,366 @@
 % \end{macrocode}
 % \end{macro}
 %
+% \subsection{Quantifiers, sets, and underset-variant renderers}
+% \label{sec:quant-set}
+%
+% Migrated 2026-09-15 from a block in the source papers themselves
+% (\texttt{LCS.arXiv.V2.tex}/\texttt{M-atlas.tex}, both identical,
+% dated 2016 and explicitly marked \emph{``belongs in
+% package''} at the time) -- these predate \cs{setupsemanticmarkup}
+% above and were in fact its own design precedent (see
+% \S\ref{sec:style-impl}'s discussion of \cs{setupquant}/\cs{setupset}).
+% The public interface (\cs{equant}, \cs{uquant}, \cs{set},
+% \cs{setupquant}, \cs{setupset}, \cs{union}, \cs{intersection},
+% \cs{full}, \cs{maxfull}, \cs{maximal}, \cs{strict}, \cs{Triv},
+% \cs{seqname}) is unchanged from the papers' own decade of real use,
+% so no call site in either paper needed to change. Internals were
+% cleaned up in the move: every scratch variable is now properly
+% scoped and uniquely named per macro family (the original shared a
+% handful of unscoped \texttt{l\_tmpa\_*}/\texttt{g\_tmpa\_*} names
+% across unrelated macros, a latent bug if two of them were ever
+% nested inside each other's arguments -- e.g. a \cs{union} inside a
+% \cs{set} predicate); the \texttt{separater} key name (a typo for
+% \emph{separator}, present in both \cs{setupquant} and \cs{setupset}
+% since 2016) is corrected, since it is internal to this package now,
+% not a document-facing name an external caller could depend on; and
+% commented-out debug lines (\cs{msg\_term:n}, \cs{int\_show:N} calls)
+% are removed. Four other commands originally living in the same
+% bracketed region of the papers (\cs{Id}, \cs{ID}, \cs{pagecrefn},
+% \cs{donotbreak}/\cs{nobreaks}) are \emph{not} part of this move --
+% they are not semantic-markup macros (identity-function rendering
+% and line-break/pageref formatting utilities, respectively) and stay
+% in the papers as paper-local commands.
+%
+% \begin{variable}{scratch variables for \S\ref{sec:quant-set}}
+% Each macro family below gets its own uniquely-named scratch
+% variables, declared together here rather than reusing a shared
+% \texttt{tmpa}-style name across families -- the fix for the latent
+% nesting bug described above.
+% \begin{macrocode}
+\clist_new:N \l_lsm_quant_tmp_clist
+\fp_new:N    \l_lsm_quant_tmp_fp
+\clist_new:N \l_lsm_set_tmp_clist
+\tl_new:N    \l_lsm_set_tmp_tl
+\bool_new:N  \l_lsm_set_star_bool
+\clist_new:N \l_lsm_unint_tmp_clist
+\fp_new:N    \l_lsm_unint_tmp_fp
+\tl_new:N    \l_lsm_full_tmp_tl
+\tl_new:N    \l_lsm_maximal_tmp_tl
+\tl_new:N    \l_lsm_strict_tmp_tl
+% \end{macrocode}
+% \end{variable}
+%
+% \begin{macro}{\equant, \uquant, \setupquant}
+% Existential/universal quantifier rendering, with a runtime style
+% switch (parenthesization and subscript-vs-inline placement of the
+% bound variables) via \cs{setupquant}, independent of
+% \cs{setupsemanticmarkup} above -- this is the papers' own original
+% style mechanism, kept as its own key family rather than folded into
+% \texttt{lsm}'s, since it predates and is unrelated to the
+% default/plain style choice.
+% \begin{macrocode}
+\int_new:N \g_lsm_quant_parens_int
+\int_new:N \g_lsm_quant_subscr_int
+\tl_new:N \g_lsm_quant_sep_tl
+
+\NewDocumentCommand{\equant}{mm}
+  { \lsm_quant:nnn {\exists} {#1} {#2} }
+
+\NewDocumentCommand{\uquant}{mm}
+  { \lsm_quant:nnn {\forall} {#1} {#2} }
+
+\NewDocumentCommand \setupquant {m}
+  { \keys_set:nn {lsm-quant} {#1} }
+
+\keys_define:nn {lsm-quant}
+ {
+  subscript   .choices:nn =
+    {
+      {none, stacked, multiple}
+      { \int_gset:Nn \g_lsm_quant_subscr_int {\l_keys_choice_int - 1} }
+    },
+  subscript   .default:n = multiple,
+  subscript   .initial:n = none,
+  parentheses .choices:nn =
+    {
+      {none, single, multiple}
+      { \int_gset:Nn \g_lsm_quant_parens_int {\l_keys_choice_int - 1} }
+    },
+  parentheses .default:n = multiple,
+  parentheses .initial:n = none,
+  separator   .tl_set:N  = \g_lsm_quant_sep_tl,
+  separator   .default:n = {.},
+  separator   .initial:n = {},
+ }
+
+\cs_new_protected:Npn \lsm_quant:nnn #1 #2 #3
+  {
+    \clist_set:Nn \l_lsm_quant_tmp_clist {#2}
+    \int_case:nn {\g_lsm_quant_subscr_int}
+      {
+        {0}
+        {
+          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\left (}
+          #1
+          \clist_use:Nn \l_lsm_quant_tmp_clist {\g_lsm_quant_sep_tl}
+          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\right )}
+          \g_lsm_quant_sep_tl #3
+        }
+        {1}
+        {
+          \fp_set:Nn \l_lsm_quant_tmp_fp
+            {ceil{\clist_count:N \l_lsm_quant_tmp_clist - 1} * .1 + 1}
+          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\left (}
+          \scaleobj{\fp_to_decimal:N \l_lsm_quant_tmp_fp}{#1} \sb
+            { \substack { \clist_use:Nn \l_lsm_quant_tmp_clist { \\ } } }
+          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\right )}
+          #3
+        }
+        {2}
+        {
+          \clist_map_inline:Nn \l_lsm_quant_tmp_clist
+            {
+              \int_compare:nT {\g_lsm_quant_parens_int > 0} {\left (}
+              \scaleobj{1.2}{#1} \sb {##1}
+              \int_compare:nT {\g_lsm_quant_parens_int > 0} {\right )}
+            }
+          #3
+        }
+      }
+  }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\set, \setupset}
+% Set-builder notation, \cs{set}\Marg{elements}\Oarg{propositions},
+% with an optional starred form (\cs{set*}) that splits the line
+% between elements and propositions -- useful inside a \env{multline}
+% environment, since \LaTeX{} cannot otherwise break a line inside a
+% macro argument. Style (the separator symbol, and whether multiple
+% propositions stack or run inline) is set via \cs{setupset}.
+% \begin{macrocode}
+\tl_new:N \g_lsm_set_sep_tl
+\int_new:N \g_lsm_set_subscr_int
+
+\NewDocumentCommand{\set}{mos}
+  {
+    \IfBooleanTF {#3}
+      { \bool_set_true:N  \l_lsm_set_star_bool }
+      { \bool_set_false:N \l_lsm_set_star_bool }
+    \lsm_set_of:nnn {#1} {#2} {\l_lsm_set_star_bool}
+  }
+
+\NewDocumentCommand \setupset {m}
+  { \keys_set:nn {lsm-set} {#1} }
+
+\keys_define:nn {lsm-set}
+  {
+    separator .tl_set:N  = \g_lsm_set_sep_tl,
+    separator .initial:n = {\mid},
+    subscript .choices:nn =
+      {
+        {stacked, multiple}
+        { \int_gset:Nn \g_lsm_set_subscr_int {\l_keys_choice_int - 1} }
+      },
+    subscript .initial:n = stacked,
+  }
+
+\cs_new_protected:Npn \lsm_set_of:nnn #1 #2 #3
+  {
+    \IfValueTF {#2}
+      {
+        \clist_set:Nn \l_lsm_set_tmp_clist {#2}
+        \tl_set:Nx \l_lsm_set_tmp_tl
+          { \clist_use:Nn \l_lsm_set_tmp_clist {\land} }
+        \bool_if:nTF {#3}
+          {
+            \scalerel*{\{}{#1 \l_lsm_set_tmp_tl}
+            #1
+            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
+            \scalerel*{\mathbin{\g_lsm_set_sep_tl}}{#1 \l_lsm_set_tmp_tl}
+            \\
+            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
+            \l_lsm_set_tmp_tl
+            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
+            \scalerel*{\}}{#1 \l_lsm_set_tmp_tl}
+          }
+          {
+            \left \{
+            #1
+            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
+            \scalerel*{\mathbin{\g_lsm_set_sep_tl}}{#1 \l_lsm_set_tmp_tl}
+            \l_lsm_set_tmp_tl
+            \right \}
+          }
+      }
+      { \left \{ #1 \right \} }
+  }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\union, \intersection}
+% Indexed union/intersection, \cs{union}\Oarg{indices}\Marg{set} and
+% \cs{intersection}\Oarg{indices}\Marg{set}; the index list's subscript
+% placement (stacked under the operator, or inline comma-separated) is
+% controlled by \cs{setupset}'s \texttt{subscript} key above, shared
+% with \cs{set} since both are the same family of indexed-operator
+% notation.
+% \begin{macrocode}
+\NewDocumentCommand{\intersection}{om}
+  { \lsm_unint_of:nnn \bigcap {#1} {#2} }
+
+\NewDocumentCommand{\union}{om}
+  { \lsm_unint_of:nnn \bigcup {#1} {#2} }
+
+\cs_new_protected:Npn \lsm_unint_of:nnn #1 #2 #3
+  {
+    \IfValueTF {#2}
+      {
+        \clist_set:Nn \l_lsm_unint_tmp_clist {#2}
+        \int_case:nn {\g_lsm_set_subscr_int}
+          {
+            {0}
+            {
+              \fp_set:Nn \l_lsm_unint_tmp_fp
+                {ceil{\clist_count:N \l_lsm_unint_tmp_clist - 1} * .1 + 1}
+              \scaleobj{\fp_to_decimal:N \l_lsm_unint_tmp_fp}{#1} \sb
+                { \substack { \clist_use:Nn \l_lsm_unint_tmp_clist { \\ } } }
+              #3
+            }
+            {1}
+            {
+              #1 \sb {\clist_use:Nn \l_lsm_unint_tmp_clist {,}}
+              #3
+            }
+          }
+      }
+      { #1 #3 }
+  }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\full, \maxfull, \maximal, \strict, \Triv}
+% A family of underset-variant renderers: each takes an optional
+% qualifier (bare, \texttt{*}, \texttt{**}, or a name ending in a
+% literal \texttt{-}, meaning ``compose this qualifier onto the
+% underset text'') and typesets \texttt{\#2} with a small bold-roman
+% label underneath indicating a variant of ``full''/``max''/``strict''/
+% ``triv'' respectively.
+% \begin{macrocode}
+\NewDocumentCommand{\full}{O{full} m}
+  { \lsm_show_full:nn {#1} {#2} }
+
+\cs_new_protected:Npn \lsm_show_full:nn #1 #2
+  {
+    \tl_set:Nn \l_lsm_full_tmp_tl {#1}
+    \str_if_eq:eeTF {\str_item:nn {#1} {-1}} {-}
+      { \tl_set:Nx \l_lsm_full_tmp_tl {{#1}max} }
+      {
+        \str_case:nn {#1}
+          {
+            {*}  {\tl_set:Nn \l_lsm_full_tmp_tl {(full,S-max-full,max-full)}}
+            {**} {\tl_set:Nn \l_lsm_full_tmp_tl {full~(S-max-full,max-full)}}
+          }
+      }
+    \underset {\textup{\l_lsm_full_tmp_tl}} {#2}
+  }
+
+\NewDocumentCommand{\maxfull}{O{max-full} m}
+  {
+    \lsm_maximal:nnnnnnn {max-full} {#1} {#2}
+      {full,max,max-full} {full,max}
+      {full~(max,max-full)} {full~(max)}
+  }
+
+\NewDocumentCommand{\maximal}{O{max} m}
+  { \lsm_maximal:nnnnnnn {max} {#1} {#2} {max} {} {max} {} }
+
+\cs_new_protected:Npn \lsm_maximal:nnnnnnn #1 #2 #3 #4 #5 #6 #7
+  {
+    \tl_set:Nn \l_lsm_maximal_tmp_tl {#2}
+    \str_if_eq:eeTF {\str_item:nn {#2} {-1}} {-}
+      { \tl_set:Nx \l_lsm_maximal_tmp_tl {{#2}#1} }
+      {
+        \str_case:nn {#2}
+          {
+            {*}   {\tl_set:Nn \l_lsm_maximal_tmp_tl {(#4)}}
+            {*x}  {\tl_set:Nn \l_lsm_maximal_tmp_tl {(#5)}}
+            {**}  {\tl_set:Nn \l_lsm_maximal_tmp_tl {#6}}
+            {**x} {\tl_set:Nn \l_lsm_maximal_tmp_tl {#7}}
+          }
+      }
+    \underset {\textup{\l_lsm_maximal_tmp_tl}} {#3}
+  }
+
+\NewDocumentCommand{\strict}{O{strict} m}
+  { \lsm_show_strict:nn {#1} {#2} }
+
+\cs_new_protected:Npn \lsm_show_strict:nn #1 #2
+  {
+    \tl_set:Nn \l_lsm_strict_tmp_tl {#1}
+    \str_if_eq:eeTF {\str_item:nn {#1} {-1}} {-}
+      { \tl_set:Nx \l_lsm_strict_tmp_tl {{#1}strict} }
+      {
+        \str_case:nn {#1}
+          {
+            {*}  {\tl_set:Nn \l_lsm_strict_tmp_tl {(semi-strict,strict)}}
+            {**} {\tl_set:Nn \l_lsm_strict_tmp_tl {semi-strict~(strict)}}
+          }
+      }
+    \underset {\textup{\l_lsm_strict_tmp_tl}} {#2}
+  }
+
+\NewDocumentCommand{\Triv}{o m}
+  { \lsm_triv:nn {#1} {#2} }
+
+\cs_new_protected:Npn \lsm_triv:nn #1 #2
+  {
+    \IfValueTF {#1}
+      {
+        \str_case:nnF {#1}
+          {
+            {full-submod-} {\underset{\mathbf{{#1}triv}}{#2}}
+            {full-}        {\underset{\mathbf{{#1}triv}}{#2}}
+            {submod-}      {\underset{\mathbf{{#1}triv}}{#2}}
+          }
+          { {\underset{#1\mathbf{triv}}{#2}} }
+      }
+      { {\underset{\mathbf{triv}}{#2}} }
+  }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\seqname}
+% Render a sequence/set/tuple name: bold upright for a multi-character
+% name, bold italic for a single character -- the same
+% length-based split \cs{catName} uses, kept as its own macro since it
+% is semantically a different kind of object (a sequence, not a
+% category) even though the rendering rule happens to coincide.
+% \begin{macrocode}
+\NewDocumentCommand{\seqname}{m}
+  { \lsm_seqname:n {#1} }
+
+\cs_new_protected:Npn \lsm_seqname:n #1
+  {
+    \int_compare:nTF {\tl_count:n {#1} > 1}
+      { {\mathbf{#1}} }
+      { {\mathbfit{#1}} }
+  }
+% \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\Id, \ID}
+% \emph{Not migrated} -- identity/inclusion-function rendering, kept
+% in the papers as paper-local commands since it is not semantic
+% markup for a mathematical construct in the sense the rest of this
+% package covers (identity functions are already nameable via
+% \cs{morphName}\Marg{Id} using this package's own morphism-naming
+% convention). Listed here only so a future reader of the source
+% papers' history knows this pair was deliberately left out of the
+% 2026-09-15 migration, not overlooked.
+% \end{macro}
+%
 %</package>
 % \end{implementation}
 %
