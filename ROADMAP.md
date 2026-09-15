@@ -39,10 +39,12 @@ digging through an old chat export.
   the two papers (`LCS.arXiv.V2.tex`, `M-atlas.tex`) that use this
   package. Fully migrated onto it as of 2026-09-15 (macros, then
   bibliography, then the last decade-old "belongs in package" block).
-  A further discussion about reorganizing these two papers themselves
-  (splitting/merging/restructuring — exact scope not yet re-confirmed)
-  is known to have happened but hasn't been located yet; add detail
-  here once recovered or re-had.
+  A further discussion — a recommendation from Claude to make M-Atlas
+  a prerequisite read before LCS — is known to have happened but was
+  not found on a real search of the claude.ai export (indexed at
+  `Personal/personal/CHAT-INDEX-2026.md`) or this lineage's own
+  86,000-line Claude Code transcript; likely lost in a ChaatGPT
+  session instead. Add detail here once recovered or re-had directly.
 
 ## How to use this file
 
