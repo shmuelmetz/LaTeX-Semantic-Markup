@@ -122,7 +122,7 @@ As of this writing, the documentation-PDF build
 (`pdflatex shmuelsemtex.dtx`) fails on at least one local MiKTeX
 installation with `! File ended while scanning use of \xmacro@code.`,
 reproducible even with a trivial `\begin{macrocode}\relax\end{macrocode}`
-under plain `ltxdoc` -- i.e. it is a local `doc.sty` (v3.0r,
+under plain `ltxdoc` -- i.e., it is a local `doc.sty` (v3.0r,
 2026-03-13) issue, not a problem in this package's `.dtx` content.
 `tex shmuelsemtex.ins` (the actual `.sty` extraction) is unaffected
 and has been verified to compile and run correctly in a real document.
