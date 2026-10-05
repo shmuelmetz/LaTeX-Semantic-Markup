@@ -2,7 +2,7 @@
 
 Semantic markup macros for LaTeX, written in expl3 (LaTeX3).
 
-Author: Shmuel (Seymour J.) Metz
+Author: Seymour J. Metz (H: Shmuel שמואל בן לייביש ולאה)
 (<https://mason.gmu.edu/~smetz3>)
 
 ## Purpose
