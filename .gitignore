@@ -26,6 +26,7 @@
 *.acr
 *.alg
 *.ist
+*.hd
 
 # Generated PDFs (committed separately when final)
 # Uncomment to ignore PDFs:
@@ -44,3 +45,6 @@ Thumbs.db
 *.swo
 .vscode/
 
+
+# Typeset documentation (built by make doc)
+*.pdf

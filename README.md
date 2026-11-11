@@ -58,18 +58,18 @@ $\chartName{U}$ $\atlasName{A}$ $\coordName{x}$  % coordinate charts/atlases/coo
 
 The full macro set, including which abbreviations each name uses and
 several open mathematical questions not yet settled, is documented
-in `shmuelsemtex.dtx` (build the typeset manual, once the local
-toolchain issue below is resolved, with `pdflatex shmuelsemtex.dtx`).
+in `shmuelsemtex.dtx` (see "Building" below for the typeset
+manual).
 
 ## Design goal: house-style portability
 
-The package's actual purpose, in the author's words: *if you submit
-a paper to different journals, you shouldn't have to change your
-markup to accommodate different house styles, other than changing
-setup.* Concretely: `\catName{Set}` (or any semantic macro, anywhere
+A paper submitted to different journals should not need different
+markup for their different house styles, only different setup.
+Concretely: `\catName{Set}` (or any semantic macro, anywhere
 in the document body) is byte-for-byte identical regardless of the
 target -- arXiv, journal X's house style, journal Y's house style.
-Only *setup* changes, in either of two equivalent forms:
+Only *setup* changes. The overall style is set as a package option
+or with `\setupsemanticmarkup`:
 
 ```latex
 \usepackage[style=default]{shmuelsemtex}   % at load time, built in
@@ -79,6 +79,9 @@ Only *setup* changes, in either of two equivalent forms:
 \setupsemanticmarkup{style=plain}             % anywhere in the body
 ```
 
+Quantifier and set-builder rendering have their own setup commands,
+`\setupquant` and `\setupset`.
+
 `style` defaults to `default` (no options needed at all). Every
 built-in style reassigns the package's complete set of internal
 presentation hooks as one coherent bundle -- never a partial patch
@@ -87,14 +90,10 @@ style later means adding one more style, not touching any document
 body. See `shmuelsemtex.dtx`, "Style switching", for the full
 mechanism (`l3keys2e`) and design rationale.
 
-The runtime form, `\setupsemanticmarkup`, matches an established,
-already-proven pattern already used in the source papers themselves
-(`LCS.arXiv.V2.tex`/`M-atlas.tex`'s own `\setupquant`/`\setupset`
-commands, built on plain `l3keys`, called once in the document body
-separately from every use site) -- not invented from scratch, and
-kept alongside the package-option form since both are legitimate
-(the runtime form additionally works mid-document, where a package
-option cannot).
+`\setupsemanticmarkup` follows the same pattern as `\setupquant` and
+`\setupset`: a runtime command built on plain `l3keys`, called away
+from the use sites, which also works mid-document, where a package
+option cannot.
 
 `test-body.tex` plus `test-style-default.tex` / `test-style-plain.tex`
 / `test-style-noopts.tex` demonstrate and verify the package-option
@@ -109,23 +108,39 @@ the use sites, mirroring the papers' own `\setupquant` usage.
 ## Building
 
 ```sh
-tex shmuelsemtex.ins      # extracts shmuelsemtex.sty from the .dtx
-pdflatex shmuelsemtex.dtx # typesets the documentation PDF
+rexx scripts/build-doc.rex shmuelsemtex.dtx
 ```
+
+`scripts/build-doc.rex` (ooRexx 5) works in the directory holding the
+`.dtx`. It extracts `shmuelsemtex.sty` with `tex shmuelsemtex.ins`,
+runs `xelatex shmuelsemtex.dtx`, builds the index and change history
+with `makeindex`, and reruns XeLaTeX until the cross-references and
+page references settle (normally three passes in all). By hand:
+
+```sh
+tex shmuelsemtex.ins
+xelatex shmuelsemtex.dtx
+makeindex -s gind.ist -o shmuelsemtex.ind shmuelsemtex.idx
+makeindex -s gglo.ist -o shmuelsemtex.gls shmuelsemtex.glo
+xelatex shmuelsemtex.dtx
+xelatex shmuelsemtex.dtx
+```
+
+The documentation loads `fontspec` for the Hebrew in the author
+line, so it needs XeLaTeX (or LuaLaTeX); `pdflatex` stops with a
+fontspec error. It also loads `cleveref`, and writes cross-references
+as "section N (Title) on page P", as the papers do.
 
 The generated `shmuelsemtex.sty` is not committed to this
 repository (see `.gitignore`) -- it is reproducible from
 `shmuelsemtex.dtx` via the `.ins` file above, per standard
 practice for `.dtx`-based packages.
 
-As of this writing, the documentation-PDF build
-(`pdflatex shmuelsemtex.dtx`) fails on at least one local MiKTeX
-installation with `! File ended while scanning use of \xmacro@code.`,
-reproducible even with a trivial `\begin{macrocode}\relax\end{macrocode}`
-under plain `ltxdoc` -- i.e., it is a local `doc.sty` (v3.0r,
-2026-03-13) issue, not a problem in this package's `.dtx` content.
-`tex shmuelsemtex.ins` (the actual `.sty` extraction) is unaffected
-and has been verified to compile and run correctly in a real document.
+In the `.dtx`, every `\begin{macrocode}` and `\end{macrocode}` line
+must be `%` followed by exactly four spaces: `doc` recognizes the end
+of a code block only in that form, and with any other spacing it
+reads on to the end of the file (`! File ended while scanning use of
+\xmacro@code.`).
 
 ## Repository structure
 
@@ -146,9 +161,9 @@ test-morphname-decoration.tex -- same regression test for \morphName/
 scripts/check_arg_consistency.py -- reusable tool: given a macro name and
                              one or more real .tex files, checks every
                              unique real argument against
-                             \lsm_if_arbitrary_symbol:nTF before trusting a
-                             rename or a heuristic change (this is the tool
-                             that found the \catName/\morphName bugs above)
+                             \lsm_if_arbitrary_symbol:nTF, for checking a
+                             rename or a change to the classification test
+scripts/build-doc.rex    -- builds the documentation PDF (see Building)
 ```
 
 ## Related
