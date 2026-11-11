@@ -21,7 +21,7 @@
 \TeXXeTstate=1
 \setlength\emergencystretch{3em}
 \usepackage{cleveref}
-% "<cref> (<name>) on page <n>", as in the papers' own \pagecrefn
+% "<cref> (<name>) on page <n>"
 \NewDocumentCommand\pagecrefn{m}{\cref{#1} (\nameref{#1}) on \cpageref{#1}}
 \begin{document}
   \DocInput{shmuelsemtex.dtx}
@@ -30,7 +30,7 @@
 % \fi
 %
 % \title{The \pkg{shmuelsemtex} package}
-% \author{Seymour J. Metz (H: Shmuel {\hebrewfont\beginR שמואל בן לייביש ולאה\endR}) \\ \url{https://mason.gmu.edu/~smetz3}}
+% \author{Seymour J. Metz (H: Shmuel {\hebrewfont\beginR שמואל בן לייביש ולאה\endR}) \\ \url{https://mason.gmu.edu/~smetz3} \\ arXiv: \url{http://arxiv.org/a/metz_s_1} \\ Stack Exchange: \url{https://stackexchange.com/users/8873368/shmuel} \\ \TeX{} Stack Exchange: \url{https://tex.stackexchange.com/users/110591/shmuel}}
 % \date{2026-09-01}
 %
 % \maketitle
@@ -96,10 +96,21 @@
 %   (\pagecrefn{sec:style-switching}), never per use.
 % \end{enumerate}
 %
+% \section{Background}
+% \label{sec:background}
+%
+% The notation in this package was first written as private macros in
+% two papers by its author, \emph{Local Coordinate Spaces: a proposed
+% unification of manifolds with fiber bundles, and associated machinery}
+% \cite{lcs} and \emph{Towards a taxonomy of atlases and of morphisms
+% between them} \cite{matlas}. Those macros were refactored into this
+% package, which the papers now load; \pagecrefn{sec:history} gives the
+% details.
+%
 % \section{Internal naming}
 %
 % Package-internal \pkg{expl3} functions use the module prefix
-% \texttt{lsm} (for \emph{latex-shmuelsemtex}), per the naming
+% \texttt{lsm} (for \LaTeX\ Semantic Markup), per the naming
 % convention \texttt{\textbackslash lsm\_}\emph{module}\texttt{\_}%
 % \emph{description}\texttt{:}\emph{args}. These are not intended for
 % direct use in documents.
@@ -247,8 +258,8 @@
 %     category-theoretic sense)
 %   \item \texttt{obj} (Object) --- objects of a category
 %   \item \texttt{morph} (Morphism) --- morphisms between objects
-%   \item \texttt{chart} --- local coordinate charts
-%   \item \texttt{atlas} --- atlases of coordinate charts
+%   \item \texttt{chart} --- charts
+%   \item \texttt{atlas} --- atlases of charts
 %   \item \texttt{coord} (Coordinate) --- coordinate systems/functions
 % \end{itemize}
 % What follows documents what each macro \emph{means} and why it is
@@ -281,9 +292,48 @@
 % (e.g.\ \cs{catName}\Arg{C}) or a long, conventionally-fixed name
 % (e.g.\ \cs{catName}\Arg{Set}). The author writes the same macro
 % either way and never separately decides a typeface: see the
-% \texttt{cat} vs.\ \texttt{catname} discussion below for why this is
+% discussion below of symbols and names for why this is
 % one auto-detecting macro rather than two.
 % \end{function}
+%
+% \begin{quote}
+% \textbf{One macro for symbols and names:} a category may be written
+% with an arbitrary symbol, such as \texttt{C}, or with a name, such as
+% \texttt{Set} or \texttt{Top}. The difference in typeface is a
+% convention about the length of the name, with no semantic distinction
+% behind it. Two macros would force the author to decide a typographic
+% question as a separate step from expressing what they mean.
+% \cs{catName} is therefore a single macro that decides for itself: the
+% author writes \cs{catName}\Arg{Set} or \cs{catName}\Arg{C}
+% identically and never chooses upright vs.\ script. Under the
+% \texttt{default} style an arbitrary symbol renders in script and a
+% name renders bold upright, by the test in
+% \pagecrefn{sec:cat-symbols}; see \pagecrefn{sec:style-switching} for
+% how a different style swaps that choice as a unit, without the author
+% touching \cs{catName}\Arg{Set} itself.
+% \end{quote}
+%
+% \begin{quote}
+% \label{sec:cat-symbols}
+% \textbf{Symbols vs.\ names:} token count alone does not separate
+% symbols from names. \texttt{C\^{}2}, \texttt{E\^{}i} and
+% \texttt{XY} (a product-space category \(X \times Y\)) are arbitrary
+% symbols, yet none is a single token.
+% What distinguishes them from \texttt{Set}/\texttt{Top} is whether
+% the argument reads as a \emph{decorated or concatenated symbol} (a
+% base letter carrying a sub/superscript, or two symbol-like letters
+% standing for a product) versus a genuine multi-letter \emph{word}.
+% \cs{catName} tests, in order: (1) does the argument contain \texttt{\^{}} or \texttt{\_{}}
+% (a sub/superscript decoration) --- if so, script, regardless of what
+% the decoration itself contains (this is why \texttt{E\^{}i}'s
+% lower-case \texttt{i} never has to be examined: the whole argument
+% is already settled as ``decorated symbol'' by the presence of
+% \texttt{\^{}} alone); (2) is it a single token --- if so, script;
+% (3) is every letter in the argument already upper case ---
+% if so, script (this is what catches \texttt{XY}: two upper-case
+% letters standing for a product, not a lower-case-bearing word); (4)
+% otherwise, bold upright.
+% \end{quote}
 %
 % \begin{function}{\catSeqName}
 % \begin{syntax}
@@ -299,106 +349,6 @@
 % conflation this package exists to remove.
 % \end{function}
 %
-% This is exactly the distinction the source papers' own formal
-% Conventions/Nomenclature section (\texttt{LCS.arXiv.V2.tex}, the
-% \texttt{\textbackslash part\{Conventions\}} beginning at its
-% \texttt{part:conv} label; identical in \texttt{M-atlas.tex}) draws,
-% verbatim:
-% \begin{verbatim}
-% Bold upper case script letters will refer to
-% sequences of categories, e.g.,
-%     $\catseqname{A} \defeq (\catname{A}_\alpha, \alpha \in \Alpha)$.
-% \end{verbatim}
-% Supporting inline evidence, at the macro definitions themselves: the
-% papers' \texttt{catname}/\texttt{catseqname} pair is introduced
-% under the single comment ``Select font for categories and sequences
-% of categories,'' and separately their \texttt{subcat}/\texttt{SUBCAT}
-% pair is commented ``Subcategory'' / ``Sequence of subcategories.''
-% The single-vs-sequence distinction is a formally stated rule in the
-% source mathematics, not just an inferred pattern.
-%
-% \begin{quote}
-% \textbf{cat vs.\ catname:} the source papers also use a
-% separate, bold-roman \texttt{cat} macro (distinct from
-% \texttt{catname}) for names like \texttt{Set} and \texttt{Top}.
-% Verbatim, from the source, the macro itself:
-% \begin{verbatim}
-% % Names of standard categories
-% \newcommand \cat [1] {\mathbf{#1}}
-% \end{verbatim}
-% and, verbatim, the comments at its two call sites:
-% \begin{verbatim}
-% %Use \cat{Top} for the standard category Top.
-% %Use \cat{Set} for the standard category Set.
-% \end{verbatim}
-% The formal Conventions/Nomenclature section cited above gives the
-% actual governing rule, verbatim, and it is not ``standard vs.\
-% arbitrary category'': it is a rule about name \emph{length}, already
-% used elsewhere in the source (see the \texttt{mathvarname} comment,
-% ``Set long names upright, short names italic''), here applied
-% specifically to categories:
-% \begin{verbatim}
-% Upright Latin letters will be used for long names.
-% \end{verbatim}
-% (immediately followed, in the source, by the \texttt{Ar}/%
-% \texttt{Hom}/\texttt{Mor}/\texttt{Ob} definitions and by
-% ``\texttt{cat}\Arg{Set} and \texttt{cat}\Arg{Top} are the
-% conventional categories of sets and topological spaces''). So
-% \texttt{Set}/\texttt{Top} are bold-upright because they are
-% \emph{long} (multi-character) names, not because they are a
-% distinct semantic kind of category in their own right.
-%
-% Crucially, the source itself already treats this as mechanical, not
-% authorial: \texttt{mathvarname} is not two macros the paper author
-% chooses between, it is \emph{one} macro that measures the argument's
-% length (via \texttt{xstring}'s \texttt{\textbackslash StrLen}) and
-% picks the typeface itself. That settles the design question for
-% this package too, on the journal-portability test in
-% \pagecrefn{sec:purpose}: since
-% ``long vs.\ short'' here is a mechanical convention with no
-% underlying semantic distinction (it is not really ``standard
-% category'' vs.\ ``arbitrary category''), offering two macros
-% (\cs{catName} and, say, \cs{catStandardName}) would force the
-% author to decide a typographic question --- ``is this name long
-% enough to count as `standard'?'' --- as a separate step from
-% expressing what they mean, exactly the conflation this package
-% exists to remove. The correct design is therefore a \emph{single}
-% macro, \cs{catName}, that auto-detects: the author writes
-% \cs{catName}\Arg{Set} or \cs{catName}\Arg{C} identically and never
-% chooses upright vs.\ script. Under the \texttt{default} style an
-% arbitrary symbol renders in script and a name renders bold upright,
-% by the test in \pagecrefn{sec:cat-symbols} (built on
-% \pkg{expl3}-native tests, with no \pkg{xstring} dependency) ---
-% see \pagecrefn{sec:style-switching} for how even \emph{that} choice is
-% swapped as a unit by a different style, without the author touching
-% \cs{catName}\Arg{Set} itself.
-% \end{quote}
-%
-% \begin{quote}
-% \label{sec:cat-symbols}
-% \textbf{Symbols vs.\ names:} token count alone does not match the
-% source papers' convention. \texttt{catname\{C\^{}2\}},
-% \texttt{catname\{E\^{}i\}} and \texttt{catname\{XY\}} (a
-% product-space category \(X \times Y\)) are arbitrary symbols in the
-% papers, called via \texttt{catname}, yet none is a single token.
-% What distinguishes them from \texttt{Set}/\texttt{Top} is whether
-% the argument reads as a \emph{decorated or concatenated symbol} (a
-% base letter carrying a sub/superscript, or two symbol-like letters
-% standing for a product) versus a genuine multi-letter \emph{word}.
-% \cs{catName} tests, in order: (1) does the argument contain \texttt{\^{}} or \texttt{\_{}}
-% (a sub/superscript decoration) --- if so, script, regardless of what
-% the decoration itself contains (this is why \texttt{E\^{}i}'s
-% lower-case \texttt{i} never has to be examined: the whole argument
-% is already settled as ``decorated symbol'' by the presence of
-% \texttt{\^{}} alone); (2) is it a single token --- if so, script;
-% (3) is every letter in the argument already upper case ---
-% if so, script (this is what catches \texttt{XY}: two upper-case
-% letters standing for a product, not a lower-case-bearing word); (4)
-% otherwise, bold upright. This classifies all 3413
-% \texttt{catname}/\texttt{cat} call sites in the two papers (17
-% distinct arguments) the way the papers' own choice of macro does.
-% \end{quote}
-%
 % \subsection{Objects}
 %
 % \begin{function}{\objName}
@@ -406,17 +356,7 @@
 % \cs{objName}\marg{text}
 % \end{syntax}
 % \cs{objName}\Arg{text} (Obj = Object) is the display name of an
-% object of a category, corresponding to what the source papers call
-% \texttt{Ob}\Arg{catname\Arg{C}}. Verbatim, from the source:
-% \begin{verbatim}
-% %Object of category
-% \newcommand \Ob {\mathrm{Ob}}
-% \end{verbatim}
-% and, from the papers' later formal definitions:
-% \begin{verbatim}
-% \item[$\Ob(\catname{C})$]
-% All objects of $\catname{C}$
-% \end{verbatim}
+% object of a category.
 % Under the \texttt{default} style the presentation is unstyled
 % (objects are typically bare math-mode variables in practice); the
 % macro exists so that document text records the semantic role even
@@ -430,89 +370,21 @@
 % \cs{morphName}\marg{text}
 % \end{syntax}
 % \cs{morphName}\Arg{text} (Morph = Morphism) is the display
-% name/label of a morphism (e.g.\ a function symbol). The
-% \texttt{morph} prefix follows the source papers' own explicit
-% terminology choice, verbatim:
-% \begin{verbatim}
-% This paper uses the term morphism in preference to arrow, but uses
-% the conventional $\Ar$.
-% \end{verbatim}
+% name/label of a morphism (e.g.\ a function symbol).
 % \end{function}
-%
-% \begin{quote}
-% \textbf{The papers' function names:} besides a disabled, pre-%
-% \pkg{expl3} definition (\texttt{\% \textbackslash newcommand
-% \textbackslash funcname [1] \{\textbackslash mathit\{\#1\}\}}), both
-% source papers have an active \pkg{expl3} definition (identical in
-% \texttt{LCS.arXiv.V2.tex} and \texttt{M-atlas.tex}):
-% \begin{verbatim}
-% \NewDocumentCommand{\funcname}{m} { \funcname:n {#1} }
-% \cs_new:Npn \funcname:n #1
-%   {
-%     \int_compare:nTF {\tl_count:n{#1} > 1}
-%       { {\mathrm{#1}} }
-%       { {\mathit{#1}} }
-%   }
-% \end{verbatim}
-% used throughout both papers (4265 call sites combined). It
-% auto-detects the way \cs{catName} does: a single-token argument (an
-% ordinary function symbol, e.g.\ \cs{funcname}\Arg{f}) renders in
-% \emph{italic}; a multi-token argument renders \emph{upright}.
-% \cs{morphName} matches this convention.
-% \end{quote}
 %
 % \begin{quote}
 % \textbf{A morphism vs.\ the class of all morphisms:} by
 % the standard definition, a single morphism always has a specific
-% source and target --- it is an element of a particular Hom-set.
+% source and target --- it is an element of a particular hom-set.
 % That is a different notion from ``the class of all morphisms/arrows
 % in a category,'' which has no reference to specific endpoints.
 % \cs{morphName} (a label for one morphism, e.g.\ $f$) is already
 % built around the correct, standard reading.
 %
-% The source papers name both notions but are, in one place,
-% internally inconsistent about which name goes with which. Their
-% inline comment directly above the \texttt{Mor} definition reads,
-% verbatim:
-% \begin{verbatim}
-% %Morphisms between two objects
-% \newcommand \Mor {\mathrm{Mor}}
-% \end{verbatim}
-% --- the correct, standard reading (a Hom-set, between two specific
-% objects). But the papers' later formal prose defines the same
-% macro differently, verbatim:
-% \begin{verbatim}
-% \item[$\Mor(\catname{C})$]
-% All morphisms of $\catname{C}$.
-% Synonymous with $\Ar(\catname{C})$.
-% \end{verbatim}
-% --- treating \texttt{Mor} as a synonym of \texttt{Ar} (the class of
-% \emph{all} morphisms), which is the imprecise reading. For
-% reference, the papers' formal definitions of the other two related
-% operators, verbatim:
-% \begin{verbatim}
-% \item[$\Ar(\catname{C})$]
-% All morphisms of $\catname{C}$
-% \item[$\Hom_\catname{C}(a,b)$]
-% All morphisms of $\catname{C}$ from $a$ to $b$
-% \end{verbatim}
-%
-% So: \texttt{Ar} denotes the class of all morphisms of a category;
-% \texttt{Hom} denotes the Hom-set of morphisms between two specific
-% objects (matching the \texttt{Mor} \emph{comment}, not the
-% \texttt{Mor} \emph{formal definition}); and ``a morphism'' in the
-% ordinary sense is always an element of some Hom-set, i.e.\ it always
-% has a specific source and target. \texttt{Ar} and \texttt{Hom} are
-% not the same kind of thing and should not be conflated in this
-% package, even though the source papers blur the line in this one
-% spot. (That blurring is an issue in the papers themselves,
-% \texttt{LCS.arXiv.V2.tex}/\texttt{M-atlas.tex}, to be fixed there
-% if desired --- it is not this package's problem to solve,
-% only something to have correctly understood here.)
-%
-% \texttt{morphAll} (the \texttt{Ar} reading: all morphisms of a
-% category) and \texttt{morphBetween} (the \texttt{Hom} reading:
-% morphisms from one specific object to another) are natural names
+% \texttt{morphAll} (all morphisms of a category) and
+% \texttt{morphBetween} (morphisms from one specific object to
+% another, a hom-set) are natural names
 % for these two notions but are not built here, pending a decision on
 % naming.
 % \end{quote}
@@ -523,14 +395,11 @@
 % (\pagecrefn{sec:cat-symbols}): decoration (\texttt{\^{}}/%
 % \texttt{\_{}}) or single token or all-upper-case letters -> italic
 % (or bold italic); otherwise -> upright (or bold upright). Single
-% tokens include single \emph{control sequences} such as \(\pi\) and
-% \(\rho\), whatever the length of their names. As with
-% \texttt{catname\{C\^{}2\}}, the papers' \texttt{funcseqname\{f\^{}2\}}
-% is an arbitrary symbol though not a single token: a decorated base
-% symbol is still an arbitrary symbol, not a name. The test classifies
-% all 5409 \texttt{funcname}/\texttt{funcseqname} call sites in the
-% two papers (11 distinct arguments) the way the papers' own choice of
-% macro does.
+% tokens include single \emph{control sequences} such as \cs{pi} and
+% \cs{rho}, whatever the length of their names. As with
+% \texttt{C\^{}2}, \texttt{f\^{}2} is an arbitrary symbol though not
+% a single token: a decorated base symbol is still an arbitrary symbol,
+% not a name.
 % \end{quote}
 %
 % \begin{function}{\morphSeqName}
@@ -544,37 +413,42 @@
 % vs.\ \cs{catName}, this is a genuinely distinct \pkg{expl3} function
 % from \cs{morphName} (\cs{lsm_morph_seqname:n}, not
 % \cs{lsm_morph_name:n} with a flag): a sequence of functions is not
-% itself a function. Auto-detects the same way \cs{morphName} does
-% (matching the source papers' active \texttt{funcseqname}, which
-% applies the identical test as \texttt{funcname} but bold throughout
-% --- see the note on function symbols above). See the discussion
+% itself a function. Auto-detects the same way \cs{morphName} does,
+% but bold throughout --- see the note on function symbols above.
+% See the discussion
 % below.
 % \end{function}
+%
+% \begin{quote}
+% \textbf{morphSeqName vs.\ morphName:} a sequence of
+% functions is not a function, the same principle as the
+% \cs{catSeqName}\slash \cs{catName} and compose/compose-head/compose-tail
+% distinctions in this section. \cs{morphSeqName} is
+% built accordingly as a genuinely
+% distinct \pkg{expl3} function, \cs{lsm_morph_seqname:n}, not
+% \cs{lsm_morph_name:n} called with a different flag.
+% \end{quote}
 %
 % \begin{function}{\morphMono}
 % \begin{syntax}
 % \cs{morphMono}
 % \end{syntax}
 % \cs{morphMono} (Mono = Monomorphism) is the arrow symbol for a
-% monomorphism, corresponding to the source papers' \texttt{into}.
+% monomorphism.
 % \end{function}
 %
 % \begin{quote}
-% \textbf{Tail, not hook:} the source papers' Conventions section
-% says: ``One with a hook ($A \hookrightarrow B$) represents an
-% inclusion map. One with a tail ($A \rightarrowtail B$) represents a
-% monomorphism.'' These are two distinct notions with two distinct
+% \textbf{Tail, not hook:} a hook ($A \hookrightarrow B$) represents
+% an inclusion map. A tail ($A \rightarrowtail B$) represents a
+% monomorphism. These are two distinct notions with two distinct
 % symbols (every inclusion is a monomorphism, but not every
 % monomorphism is an inclusion); conflating them under one glyph is
 % exactly the typography/semantics conflation this package exists to
 % prevent. \cs{morphMono} therefore renders as \cs{rightarrowtail}
 % (↣, from \pkg{amssymb}; see \pagecrefn{sec:font-guard}), matching
-% the papers' own \texttt{into} (a thin tail-arrow from \pkg{xy},
-% near-identical to \cs{rightarrowtail}) and the wider category-theory
+% the category-theory
 % convention that draws the same hook-vs-tail distinction.
-% \cs{hookrightarrow} is not otherwise used by this package; a
-% dedicated \cs{morphInclusion} for the separate ``inclusion map''
-% concept is a natural future addition, not built here.
+% The hook arrow is \cs{morphInclArrow}.
 % \end{quote}
 %
 % \begin{function}{\morphEpi}
@@ -582,7 +456,7 @@
 % \cs{morphEpi}
 % \end{syntax}
 % \cs{morphEpi} (Epi = Epimorphism) is the arrow symbol for an
-% epimorphism, corresponding to the source papers' \texttt{onto}.
+% epimorphism.
 % This is kept distinct from \cs{morphMono} because mono/epi is a
 % real mathematical distinction (injective vs.\ surjective in the
 % relevant sense), not a choice of arrowhead glyph.
@@ -595,8 +469,7 @@
 % \cs{morphCompose} is the general morphism-composition operator
 % (default $\circ$). An optional argument
 % \cs{morphCompose}\oarg{label} places \texttt{label} over the
-% operator, mirroring how composition is annotated in the source
-% papers.
+% operator.
 % \end{function}
 %
 % \begin{function}{\morphComposeHead}
@@ -604,7 +477,9 @@
 % \cs{morphComposeHead}\oarg{label}
 % \end{syntax}
 % \cs{morphComposeHead} (default $\odot$) is composition taken from
-% the head of a sequence of functions.
+% the head of a sequence of functions. An optional argument
+% \cs{morphComposeHead}\oarg{label} places \texttt{label} over the
+% operator.
 % \end{function}
 %
 % \begin{function}{\morphComposeTail}
@@ -612,36 +487,13 @@
 % \cs{morphComposeTail}\oarg{label}
 % \end{syntax}
 % \cs{morphComposeTail} (default $\cdot$) is composition taken from
-% the tail of a sequence of functions. Both take the same optional
-% label argument as \cs{morphCompose}.
+% the tail of a sequence of functions. An optional argument
+% \cs{morphComposeTail}\oarg{label} places \texttt{label} over the
+% operator.
 % \end{function}
 %
 % \begin{quote}
-% \textbf{Three distinct compositions:} the source papers define
-% \emph{three} composition operators, verbatim:
-% \begin{verbatim}
-% % Extended composition operators for function sequences
-% \newcommand {\compose} [1] [def]
-%    { \ifthenelse {\equal{#1}{def}}
-%        {\mathbin \circ}
-%        {\mathbin{\overset{#1} {\circ}}}
-%    }
-%
-% % Compose head
-% \newcommand {\composeh} [1] [def]
-%    { \ifthenelse {\equal{#1}{def}}
-%        {\mathbin \odot}
-%        {\mathbin{\overset{#1} {\odot}}}
-%    }
-%
-% % Compose tail
-% \newcommand {\composet} [1] [def]
-%    { \ifthenelse {\equal{#1}{def}}
-%        {\mathbin \cdot}
-%        {\mathbin{\overset{#1} {\cdot}}}
-%    }
-% \end{verbatim}
-% Plain composition, ``compose head,'' and ``compose
+% \textbf{Three distinct compositions:} plain composition, ``compose head,'' and ``compose
 % tail'' are genuinely different mathematical operations, not
 % glyph/styling variants of one operation. They are built accordingly
 % as three separate \pkg{expl3} functions ---
@@ -653,29 +505,56 @@
 % typography/semantics conflation this package exists to remove.
 % \end{quote}
 %
-% \begin{quote}
-% \textbf{morphSeqName vs.\ morphName:} a sequence of
-% functions is not a function, the same principle as the
-% \cs{catSeqName}\slash \cs{catName} and compose/compose-head/compose-tail
-% distinctions above. It is a rule stated outright in the source
-% papers' own formal Conventions/Nomenclature section
-% (\texttt{\textbackslash part\{Conventions\}}, label
-% \texttt{part:conv}; identical text in both \texttt{LCS.arXiv.V2.tex}
-% and \texttt{M-atlas.tex}), verbatim:
-% \begin{verbatim}
-% Bold lower case italic letters will refer to sets, sequences and
-% tuples of functions, e.g.,
-%     $\funcseqname{f} \defeq (\funcname{f}_1, \funcname{f}_2)$.
-% \end{verbatim}
-% i.e.\ \texttt{funcname} (a single function) and \texttt{funcseqname}
-% (a sequence/tuple of functions) are explicitly distinguished as
-% different kinds of object, bold vs.\ not, in the papers' own stated
-% rules, as well as by the disabled macro pair commented ``Select font
-% for functions and sequences of functions''. \cs{morphSeqName} is
-% built accordingly as a genuinely
-% distinct \pkg{expl3} function, \cs{lsm_morph_seqname:n}, not
-% \cs{lsm_morph_name:n} called with a different flag.
-% \end{quote}
+% \begin{function}{\morphId}
+% \begin{syntax}
+% \cs{morphId}\oarg{object}
+% \end{syntax}
+% \cs{morphId} (Id = Identity) is the identity morphism. The optional
+% \meta{object} is the object it acts on, written as a subscript:
+% $\operatorname{Id}_A$. Without it, the bare $\operatorname{Id}$ is
+% written.
+% \end{function}
+%
+% \begin{function}{\morphSeqId}
+% \begin{syntax}
+% \cs{morphSeqId}\oarg{object}
+% \end{syntax}
+% \cs{morphSeqId} is a sequence or tuple of identity morphisms, in
+% bold: $\operatorname{\mathbf{Id}}_A$. The optional \meta{object} is
+% written as in \cs{morphId}.
+% \end{function}
+%
+% \begin{function}{\morphIncl}
+% \begin{syntax}
+% \cs{morphIncl}\oarg{included,containing}
+% \end{syntax}
+% \cs{morphIncl} (Incl = Inclusion) is the inclusion map of
+% \meta{included} into \meta{containing}, written with the included
+% object as a superscript and the containing object as a subscript:
+% $\operatorname{Id}^A_B$. The optional argument is a comma list of at
+% most two items; more than two is an error. With one item, only the
+% superscript is written; with none, the bare $\operatorname{Id}$. An
+% object containing a comma goes in braces. Inclusion is a separate
+% command from \cs{morphId}, even where the two render alike, so that
+% a style can tell them apart.
+% \end{function}
+%
+% \begin{function}{\morphSeqIncl}
+% \begin{syntax}
+% \cs{morphSeqIncl}\oarg{included,containing}
+% \end{syntax}
+% \cs{morphSeqIncl} is a sequence or tuple of inclusion maps, in bold:
+% $\operatorname{\mathbf{Id}}^A_B$. The optional argument is as in
+% \cs{morphIncl}.
+% \end{function}
+%
+% \begin{function}{\morphInclArrow}
+% \begin{syntax}
+% \cs{morphInclArrow}
+% \end{syntax}
+% \cs{morphInclArrow} is the arrow symbol for an inclusion map,
+% $\hookrightarrow$, distinct from the tail arrow of \cs{morphMono}.
+% \end{function}
 %
 % \subsection{Charts, atlases, and coordinates}
 %
@@ -683,15 +562,16 @@
 % \begin{syntax}
 % \cs{chartName}\marg{text}
 % \end{syntax}
-% \cs{chartName}\Arg{text} is the display name of a local coordinate
-% chart.
+% \cs{chartName}\Arg{text} is the display name of a chart: a map
+% relating part of a space to a model space.
 % \end{function}
 %
 % \begin{function}{\atlasName}
 % \begin{syntax}
 % \cs{atlasName}\marg{text}
 % \end{syntax}
-% \cs{atlasName}\Arg{text} is the display name of an atlas of charts.
+% \cs{atlasName}\Arg{text} is the display name of an atlas: a
+% collection of charts.
 % \end{function}
 %
 % \begin{function}{\coordName}
@@ -703,12 +583,7 @@
 % \end{function}
 %
 % \begin{quote}
-% \textbf{Placeholder, thin evidence:} the source papers use only a
-% predicate \texttt{isAtl} (``Propositional function isAtl(A,E,C)'')
-% and an untyped \texttt{Atl} macro (``Category of atlases from E to
-% C'') for this cluster --- there is no existing inline precedent for
-% chart/atlas/coordinate \emph{naming} to generalize from, unlike the
-% category and morphism families above. These three commands are
+% \textbf{Placeholder:} these three commands are
 % provided as minimal, unstyled hooks under the \texttt{default} style
 % so the semantic distinction exists in document markup from the
 % start; being ordinary presentation hooks like every other macro in
@@ -789,7 +664,9 @@
 % \end{syntax}
 % Set-builder notation: \meta{elements} in braces, followed, when
 % \meta{propositions} is given, by the separator and the
-% propositions, a comma list joined with $\land$. The starred form
+% propositions. \meta{propositions} is a comma list; each comma is
+% typeset as $\land$, so \texttt{\textbackslash set\{x\}[p,q]}
+% renders as $\{x \mid p \land q\}$. The starred form
 % splits the line between the elements and the propositions, for use
 % inside a \env{multline} environment, since \LaTeX{} cannot otherwise
 % break a line inside a macro argument. The star follows the
@@ -824,55 +701,6 @@
 % placement is set with \cs{setupset}'s \texttt{subscript} key.
 % \end{function}
 %
-% \subsection{Underset variants}
-%
-% \begin{function}{\full, \maxfull, \maximal, \strict, \Triv}
-% \begin{syntax}
-% \cs{full}\oarg{qualifiers}\marg{name}
-% \cs{maxfull}\oarg{qualifiers}\marg{name}
-% \cs{maximal}\oarg{qualifiers}\marg{name}
-% \cs{strict}\oarg{qualifiers}\marg{name}
-% \cs{Triv}\oarg{qualifiers}\marg{name}
-% \end{syntax}
-% Each renders \meta{name} with a small label underneath, naming a
-% variation of ``full'' (\cs{full}), ``max'' or ``full''
-% (\cs{maxfull}), ``max'' (\cs{maximal}), ``strict'' (\cs{strict}) or
-% bold ``triv'' (\cs{Triv}). The optional \meta{qualifiers} argument
-% selects the label: an argument ending in a literal \texttt{-} is
-% composed onto the label text, and any other argument not listed is
-% used as the label as it stands.
-% \begin{center}
-% \begin{tabular}{lll}
-% Command & Qualifier & Label \\
-% \hline
-% \cs{full} & none & full \\
-%   & \texttt{*} & (full,S-max-full,max-full) \\
-%   & \texttt{**} & full (S-max-full,max-full) \\
-%   & \meta{q}\texttt{-} & \meta{q}\texttt{-}max \\
-% \cs{maxfull} & none & max-full \\
-%   & \texttt{*} & (full,max,max-full) \\
-%   & \texttt{*x} & (full,max) \\
-%   & \texttt{**} & full (max,max-full) \\
-%   & \texttt{**x} & full (max) \\
-%   & \meta{q}\texttt{-} & \meta{q}\texttt{-}max-full \\
-% \cs{maximal} & none & max \\
-%   & \texttt{*} & (max) \\
-%   & \texttt{*x} & () \\
-%   & \texttt{**} & max \\
-%   & \texttt{**x} & (empty) \\
-%   & \meta{q}\texttt{-} & \meta{q}\texttt{-}max \\
-% \cs{strict} & none & strict \\
-%   & \texttt{*} & (semi-strict,strict) \\
-%   & \texttt{**} & semi-strict (strict) \\
-%   & \meta{q}\texttt{-} & \meta{q}\texttt{-}strict \\
-% \cs{Triv} & none & \textbf{triv} \\
-%   & \texttt{full-submod-}, \texttt{full-}, \texttt{submod-} &
-%     \textbf{\meta{q}\texttt{-}triv} \\
-%   & other & \meta{q}\textbf{triv} \\
-% \end{tabular}
-% \end{center}
-% \end{function}
-%
 % \subsection{Sequence names}
 %
 % \begin{function}{\seqname}
@@ -885,50 +713,30 @@
 % a sequence is a different kind of object from a category.
 % \end{function}
 %
-% \subsection{Related commands not provided}
-%
-% \textbf{The papers' former names} are replaced by this package's
-% names; see \pagecrefn{sec:history}.
-%
-% \textbf{Document utilities.} The papers' \texttt{\textbackslash
-% pagecrefn} (a cross-reference written as ``section N (Title) on page
-% P'') and \texttt{\textbackslash donotbreak}\slash
-% \texttt{\textbackslash nobreaks} (keep a phrase on one line) control
-% the wording and line breaking of a document, not the presentation of
-% a mathematical construct, so they belong to the document, not to this
-% package.
-%
-% \textbf{Identity and inclusion functions.} The papers'
-% \texttt{\textbackslash Id} (``Identity or inclusion function'',
-% written $\operatorname{Id}$ with optional sub- and superscripts) and
-% \texttt{\textbackslash ID} (``Sequence of Identity or Inclusion
-% functions'', in bold) remain in the papers; the package does not yet
-% provide them.
-%
-% \textbf{Inclusion maps.} The package has no command for an inclusion
-% map; the papers write its hook arrow as \cs{hookrightarrow}, which is
-% distinct from \cs{morphMono}'s tail arrow.
-%
 % \section{History}
 % \label{sec:history}
 %
 % The notation in this package was first written as private macros in
 % two papers by the package's author, \emph{Local Coordinate Spaces: a
-% proposed unification of manifolds and fiber bundles, and associated
+% proposed unification of manifolds with fiber bundles, and associated
 % machinery} \cite{lcs} and \emph{Towards a taxonomy of atlases and of
 % morphisms between them} \cite{matlas}, which share one set of
 % definitions. The papers' macros for categories, functions,
 % composition and arrows named their typography, or named a construct
 % only loosely; this package gives the same constructs names that say
 % what they are, and moves their presentation into styles. The
-% quantifier, set-builder, union and intersection, underset-variant and
+% quantifier, set-builder, union and intersection and
 % sequence-name commands were already semantic, and keep the papers'
 % names: in the papers they form a block marked as belonging in a
 % package, copyright 2016, whose header describes them as semantic
 % markup for common mathematical constructs and grants permission to
 % incorporate them, with attribution, in any freely redistributable
 % \LaTeX{} package. The sources of the papers now load this package; the versions
-% on arXiv use the original macros.
+% on arXiv use the original macros. The papers' underset-variant
+% commands (\texttt{\textbackslash full},
+% \texttt{\textbackslash maxfull}, \texttt{\textbackslash maximal},
+% \texttt{\textbackslash strict}, \texttt{\textbackslash Triv}) are
+% specific to those papers and remain in them.
 %
 % \begin{center}
 % \begin{tabular}{ll}
@@ -951,9 +759,6 @@
 % \texttt{\textbackslash set}, \texttt{\textbackslash setupset},
 %   \texttt{\textbackslash union}, \texttt{\textbackslash intersection}
 %   & unchanged \\
-% \texttt{\textbackslash full}, \texttt{\textbackslash maxfull},
-%   \texttt{\textbackslash maximal}, \texttt{\textbackslash strict},
-%   \texttt{\textbackslash Triv} & unchanged \\
 % \texttt{\textbackslash seqname} & unchanged \\
 % \end{tabular}
 % \end{center}
@@ -1287,25 +1092,23 @@
 % \end{macro}
 %
 % \begin{macro}{\setupsemanticmarkup}
-% Runtime counterpart to the package option above, matching the
-% source papers' own \cs{setupquant}\slash \cs{setupset} precedent
-% (documented above): a thin wrapper around \cs{keys_set:nn} on the
-% same key family, callable anywhere in the document body, not only
-% on the \cs{usepackage} line.
+% Runtime counterpart to the package option above, in the manner of
+% \cs{setupquant}\slash \cs{setupset}: a thin wrapper around
+% \cs{keys_set:nn} on the same key family, callable anywhere in the
+% document body, not only on the \cs{usepackage} line.
 %    \begin{macrocode}
 \NewDocumentCommand \setupsemanticmarkup { m }
   { \keys_set:nn { lsm } {#1} }
 %    \end{macrocode}
 % \end{macro}
 %
-% \subsection{Quantifiers, sets, and underset-variant renderers}
+% \subsection{Quantifiers, sets, and sequence names}
 % \label{sec:quant-set-impl}
 %
 % The public interface of these commands (\cs{equant}, \cs{uquant},
 % \cs{set}, \cs{setupquant}, \cs{setupset}, \cs{union},
-% \cs{intersection}, \cs{full}, \cs{maxfull}, \cs{maximal},
-% \cs{strict}, \cs{Triv}, \cs{seqname}) is the one the source papers
-% use; \cs{setupquant} and \cs{setupset} are the model for
+% \cs{intersection}, \cs{seqname}) is documented above;
+% \cs{setupquant} and \cs{setupset} are the model for
 % \cs{setupsemanticmarkup} (see the discussion in
 % \pagecrefn{sec:style-impl}). Each macro family has its own scoped,
 % uniquely named scratch variables, so one family nested inside
@@ -1314,8 +1117,7 @@
 %
 % \begin{variable}[no-user-doc]{\l_lsm_quant_tmp_clist, \l_lsm_quant_tmp_fp,
 %   \l_lsm_set_tmp_clist, \l_lsm_set_tmp_tl, \l_lsm_set_star_bool,
-%   \l_lsm_unint_tmp_clist, \l_lsm_unint_tmp_fp, \l_lsm_full_tmp_tl,
-%   \l_lsm_maximal_tmp_tl, \l_lsm_strict_tmp_tl}
+%   \l_lsm_unint_tmp_clist, \l_lsm_unint_tmp_fp}
 % Each macro family below gets its own uniquely-named scratch
 % variables, declared together here rather than reusing a shared
 % \texttt{tmpa}-style name across families -- the fix for the latent
@@ -1328,9 +1130,6 @@
 \bool_new:N  \l_lsm_set_star_bool
 \clist_new:N \l_lsm_unint_tmp_clist
 \fp_new:N    \l_lsm_unint_tmp_fp
-\tl_new:N    \l_lsm_full_tmp_tl
-\tl_new:N    \l_lsm_maximal_tmp_tl
-\tl_new:N    \l_lsm_strict_tmp_tl
 %    \end{macrocode}
 % \end{variable}
 %
@@ -1338,8 +1137,8 @@
 % Existential/universal quantifier rendering, with a runtime style
 % switch (parenthesization and subscript-vs-inline placement of the
 % bound variables) via \cs{setupquant}, independent of
-% \cs{setupsemanticmarkup} above -- this is the papers' own original
-% style mechanism, kept as its own key family rather than folded into
+% \cs{setupsemanticmarkup} above; it is
+% kept as its own key family rather than folded into
 % \texttt{lsm}'s, since it predates and is unrelated to the
 % default/plain style choice.
 %    \begin{macrocode}
@@ -1524,98 +1323,6 @@
           }
       }
       { #1 #3 }
-  }
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\full, \maxfull, \maximal, \strict, \Triv}
-% A family of underset-variant renderers: each takes an optional
-% \meta{qualifiers} argument (bare, \texttt{*}, \texttt{**}, or text
-% ending in a literal \texttt{-}, meaning ``compose this argument onto
-% the underset text'') and typesets \texttt{\#2} with a small label
-% underneath, upright (\cs{textup}) except for \cs{Triv}'s bold
-% \texttt{triv}, indicating a variation of ``full''/``max or
-% full''/``max''/``strict''/``triv'' respectively.
-%    \begin{macrocode}
-\NewDocumentCommand{\full}{O{full} m}
-  { \lsm_show_full:nn {#1} {#2} }
-
-\cs_new_protected:Npn \lsm_show_full:nn #1 #2
-  {
-    \tl_set:Nn \l_lsm_full_tmp_tl {#1}
-    \str_if_eq:eeTF {\str_item:nn {#1} {-1}} {-}
-      { \tl_set:Nx \l_lsm_full_tmp_tl {{#1}full} }
-      {
-        \str_case:nn {#1}
-          {
-            {*}  {\tl_set:Nn \l_lsm_full_tmp_tl {(full,S-max-full,max-full)}}
-            {**} {\tl_set:Nn \l_lsm_full_tmp_tl {full~(S-max-full,max-full)}}
-          }
-      }
-    \underset {\textup{\l_lsm_full_tmp_tl}} {#2}
-  }
-
-\NewDocumentCommand{\maxfull}{O{max-full} m}
-  {
-    \lsm_maximal:nnnnnnn {max-full} {#1} {#2}
-      {full,max,max-full} {full,max}
-      {full~(max,max-full)} {full~(max)}
-  }
-
-\NewDocumentCommand{\maximal}{O{max} m}
-  { \lsm_maximal:nnnnnnn {max} {#1} {#2} {max} {} {max} {} }
-
-\cs_new_protected:Npn \lsm_maximal:nnnnnnn #1 #2 #3 #4 #5 #6 #7
-  {
-    \tl_set:Nn \l_lsm_maximal_tmp_tl {#2}
-    \str_if_eq:eeTF {\str_item:nn {#2} {-1}} {-}
-      { \tl_set:Nx \l_lsm_maximal_tmp_tl {{#2}#1} }
-      {
-        \str_case:nn {#2}
-          {
-            {*}   {\tl_set:Nn \l_lsm_maximal_tmp_tl {(#4)}}
-            {*x}  {\tl_set:Nn \l_lsm_maximal_tmp_tl {(#5)}}
-            {**}  {\tl_set:Nn \l_lsm_maximal_tmp_tl {#6}}
-            {**x} {\tl_set:Nn \l_lsm_maximal_tmp_tl {#7}}
-          }
-      }
-    \underset {\textup{\l_lsm_maximal_tmp_tl}} {#3}
-  }
-
-\NewDocumentCommand{\strict}{O{strict} m}
-  { \lsm_show_strict:nn {#1} {#2} }
-
-\cs_new_protected:Npn \lsm_show_strict:nn #1 #2
-  {
-    \tl_set:Nn \l_lsm_strict_tmp_tl {#1}
-    \str_if_eq:eeTF {\str_item:nn {#1} {-1}} {-}
-      { \tl_set:Nx \l_lsm_strict_tmp_tl {{#1}strict} }
-      {
-        \str_case:nn {#1}
-          {
-            {*}  {\tl_set:Nn \l_lsm_strict_tmp_tl {(semi-strict,strict)}}
-            {**} {\tl_set:Nn \l_lsm_strict_tmp_tl {semi-strict~(strict)}}
-          }
-      }
-    \underset {\textup{\l_lsm_strict_tmp_tl}} {#2}
-  }
-
-\NewDocumentCommand{\Triv}{o m}
-  { \lsm_triv:nn {#1} {#2} }
-
-\cs_new_protected:Npn \lsm_triv:nn #1 #2
-  {
-    \IfValueTF {#1}
-      {
-        \str_case:nnF {#1}
-          {
-            {full-submod-} {\underset{\mathbf{{#1}triv}}{#2}}
-            {full-}        {\underset{\mathbf{{#1}triv}}{#2}}
-            {submod-}      {\underset{\mathbf{{#1}triv}}{#2}}
-          }
-          { {\underset{#1\mathbf{triv}}{#2}} }
-      }
-      { {\underset{\mathbf{triv}}{#2}} }
   }
 %    \end{macrocode}
 % \end{macro}

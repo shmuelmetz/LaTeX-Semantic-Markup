@@ -53,7 +53,7 @@ $\morphName{f}$      % display name of a morphism
 $\morphSeqName{f}$   % display name of a sequence/tuple of morphisms
 $\morphMono$ $\morphEpi$  % monomorphism / epimorphism arrows
 $\morphCompose$ / $\morphComposeHead$ / $\morphComposeTail$  % composition (plain / head / tail; each also takes [label])
-$\chartName{U}$ $\atlasName{A}$ $\coordName{x}$  % coordinate charts/atlases/coordinates
+$\chartName{U}$ $\atlasName{A}$ $\coordName{x}$  % charts/atlases/coordinates
 ```
 
 The full macro set, including which abbreviations each name uses and
@@ -171,6 +171,8 @@ scripts/build-doc.rex    -- builds the documentation PDF (see Building)
 - [Local-Coordinate-Spaces](https://github.com/shmuelmetz/Local-Coordinate-Spaces) --
   mathematical papers that use these macros
 - arXiv author page: <http://arxiv.org/a/metz_s_1>
+- Stack Exchange: <https://stackexchange.com/users/8873368/shmuel>;
+  TeX Stack Exchange: <https://tex.stackexchange.com/users/110591/shmuel>
 
 ## License
 
