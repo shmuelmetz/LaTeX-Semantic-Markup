@@ -21,6 +21,7 @@
 \TeXXeTstate=1
 \setlength\emergencystretch{3em}
 \usepackage{cleveref}
+\usepackage{shmuelsemtex}
 % "<cref> (<name>) on page <n>"
 \NewDocumentCommand\pagecrefn{m}{\cref{#1} (\nameref{#1}) on \cpageref{#1}}
 \begin{document}
@@ -30,8 +31,8 @@
 % \fi
 %
 % \title{The \pkg{shmuelsemtex} package}
-% \author{Seymour J. Metz (H: Shmuel {\hebrewfont\beginR שמואל בן לייביש ולאה\endR}) \\ \url{https://mason.gmu.edu/~smetz3} \\ arXiv: \url{http://arxiv.org/a/metz_s_1} \\ Stack Exchange: \url{https://stackexchange.com/users/8873368/shmuel} \\ \TeX{} Stack Exchange: \url{https://tex.stackexchange.com/users/110591/shmuel}}
-% \date{2026-09-01}
+% \author{Seymour J. Metz (H: Shmuel {\hebrewfont\beginR שמואל בן לייביש ולאה\endR}) \\ {\small \url{https://mason.gmu.edu/~smetz3}} \\ {\small arXiv: \url{http://arxiv.org/a/metz_s_1}} \\ {\small Stack Exchange: \url{https://stackexchange.com/users/8873368/shmuel}} \\ {\small \TeX{} Stack Exchange: \url{https://tex.stackexchange.com/users/110591/shmuel}}}
+% \date{2026-11-11}
 %
 % \maketitle
 %
@@ -137,30 +138,29 @@
 % \usepackage[style=plain]{shmuelsemtex}     % built in, alternate
 % \end{verbatim}
 % and can also be changed anywhere in the document with
-% \cs{setupsemanticmarkup} (below). Quantifier and set-builder
-% rendering have their own setup commands, \cs{setupquant} and
-% \cs{setupset} (\pagecrefn{sec:quant-set}). Either way, the markup at the
+% \cs{setupsemanticmarkup} (below). A style also sets how quantifiers
+% and set-builder notation are displayed; \cs{setupquant} and
+% \cs{setupset} (\pagecrefn{sec:quant-set}) adjust that within the
+% current style. Either way, the markup at the
 % use sites --- every \cs{catName}, every \cs{morphCompose},
 % everything --- is written once and does not vary with the setup;
 % moving between, say, an arXiv upload and a journal submission
 % changes only the setup. This is the direct implementation of the
 % journal-portability test in \pagecrefn{sec:purpose}.
 %
-% The mechanism is \pkg{l3keys2e} package-option processing (the
-% standard modern \pkg{expl3} idiom for \texttt{key=value}
-% \cs{usepackage} options; the same mechanism many CTAN packages use
-% for exactly this ``pick a coherent bundle of choices at once''
-% pattern), with a single \texttt{.choice:} key, \texttt{style}, in
+% The mechanism is the \LaTeX{} kernel's processing of
+% \texttt{key=value} package options, \cs{ProcessKeyOptions}, with a
+% single \texttt{.choice:} key, \texttt{style}, in
 % the key family \texttt{lsm}. Each choice's code is one function
 % (\cs{lsm_style_default:}, \cs{lsm_style_plain:}) that reassigns
 % \emph{every} presentation hook in the package in one place, so a
 % style is always a complete, coherent bundle --- never a partial
 % patch the author has to assemble by hand from individual macro
-% redefinitions. \texttt{style} defaults to \texttt{default} via
-% \texttt{.initial:n}, which runs the named choice's code at
-% \cs{keys_define:nn} time, so the package works with no options at
-% all; any explicit \texttt{style=...} package
-% option is applied afterward via \cs{ProcessKeysPackageOptions}.
+% redefinitions, together with the settings of \cs{setupquant} and
+% \cs{setupset}. \texttt{default} is applied when the package loads,
+% so the package works with no options at all; any explicit
+% \texttt{style=...} package option is applied afterward via
+% \cs{ProcessKeyOptions}.
 %
 % Only two styles are built in for now, both illustrating the
 % mechanism rather than encoding any real journal's house style yet:
@@ -183,13 +183,14 @@
 %   built later might, but that is a further design question, not
 %   answered here.
 % \end{description}
-% Where no predefined style matches the house style, a new style is
-% added as one more \texttt{style / \meta{name} .code:n} choice and
-% one more \cs{lsm_style_\meta{name}:} function that reassigns the
-% same complete set of hooks; it never means touching the public
-% macros or the markup at the use sites. The package does not yet
-% provide a user-level command for defining a style in a document's
-% own preamble.
+% Both built-in styles set quantifiers and sets to the initial settings
+% listed under \cs{setupquant} and \cs{setupset}.
+% Where no built-in style matches the house style, a document declares
+% its own in the preamble with \cs{DeclareSemanticStyle}
+% (\pagecrefn{sec:setup}): it names an existing style to start from
+% and gives new presentation only for the commands that differ. The
+% result is again a complete set of hooks, and it never means
+% touching the public macros or the markup at the use sites.
 %
 % \begin{quote}
 % \textbf{Runtime setup.} \cs{setupquant} and \cs{setupset}
@@ -209,22 +210,15 @@
 % \begin{verbatim}
 % \setupsemanticmarkup {style=plain}
 % \end{verbatim}
-% Both forms are kept: \cs{keys_set:nn} is what
-% \cs{ProcessKeysPackageOptions} calls to apply a package option, and
-% \cs{setupsemanticmarkup} makes the same call available at any point
-% in the body.
+% Both forms are kept: \cs{ProcessKeyOptions} applies a package option
+% through the \texttt{lsm} key family, and \cs{setupsemanticmarkup}
+% sets the same family at any point in the body.
 %
-% This package's styles remain one coherent \texttt{style} bundle
-% covering every macro at once, unlike \cs{setupquant}\slash \cs{setupset}'s
-% split into independent per-concept-family setup commands: a
-% journal's house style is ordinarily one holistic choice applied
-% consistently everywhere, not an independent axis per semantic
-% family the way quantifier-rendering-taste and set-builder-rendering-%
-% taste are independent of each other for a single author. If a real
-% future style needs finer-grained, per-family control, splitting
-% \texttt{style} into per-family keys (mirroring \texttt{quant}/%
-% \texttt{set} exactly) is a natural extension of this same
-% \pkg{l3keys} foundation, not a different mechanism.
+% A style covers every macro at once, including how quantifiers and
+% sets are displayed: a journal's house style is ordinarily one
+% holistic choice applied consistently everywhere. \cs{setupquant} and
+% \cs{setupset} adjust quantifiers and sets within the current style;
+% selecting a style resets them to that style's settings.
 % \end{quote}
 %
 % \section{Abbreviations used in macro names}
@@ -606,8 +600,28 @@
 % Selects the style, the complete set of presentation choices for
 % every macro in \pkg{shmuelsemtex}. The built-in styles are
 % \texttt{default}, used when no option is given, and \texttt{plain};
-% \pagecrefn{sec:style-switching} describes both.
+% \pagecrefn{sec:style-switching} describes both. \meta{name} may also
+% be a style declared later in the preamble with
+% \cs{DeclareSemanticStyle}; it takes effect at
+% \verb|\begin{document}|.
 % \end{function}
+%
+% Examples:
+% \begin{center}
+% \renewcommand\arraystretch{1.6}
+% \begin{tabular}{lll}
+% Markup & \texttt{default} & \texttt{plain} \\
+% \hline
+% \verb|\catName{C}| & $\catName{C}$ & \setupsemanticmarkup{style=plain}$\catName{C}$ \\
+% \verb|\catName{Set}| & $\catName{Set}$ & \setupsemanticmarkup{style=plain}$\catName{Set}$ \\
+% \verb|\catName{C^2}| & $\catName{C^2}$ & \setupsemanticmarkup{style=plain}$\catName{C^2}$ \\
+% \verb|\catSeqName{A}| & $\catSeqName{A}$ & \setupsemanticmarkup{style=plain}$\catSeqName{A}$ \\
+% \verb|\morphName{f}| & $\morphName{f}$ & \setupsemanticmarkup{style=plain}$\morphName{f}$ \\
+% \verb|\morphName{ev}| & $\morphName{ev}$ & \setupsemanticmarkup{style=plain}$\morphName{ev}$ \\
+% \verb|\morphSeqName{f}| & $\morphSeqName{f}$ & \setupsemanticmarkup{style=plain}$\morphSeqName{f}$ \\
+% \verb|A \morphMono B| & $A \morphMono B$ & \setupsemanticmarkup{style=plain}$A \morphMono B$ \\
+% \end{tabular}
+% \end{center}
 %
 % \begin{function}{\setupsemanticmarkup}
 % \begin{syntax}
@@ -616,6 +630,57 @@
 % Runtime counterpart to the \texttt{style} package option: sets the
 % same key, and can be called anywhere in the document, not only on
 % the \cs{usepackage} line.
+% \end{function}
+%
+% \begin{function}{\DeclareSemanticStyle}
+% \begin{syntax}
+% \cs{DeclareSemanticStyle}\marg{name}\marg{key=value list}
+% \end{syntax}
+% Declares a style called \meta{name}, which \texttt{style=}\meta{name}
+% then selects like a built-in one. The key \texttt{base} names the
+% style to start from, \texttt{default} if omitted; it may be a built-in
+% style or one declared earlier. Every other key is the name of a
+% command without its backslash, and its value is the new presentation
+% of that command, written in terms of the command's arguments:
+% \begin{description}
+% \item[No argument] \texttt{morphMono}, \texttt{morphEpi},
+%   \texttt{morphInclArrow}.
+% \item[\texttt{\#1}, the text] \texttt{semName}, \texttt{catName},
+%   \texttt{catSeqName}, \texttt{objName}, \texttt{morphName},
+%   \texttt{morphSeqName}, \texttt{chartName}, \texttt{atlasName},
+%   \texttt{coordName}.
+% \item[\texttt{\#1}, the label] \texttt{morphCompose},
+%   \texttt{morphComposeHead}, \texttt{morphComposeTail}; \texttt{\#1}
+%   is empty when no label is given.
+% \item[\texttt{\#1}, the object] \texttt{morphId},
+%   \texttt{morphSeqId}; empty when none is given.
+% \item[\texttt{\#1}, \texttt{\#2}, the included and containing
+%   objects] \texttt{morphIncl}, \texttt{morphSeqIncl}; either may be
+%   empty.
+% \end{description}
+% The keys \texttt{setupquant} and \texttt{setupset} take a
+% \texttt{key=value} list for \cs{setupquant} or \cs{setupset},
+% applied after the base style's settings. For example:
+% \begin{verbatim}
+% \DeclareSemanticStyle{journalx}{
+%   base     = default,
+%   setupquant = {subscript=stacked, parentheses=multiple},
+%   catName  = \IfSemanticSymbolTF{#1}{\mathcal{#1}}{\mathsf{#1}},
+%   morphEpi = \to,
+% }
+% \setupsemanticmarkup{style=journalx}
+% \end{verbatim}
+% Declaring a style again under the same name replaces it.
+% \end{function}
+%
+% \begin{function}{\IfSemanticSymbolTF}
+% \begin{syntax}
+% \cs{IfSemanticSymbolTF}\marg{text}\marg{true}\marg{false}
+% \end{syntax}
+% Applies the test of \pagecrefn{sec:cat-symbols}: \meta{true} if
+% \meta{text} is an arbitrary symbol, \meta{false} if it is a name.
+% It lets a declared style split symbols from names the way the
+% \texttt{default} style does.
 % \end{function}
 %
 % \subsection{Quantifiers}
@@ -641,8 +706,9 @@
 % \begin{description}
 % \item[\texttt{subscript}] \texttt{none} (initial): the quantifier
 %   symbol followed by the variables, joined by the separator;
-%   \texttt{stacked}: the variables stacked under an enlarged
-%   quantifier symbol; \texttt{multiple} (the value when the key is
+%   \texttt{stacked}: an enlarged quantifier symbol with the variables,
+%   one above another, as its subscript, at its lower right;
+%   \texttt{multiple} (the value when the key is
 %   given alone): one quantifier symbol per variable, each with its
 %   variable as a subscript.
 % \item[\texttt{parentheses}] \texttt{none} (initial), \texttt{single}
@@ -651,9 +717,34 @@
 %   with \texttt{subscript=multiple}, each quantifier separately.
 % \item[\texttt{separator}] The token list written between the
 %   variables and before the formula: empty initially, \texttt{.} when
-%   the key is given alone.
+%   the key is given alone. It is used only with \texttt{subscript=none};
+%   the \texttt{stacked} and \texttt{multiple} forms ignore it.
 % \end{description}
+% The settings are local to the current group, like the \texttt{style}
+% key. Selecting a style resets them to that style's settings.
 % \end{function}
+%
+% Examples, each with only the settings shown changed from the initial
+% \texttt{subscript=none, parentheses=none} and an empty separator:
+% \begin{center}
+% \renewcommand\arraystretch{2.2}
+% \begin{tabular}{ll}
+% Setting & \verb|\equant{x,y}{P(x,y)}| \\
+% \hline
+% initial & $\equant{x,y}{P(x,y)}$ \\
+% \verb|subscript=stacked| & \setupquant{subscript=stacked}$\equant{x,y}{P(x,y)}$ \\
+% \verb|subscript=multiple| & \setupquant{subscript=multiple}$\equant{x,y}{P(x,y)}$ \\
+% \verb|parentheses=single| & \setupquant{parentheses=single}$\equant{x,y}{P(x,y)}$ \\
+% \verb|parentheses=single, subscript=stacked|
+%   & \setupquant{parentheses=single, subscript=stacked}$\equant{x,y}{P(x,y)}$ \\
+% \verb|parentheses=single, subscript=multiple|
+%   & \setupquant{parentheses=single, subscript=multiple}$\equant{x,y}{P(x,y)}$ \\
+% \verb|parentheses=multiple, subscript=multiple|
+%   & \setupquant{parentheses=multiple, subscript=multiple}$\equant{x,y}{P(x,y)}$ \\
+% \verb|separator| & \setupquant{separator}$\equant{x,y}{P(x,y)}$ \\
+% \verb|separator=:| & \setupquant{separator=:}$\equant{x,y}{P(x,y)}$ \\
+% \end{tabular}
+% \end{center}
 %
 % \subsection{Set-builder notation}
 %
@@ -681,12 +772,51 @@
 % The keys:
 % \begin{description}
 % \item[\texttt{separator}] The symbol between the elements and the
-%   propositions of \cs{set}; initially $\mid$.
+%   propositions of \cs{set}, and of \cs{union} and \cs{intersection}
+%   with \texttt{subscript=none}; initially $\mid$. A vertical bar,
+%   such as \cs{mid} or \cs{Vert}, is stretched to the height of the
+%   set's contents; any other separator is set at its normal size.
 % \item[\texttt{subscript}] Placement of the indices of \cs{union} and
-%   \cs{intersection}: \texttt{stacked} (initial), stacked under an
-%   enlarged operator; \texttt{multiple}, a comma-separated subscript.
+%   \cs{intersection}: \texttt{none}, after the operator, as
+%   set-builder notation like \cs{set}'s, with the indices as its
+%   propositions; \texttt{stacked} (initial), an enlarged operator with
+%   the indices, one above another, as its subscript, at its lower
+%   right; \texttt{multiple}, a comma-separated subscript;
+%   \texttt{stackbelow}, or its synonym \texttt{stackunder}, the
+%   indices, one above another, centred under the operator. It does
+%   not affect \cs{set}.
 % \end{description}
+% The settings are local to the current group, like the \texttt{style}
+% key. Selecting a style resets them to that style's settings.
 % \end{function}
+%
+% Examples, each with only the settings shown changed from the initial
+% \texttt{separator=\textbackslash mid, subscript=stacked}. With
+% \texttt{subscript=none}, \cs{union} applies the operator to the set
+% $\{S_{ij} \mid i \in I \land j \in J\}$: the indices become the
+% propositions of a set-builder expression, so \texttt{separator}
+% applies to them too.
+% \begin{center}
+% \renewcommand\arraystretch{2.2}\setlength\tabcolsep{4pt}\small
+% \begin{tabular}{lll}
+% Setting & \verb|\set{x}[p,q]| & \verb|\union[i \in I, j \in J]{S_{ij}}| \\
+% \hline
+% initial & $\set{x}[p,q]$ & $\union[i \in I, j \in J]{S_{ij}}$ \\
+% \verb|separator=:| & \setupset{separator=:}$\set{x}[p,q]$
+%   & \setupset{separator=:}$\union[i \in I, j \in J]{S_{ij}}$ \\
+% \verb|subscript=none| & \setupset{subscript=none}$\set{x}[p,q]$
+%   & \setupset{subscript=none}$\union[i \in I, j \in J]{S_{ij}}$ \\
+% \verb|subscript=none, separator=:|
+%   & \setupset{subscript=none, separator=:}$\set{x}[p,q]$
+%   & \setupset{subscript=none, separator=:}$\union[i \in I, j \in J]{S_{ij}}$ \\
+% \verb|subscript=stacked| & \setupset{subscript=stacked}$\set{x}[p,q]$
+%   & \setupset{subscript=stacked}$\union[i \in I, j \in J]{S_{ij}}$ \\
+% \verb|subscript=multiple| & \setupset{subscript=multiple}$\set{x}[p,q]$
+%   & \setupset{subscript=multiple}$\union[i \in I, j \in J]{S_{ij}}$ \\
+% \verb|subscript=stackbelow| & \setupset{subscript=stackbelow}$\set{x}[p,q]$
+%   & \setupset{subscript=stackbelow}$\union[i \in I, j \in J]{S_{ij}}$ \\
+% \end{tabular}
+% \end{center}
 %
 % \subsection{Indexed union and intersection}
 %
@@ -764,7 +894,7 @@
 % \end{center}
 %
 % \begin{thebibliography}{9}
-% \bibitem{lcs} Seymour J. Metz, \emph{Local Coordinate Spaces: a
+% \bibitem{lcs} Shmuel (Seymour J.) Metz, \emph{Local Coordinate Spaces: a
 %   proposed unification of manifolds and fiber bundles, and associated
 %   machinery}, arXiv:1801.05775v1 [math.AT], 17 January 2018.
 %   \url{https://arxiv.org/abs/1801.05775}
@@ -781,13 +911,12 @@
 %
 %<*package>
 %    \begin{macrocode}
-\ProvidesExplPackage{shmuelsemtex}{2026-09-01}{0.6.0}
+\NeedsTeXFormat{LaTeX2e}[2022-06-01]
+\ProvidesExplPackage{shmuelsemtex}{2026-11-11}{0.7.0}
   {Semantic markup macros for LaTeX (LSM)}
-\RequirePackage{xparse}
 \RequirePackage{amsmath}
 \RequirePackage{bm}
 \RequirePackage{scalerel}
-\RequirePackage{l3keys2e}
 %    \end{macrocode}
 %
 % \subsection{Font packages: load only if genuinely needed}
@@ -943,6 +1072,56 @@
 % style will assign the same hook name). A style is applied by
 % calling its function, never by patching individual hooks.
 %
+% \begin{macro}[no-user-doc]{\lsm_base_decoration:Nn, \lsm_script:nn,
+%   \lsm_bold_script:nn}
+% Splits \texttt{\#2} into its base, everything before the first
+% superscript or subscript token, and its decoration, the rest with
+% braces kept, and passes the two to \texttt{\#1} as plain tokens.
+% \cs{lsm_script:nn} and \cs{lsm_bold_script:nn} then set only the
+% base in script: \verb|\mathscr{C}^2|, not \verb|\mathscr{C^2}|. A
+% script font has no digits or lower-case letters, so the second form
+% loses them. The split comes first because \cs{bm} cannot take
+% \pkg{expl3} code in its argument.
+%    \begin{macrocode}
+\tl_new:N \l_lsm_base_tl
+\tl_new:N \l_lsm_deco_tl
+\bool_new:N \l_lsm_deco_bool
+\cs_new_protected:Npn \lsm_base_decoration:Nn #1 #2
+  {
+    \tl_clear:N \l_lsm_base_tl
+    \tl_clear:N \l_lsm_deco_tl
+    \bool_set_false:N \l_lsm_deco_bool
+    \tl_map_inline:nn {#2}
+      {
+        \bool_if:NF \l_lsm_deco_bool
+          {
+            \tl_if_single_token:nT {##1}
+              {
+                \bool_lazy_or:nnT
+                  { \token_if_math_superscript_p:N ##1 }
+                  { \token_if_math_subscript_p:N ##1 }
+                  { \bool_set_true:N \l_lsm_deco_bool }
+              }
+          }
+        \tl_if_single_token:nTF {##1}
+          {
+            \bool_if:NTF \l_lsm_deco_bool
+              { \tl_put_right:Nn \l_lsm_deco_tl {##1} }
+              { \tl_put_right:Nn \l_lsm_base_tl {##1} }
+          }
+          {
+            \bool_if:NTF \l_lsm_deco_bool
+              { \tl_put_right:Nn \l_lsm_deco_tl { {##1} } }
+              { \tl_put_right:Nn \l_lsm_base_tl { {##1} } }
+          }
+      }
+    \exp_args:NVV #1 \l_lsm_base_tl \l_lsm_deco_tl
+  }
+\cs_new_protected:Npn \lsm_script:nn #1 #2 { \mathscr{#1} #2 }
+\cs_new_protected:Npn \lsm_bold_script:nn #1 #2 { \bm{ \mathscr{#1} #2 } }
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}[no-user-doc]{\lsm_style_default:}
 % The \texttt{default} style: the presentation choices justified,
 % macro by macro, in the documentation above.
@@ -953,10 +1132,11 @@
     \cs_set_protected:Npn \lsm_cat_name:n ##1
       {
         \lsm_if_arbitrary_symbol:nTF {##1}
-          { \mathscr{##1} }
+          { \lsm_base_decoration:Nn \lsm_script:nn {##1} }
           { \mathbf{##1} }
       }
-    \cs_set_protected:Npn \lsm_cat_seqname:n ##1 { \bm{\mathscr{##1}} }
+    \cs_set_protected:Npn \lsm_cat_seqname:n ##1
+      { \lsm_base_decoration:Nn \lsm_bold_script:nn {##1} }
     \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_morph_name:n ##1
       {
@@ -994,6 +1174,7 @@
     \cs_set_protected:Npn \lsm_chart_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_atlas_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_coord_name:n ##1 { ##1 }
+    \lsm_style_quantset:
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1023,6 +1204,19 @@
     \cs_set_protected:Npn \lsm_morph_seqincl:nn ##1 ##2
       { \lsm_id_incl:nnn { \mathbf{Id} } {##1} {##2} }
     \cs_set_protected:Npn \lsm_morph_incl_arrow: { \hookrightarrow }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}[no-user-doc]{\lsm_style_quantset:}
+% The quantifier and set settings of both built-in styles: the initial
+% values of the \cs{setupquant} and \cs{setupset} keys.
+%    \begin{macrocode}
+\cs_new_protected:Npn \lsm_style_quantset:
+  {
+    \keys_set:nn { lsm-quant }
+      { subscript = none , parentheses = none , separator = }
+    \keys_set:nn { lsm-set } { subscript = stacked , separator = \mid }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1066,6 +1260,7 @@
     \cs_set_protected:Npn \lsm_chart_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_atlas_name:n ##1 { ##1 }
     \cs_set_protected:Npn \lsm_coord_name:n ##1 { ##1 }
+    \lsm_style_quantset:
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1073,21 +1268,40 @@
 % \subsection{Package options and runtime setup}
 %
 % \begin{macro}{style}
-% A single \texttt{.choice:} key in the \texttt{lsm} key family,
-% defaulting to \texttt{default} via \texttt{.initial:n} (which runs
-% immediately at definition time, so the package works correctly with
-% no options given at all), then re-applied if the author gives an
+% A single \texttt{.choice:} key in the \texttt{lsm} key family, set
+% to \texttt{default} at the end of the package
+% (\pagecrefn{sec:initial-style}), so the package works with no options
+% given at all, then re-applied if the author gives an
 % explicit \texttt{style=...} package option, or calls
-% \cs{setupsemanticmarkup} (below) at any later point.
+% \cs{setupsemanticmarkup} (below) at any later point. Every choice
+% goes through \cs{lsm_style_apply:n}. A name that is not yet a
+% choice is kept while in the preamble, since \cs{DeclareSemanticStyle}
+% may still declare it, and applied at \verb|\begin{document}|; in the
+% body it is an error.
 %    \begin{macrocode}
+\tl_new:N \g_lsm_style_pending_tl
+\bool_new:N \g_lsm_in_body_bool
+\msg_new:nnn { shmuelsemtex } { unknown-style }
+  { Unknown~style~`#1'. }
+\cs_new_protected:Npn \lsm_style_apply:n #1
+  {
+    \tl_gclear:N \g_lsm_style_pending_tl
+    \use:c { lsm_style_ #1 : }
+  }
 \keys_define:nn { lsm }
   {
     style .choice: ,
-    style / default .code:n = { \lsm_style_default: } ,
-    style / plain .code:n = { \lsm_style_plain: } ,
-    style .initial:n = default ,
+    style / default .code:n = { \lsm_style_apply:n { default } } ,
+    style / plain .code:n = { \lsm_style_apply:n { plain } } ,
+    style / unknown .code:n =
+      {
+        \bool_if:NTF \g_lsm_in_body_bool
+          {
+            \msg_error:nnn { shmuelsemtex } { unknown-style } {#1}
+          }
+          { \tl_gset:Nn \g_lsm_style_pending_tl {#1} }
+      } ,
   }
-\ProcessKeysPackageOptions { lsm }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1099,6 +1313,109 @@
 %    \begin{macrocode}
 \NewDocumentCommand \setupsemanticmarkup { m }
   { \keys_set:nn { lsm } {#1} }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\DeclareSemanticStyle}
+% Each command key stores its value as a function
+% \cs{lsm_user_\meta{style}_\meta{hook}}, whose signature (and so its
+% number of arguments) is that of the hook it replaces, and records a
+% \cs{cs_set_eq:NN} from the hook to it. The style's function calls the
+% base style's function and then those assignments, so the result is
+% always a complete set of hooks. The keys \texttt{setupquant} and
+% \texttt{setupset} record a \cs{keys_set:nn} on those key families in
+% the same list, after the base style's settings. The style becomes one
+% more choice of the \texttt{style} key.
+%    \begin{macrocode}
+\tl_new:N \l_lsm_decl_style_tl
+\tl_new:N \l_lsm_decl_base_tl
+\tl_new:N \l_lsm_decl_hooks_tl
+\msg_new:nnn { shmuelsemtex } { unknown-base }
+  { Unknown~base~style~`#1'~for~style~`#2';~using~`default'. }
+\msg_new:nnn { shmuelsemtex } { unknown-command }
+  { `#1'~is~not~a~command~a~style~can~set. }
+\cs_new_protected:Npn \lsm_decl_hook_key:nn #1 #2
+  {
+    \keys_define:nn { lsm / declare }
+      {
+        #1 .code:n =
+          {
+            \cs_set_protected:cn
+              { lsm_user_ \l_lsm_decl_style_tl _ #2 } {##1}
+            \tl_put_right:Ne \l_lsm_decl_hooks_tl
+              {
+                \cs_set_eq:NN \exp_not:c { lsm_ #2 }
+                  \exp_not:c { lsm_user_ \l_lsm_decl_style_tl _ #2 }
+              }
+          }
+      }
+  }
+\lsm_decl_hook_key:nn { semName } { sem_name:n }
+\lsm_decl_hook_key:nn { catName } { cat_name:n }
+\lsm_decl_hook_key:nn { catSeqName } { cat_seqname:n }
+\lsm_decl_hook_key:nn { objName } { obj_name:n }
+\lsm_decl_hook_key:nn { morphName } { morph_name:n }
+\lsm_decl_hook_key:nn { morphSeqName } { morph_seqname:n }
+\lsm_decl_hook_key:nn { morphMono } { morph_mono: }
+\lsm_decl_hook_key:nn { morphEpi } { morph_epi: }
+\lsm_decl_hook_key:nn { morphCompose } { morph_compose:n }
+\lsm_decl_hook_key:nn { morphComposeHead } { morph_compose_head:n }
+\lsm_decl_hook_key:nn { morphComposeTail } { morph_compose_tail:n }
+\lsm_decl_hook_key:nn { morphId } { morph_id:n }
+\lsm_decl_hook_key:nn { morphSeqId } { morph_seqid:n }
+\lsm_decl_hook_key:nn { morphIncl } { morph_incl:nn }
+\lsm_decl_hook_key:nn { morphSeqIncl } { morph_seqincl:nn }
+\lsm_decl_hook_key:nn { morphInclArrow } { morph_incl_arrow: }
+\lsm_decl_hook_key:nn { chartName } { chart_name:n }
+\lsm_decl_hook_key:nn { atlasName } { atlas_name:n }
+\lsm_decl_hook_key:nn { coordName } { coord_name:n }
+\keys_define:nn { lsm / declare }
+  {
+    base .tl_set:N = \l_lsm_decl_base_tl ,
+    setupquant .code:n =
+      {
+        \tl_put_right:Nn \l_lsm_decl_hooks_tl
+          { \keys_set:nn { lsm-quant } {#1} }
+      } ,
+    setupset .code:n =
+      {
+        \tl_put_right:Nn \l_lsm_decl_hooks_tl
+          { \keys_set:nn { lsm-set } {#1} }
+      } ,
+    unknown .code:n =
+      {
+        \msg_error:nnV { shmuelsemtex } { unknown-command }
+          \l_keys_key_str
+      } ,
+  }
+\NewDocumentCommand \DeclareSemanticStyle { m m }
+  {
+    \tl_set:Nn \l_lsm_decl_style_tl {#1}
+    \tl_set:Nn \l_lsm_decl_base_tl { default }
+    \tl_clear:N \l_lsm_decl_hooks_tl
+    \keys_set:nn { lsm / declare } {#2}
+    \cs_if_exist:cF { lsm_style_ \l_lsm_decl_base_tl : }
+      {
+        \msg_error:nnVn { shmuelsemtex } { unknown-base }
+          \l_lsm_decl_base_tl {#1}
+        \tl_set:Nn \l_lsm_decl_base_tl { default }
+      }
+    \cs_set_protected:cpe { lsm_style_ #1 : }
+      {
+        \exp_not:c { lsm_style_ \l_lsm_decl_base_tl : }
+        \exp_not:V \l_lsm_decl_hooks_tl
+      }
+    \keys_define:nn { lsm }
+      { style / #1 .code:n = { \lsm_style_apply:n {#1} } }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\IfSemanticSymbolTF}
+% The document-level form of \cs{lsm_if_arbitrary_symbol:nTF}.
+%    \begin{macrocode}
+\NewDocumentCommand \IfSemanticSymbolTF { m m m }
+  { \lsm_if_arbitrary_symbol:nTF {#1} {#2} {#3} }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1142,9 +1459,9 @@
 % \texttt{lsm}'s, since it predates and is unrelated to the
 % default/plain style choice.
 %    \begin{macrocode}
-\int_new:N \g_lsm_quant_parens_int
-\int_new:N \g_lsm_quant_subscr_int
-\tl_new:N \g_lsm_quant_sep_tl
+\int_new:N \l_lsm_quant_parens_int
+\int_new:N \l_lsm_quant_subscr_int
+\tl_new:N \l_lsm_quant_sep_tl
 
 \NewDocumentCommand{\equant}{mm}
   { \lsm_quant:nnn {\exists} {#1} {#2} }
@@ -1160,18 +1477,18 @@
   subscript   .choices:nn =
     {
       {none, stacked, multiple}
-      { \int_gset:Nn \g_lsm_quant_subscr_int {\l_keys_choice_int - 1} }
+      { \int_set:Nn \l_lsm_quant_subscr_int {\l_keys_choice_int - 1} }
     },
   subscript   .default:n = multiple,
   subscript   .initial:n = none,
   parentheses .choices:nn =
     {
       {none, single, multiple}
-      { \int_gset:Nn \g_lsm_quant_parens_int {\l_keys_choice_int - 1} }
+      { \int_set:Nn \l_lsm_quant_parens_int {\l_keys_choice_int - 1} }
     },
   parentheses .default:n = multiple,
   parentheses .initial:n = none,
-  separator   .tl_set:N  = \g_lsm_quant_sep_tl,
+  separator   .tl_set:N  = \l_lsm_quant_sep_tl,
   separator   .default:n = {.},
   separator   .initial:n = {},
  }
@@ -1179,36 +1496,36 @@
 \cs_new_protected:Npn \lsm_quant:nnn #1 #2 #3
   {
     \clist_set:Nn \l_lsm_quant_tmp_clist {#2}
-    \int_case:nn {\g_lsm_quant_subscr_int}
+    \int_case:nn {\l_lsm_quant_subscr_int}
       {
         {0}
         {
-          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\left (}
+          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\left (}
           #1
-          \clist_use:Nn \l_lsm_quant_tmp_clist {\g_lsm_quant_sep_tl}
-          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\right )}
-          \g_lsm_quant_sep_tl #3
+          \clist_use:Nn \l_lsm_quant_tmp_clist {\l_lsm_quant_sep_tl}
+          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\right )}
+          \l_lsm_quant_sep_tl #3
         }
         {1}
         {
           \fp_set:Nn \l_lsm_quant_tmp_fp
             {ceil{\clist_count:N \l_lsm_quant_tmp_clist - 1} * .1 + 1}
-          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\left (}
+          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\left (}
           \scaleobj{\fp_to_decimal:N \l_lsm_quant_tmp_fp}{#1} \sb
             { \substack { \clist_use:Nn \l_lsm_quant_tmp_clist { \\ } } }
-          \int_compare:nT {\g_lsm_quant_parens_int > 0} {\right )}
+          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\right )}
           #3
         }
         {2}
         {
-          \int_compare:nT {\g_lsm_quant_parens_int = 1} {\left (}
+          \int_compare:nT {\l_lsm_quant_parens_int = 1} {\left (}
           \clist_map_inline:Nn \l_lsm_quant_tmp_clist
             {
-              \int_compare:nT {\g_lsm_quant_parens_int = 2} {\left (}
+              \int_compare:nT {\l_lsm_quant_parens_int = 2} {\left (}
               \scaleobj{1.2}{#1} \sb {##1}
-              \int_compare:nT {\g_lsm_quant_parens_int = 2} {\right )}
+              \int_compare:nT {\l_lsm_quant_parens_int = 2} {\right )}
             }
-          \int_compare:nT {\g_lsm_quant_parens_int = 1} {\right )}
+          \int_compare:nT {\l_lsm_quant_parens_int = 1} {\right )}
           #3
         }
       }
@@ -1223,12 +1540,16 @@
 % line between elements and propositions -- useful inside a
 % \env{multline} environment, since \LaTeX{} cannot otherwise break a
 % line inside a macro argument. \cs{setupset}'s \texttt{separator} key
-% sets the symbol between elements and propositions; its
+% sets the symbol between elements and propositions, which
+% \cs{lsm_set_sep:n} stretches to the height of the contents when it is
+% a vertical-bar delimiter (\verb+|+, \cs{mid}, \cs{vert}, \cs{Vert},
+% \verb+\|+, \cs{parallel}, \cs{lvert}, \cs{rvert}) and otherwise sets
+% at its normal size; its
 % \texttt{subscript} key applies to \cs{union} and \cs{intersection}
 % (below).
 %    \begin{macrocode}
-\tl_new:N \g_lsm_set_sep_tl
-\int_new:N \g_lsm_set_subscr_int
+\tl_new:N \l_lsm_set_sep_tl
+\int_new:N \l_lsm_set_subscr_int
 
 \NewDocumentCommand{\set}{mos}
   {
@@ -1243,16 +1564,26 @@
 
 \keys_define:nn {lsm-set}
   {
-    separator .tl_set:N  = \g_lsm_set_sep_tl,
+    separator .tl_set:N  = \l_lsm_set_sep_tl,
     separator .initial:n = {\mid},
     subscript .choices:nn =
       {
-        {stacked, multiple}
-        { \int_gset:Nn \g_lsm_set_subscr_int {\l_keys_choice_int - 1} }
+        {none, stacked, multiple, stackbelow, stackunder}
+        { \int_set:Nn \l_lsm_set_subscr_int {\l_keys_choice_int - 1} }
       },
     subscript .initial:n = stacked,
   }
 
+\cs_new_protected:Npn \lsm_set_sep:n #1
+  {
+    \exp_args:NV \str_case:nnTF \l_lsm_set_sep_tl
+      {
+        { | } { } { \mid } { } { \vert } { } { \Vert } { }
+        { \| } { } { \parallel } { } { \lvert } { } { \rvert } { }
+      }
+      { \scalerel*{\mathbin{\l_lsm_set_sep_tl}}{#1} }
+      { \mathbin{\l_lsm_set_sep_tl} }
+  }
 \cs_new_protected:Npn \lsm_set_of:nnn #1 #2 #3
   {
     \IfValueTF {#2}
@@ -1265,7 +1596,7 @@
             \scalerel*{\{}{#1 \l_lsm_set_tmp_tl}
             #1
             \clist_set:Nn \l_lsm_set_tmp_clist {#2}
-            \scalerel*{\mathbin{\g_lsm_set_sep_tl}}{#1 \l_lsm_set_tmp_tl}
+            \lsm_set_sep:n {#1 \l_lsm_set_tmp_tl}
             \\
             \clist_set:Nn \l_lsm_set_tmp_clist {#2}
             \l_lsm_set_tmp_tl
@@ -1276,7 +1607,7 @@
             \left \{
             #1
             \clist_set:Nn \l_lsm_set_tmp_clist {#2}
-            \scalerel*{\mathbin{\g_lsm_set_sep_tl}}{#1 \l_lsm_set_tmp_tl}
+            \lsm_set_sep:n {#1 \l_lsm_set_tmp_tl}
             \l_lsm_set_tmp_tl
             \right \}
           }
@@ -1288,8 +1619,10 @@
 %
 % \begin{macro}{\union, \intersection}
 % \cs{union}\oarg{indices}\marg{set} and
-% \cs{intersection}\oarg{indices}\marg{set} typeset indexed union and intersection; the index list's subscript
-% placement (stacked under the operator, or inline comma-separated) is
+% \cs{intersection}\oarg{indices}\marg{set} typeset indexed union and intersection; the index list's
+% placement (as set-builder notation after the operator, stacked one
+% above another in its subscript, as a comma-separated subscript, or
+% stacked centred under it) is
 % controlled by \cs{setupset}'s \texttt{subscript} key above, shared
 % with \cs{set} since both are the same family of indexed-operator
 % notation.
@@ -1305,9 +1638,17 @@
     \IfValueTF {#2}
       {
         \clist_set:Nn \l_lsm_unint_tmp_clist {#2}
-        \int_case:nn {\g_lsm_set_subscr_int}
+        \int_compare:nNnT {\l_lsm_set_subscr_int} > { 2 }
+          {
+            \mathop{#1}\limits \sb
+              { \substack { \clist_use:Nn \l_lsm_unint_tmp_clist { \\ } } }
+            #3
+          }
+        \int_case:nn {\l_lsm_set_subscr_int}
           {
             {0}
+            { #1 \lsm_set_of:nnn {#3} {#2} { \c_false_bool } }
+            {1}
             {
               \fp_set:Nn \l_lsm_unint_tmp_fp
                 {ceil{\clist_count:N \l_lsm_unint_tmp_clist - 1} * .1 + 1}
@@ -1315,7 +1656,7 @@
                 { \substack { \clist_use:Nn \l_lsm_unint_tmp_clist { \\ } } }
               #3
             }
-            {1}
+            {2}
             {
               #1 \sb {\clist_use:Nn \l_lsm_unint_tmp_clist {,}}
               #3
@@ -1349,6 +1690,32 @@
   }
 %    \end{macrocode}
 % \end{macro}
+%
+% \subsection{Initial style and package options}
+% \label{sec:initial-style}
+%
+% The initial style, \texttt{default}, is applied here, at the end,
+% because a style also sets the keys of \cs{setupquant} and
+% \cs{setupset}, which are defined above. The package options come
+% next; a style they name that is not declared yet is applied at
+% \verb|\begin{document}|.
+%    \begin{macrocode}
+\keys_set:nn { lsm } { style = default }
+\ProcessKeyOptions [ lsm ]
+\hook_gput_code:nnn { begindocument } { shmuelsemtex }
+  {
+    \bool_gset_true:N \g_lsm_in_body_bool
+    \tl_if_empty:NF \g_lsm_style_pending_tl
+      {
+        \cs_if_exist:cTF { lsm_style_ \g_lsm_style_pending_tl : }
+          { \exp_args:NV \lsm_style_apply:n \g_lsm_style_pending_tl }
+          {
+            \msg_error:nnV { shmuelsemtex } { unknown-style }
+              \g_lsm_style_pending_tl
+          }
+      }
+  }
+%    \end{macrocode}
 %
 %</package>
 % \end{implementation}

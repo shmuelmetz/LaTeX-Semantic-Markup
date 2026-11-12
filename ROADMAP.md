@@ -15,15 +15,68 @@ as well as or better than a solo submission of this package. Before
 investing in CTAN-readiness work for this repo specifically, check
 whether such a package already exists on CTAN.
 
-- **CTAN**: a separate CTAN-ready repo, `ctan-shmuelsemtex`, is
-  planned but not created; development is in this repo. **No CTAN
+- **CTAN**: development is in this repo, and a `make ctan` target
+  is to build the upload; the separate `ctan-shmuelsemtex` repo once
+  planned is not needed. **No CTAN
   submission has been made.** For a submission, CTAN
   expects a working documentation-PDF build (working as of
   2026-10-10 with `xelatex`; see README's "Building" section), a
   `README`, and a CTAN catalogue entry (name/license/topics/version
   metadata) — the catalogue entry does not exist yet.
-- No other distribution channel (package manager, journal
-  announcement, etc.) is planned yet.
+- Other channels: see step 5 below.
+
+### Steps to submission, 2026-11-11
+
+1. **Decide: separate package, or contribute to `mathsemantics`.**
+   Ask its maintainers first, on its
+   [GitHub discussions board](https://github.com/kellertuer/MathSemantics.sty/discussions).
+   That repository has had no push since May 2022 and its board has
+   only the welcome post, so a reply may not come; if none comes
+   within a set time, go ahead separately.
+2. **Fix what a reviewer would hit first.**
+   - Done 2026-11-11: `\DeclareSemanticStyle` declares a style in a
+     preamble. Still to do: one real journal's house style as a
+     demonstration. Style switching is the package's main claim.
+     Search of 2026-11-11: no journal checked imposes notation that
+     differs from `default`. The AMS Style Guide (Journals, October
+     2017, section 12.3.3) leaves the typeface of variables to the
+     author ("Stet the author's usage") and sets the functions of its
+     Appendix A in roman; Theory and Applications of Categories asks
+     only for italic single characters and upright multi-character
+     identifiers. The author pages found for Differential Geometry
+     and its Applications, Journal of Geometry and Physics, Annals of
+     Global Analysis and Geometry and manuscripta mathematica gave no
+     notation rules. A demonstration style needs a journal that does
+     impose conventions, or a model taken from papers it published.
+   - Done 2026-11-11: moved off `l3keys2e`, which
+     [CTAN marks deprecated](https://ctan.org/pkg/l3keys2e), to the
+     kernel's `\ProcessKeyOptions`; dropped `xparse`. The package now
+     needs LaTeX 2022-06-01 or later.
+   - Review the generic command names `\set`, `\union` and
+     `\intersection`; `\set` collides with `braket.sty`.
+   - Choose an expl3 prefix (`l3prefixes` advises against short ones
+     such as `lsm`) and register it with the LaTeX team.
+   - Generalize `\Id`/`\ID`; check package options for orthogonality.
+   - Bump the version and date; give the `test-*.tex` files expected
+     output, so that they work as regression tests.
+   - Decide whether to keep the name `shmuelsemtex`, which may read as
+     a personal macro set. A rename is cheap only before submission.
+3. **Package it**, per
+   [CTAN's upload rules](https://ctan.org/help/upload-pkg): one
+   directory named after the package, as a zip, holding the `.dtx`,
+   `.ins`, documentation PDF and a UTF-8 `README.md`, without the
+   generated `.sty`. The README states the license and any special
+   font needs (the documentation uses David CLM for the Hebrew).
+4. **Submit** through the CTAN upload form, and create the catalogue
+   entry's metadata there.
+5. **Get it looked at**: the LaTeX team's GitHub Discussions
+   (<https://github.com/latex3/latex2e/discussions>), which replaced
+   the retired LaTeX-L mailing list in 2025, for review of the
+   expl3 code, ideally before submitting; TeX Stack Exchange chat,
+   the other replacement, for informal discussion; TeX Stack Exchange, by
+   answering real questions where the package fits; a TUGboat article
+   on the journal-portability test; the sTeX and mathematical
+   knowledge management community; the two papers, as real-world use.
 
 ### CTAN survey, 2026-10-10
 

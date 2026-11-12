@@ -1,0 +1,27 @@
+% Declared-style test: \DeclareSemanticStyle in the preamble, selected
+% by a package option that names it before it is declared (applied at
+% \begin{document}), then switched at runtime.
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[style=journalx]{shmuelsemtex}
+\DeclareSemanticStyle{journalx}{
+  catName      = \IfSemanticSymbolTF{#1}{\mathcal{#1}}{\mathsf{#1}},
+  morphEpi     = \to,
+  morphCompose = \mathbin{\star\ifx\relax#1\relax\else_{#1}\fi},
+  morphIncl    = \iota^{#1}_{#2},
+}
+\DeclareSemanticStyle{journaly}{
+  base    = journalx,
+  catName = \mathfrak{#1},
+}
+\begin{document}
+journalx: $\catName{C}$ $\catName{Set}$ $A \morphEpi B$
+$f \morphCompose g$ $f \morphCompose[x] g$ $\morphIncl[A,B]$
+$\catSeqName{A}$ $\morphMono$
+
+\setupsemanticmarkup{style=journaly}
+journaly: $\catName{C}$ $A \morphEpi B$ $f \morphCompose g$
+
+\setupsemanticmarkup{style=default}
+default: $\catName{C}$ $\catName{Set}$ $A \morphEpi B$ $f \morphCompose g$
+\end{document}

@@ -1,0 +1,44 @@
+% Quantifiers, set-builder notation, indexed union and intersection,
+% and sequence names, under every setup.
+\input{regression-test}
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{shmuelsemtex}
+% regression-test.tex lets \@@end to \END; bm.sty uses \@@end as a
+% sentinel (\ifx#1\@@end), so \bm loops without the primitive back.
+\makeatletter\let\@@end\@@@end\makeatother
+\newcommand\SHOW[1]{\setbox0=\hbox{$#1$}\showbox0}
+\newcommand\QUANT{\SHOW{\equant{x,y}{P}}\SHOW{\uquant{x}{P}}}
+\begin{document}
+\START
+\newcommand\HEAD[1]{\TYPE{============ #1}}
+\HEAD{quantifiers, initial setup}{\QUANT}
+\HEAD{subscript=stacked}{\setupquant{subscript=stacked}\QUANT}
+\HEAD{subscript=multiple, parentheses=single}{%
+  \setupquant{subscript=multiple, parentheses=single}\QUANT}
+\HEAD{subscript=multiple, parentheses=multiple}{%
+  \setupquant{subscript=multiple, parentheses=multiple}\QUANT}
+\HEAD{subscript=none, parentheses=single, separator}{%
+  \setupquant{subscript=none, parentheses=single, separator}\QUANT}
+\HEAD{set}{%
+  \SHOW{\set{x}}\SHOW{\set{x}[p,q]}%
+  \setupset{separator=:}\SHOW{\set{x}[p]}}
+\HEAD{union and intersection}{%
+  \SHOW{\union{S}}\SHOW{\union[i,j]{S}}\SHOW{\intersection[i]{S}}%
+  \setupset{subscript=multiple}\SHOW{\union[i,j]{S}}}
+\HEAD{union and intersection, subscript=none}{%
+  \setupset{subscript=none}\SHOW{\union{S}}\SHOW{\union[i,j]{S}}%
+  \SHOW{\intersection[i \in I]{S_i}}}
+\HEAD{union and intersection, stackbelow and stackunder}{%
+  \setupset{subscript=stackbelow}\SHOW{\union{S}}\SHOW{\union[i,j]{S}}%
+  \setupset{subscript=stackunder}\SHOW{\intersection[i \in I]{S_i}}}
+\HEAD{seqname}{\SHOW{\seqname{A}}\SHOW{\seqname{AB}}}
+\HEAD{settings are local to a group}{%
+  \setupquant{subscript=none, parentheses=none, separator=}%
+  \setupset{subscript=stacked, separator=\mid}%
+  \begingroup
+    \setupquant{subscript=stacked, parentheses=single}%
+    \setupset{subscript=multiple, separator=:}%
+  \endgroup
+  \QUANT\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+\END

@@ -23,8 +23,7 @@ category theory, and are equally usable in any mathematical document.
 - A current TeX Live or MiKTeX distribution
 - The `expl3` package (part of the LaTeX3 bundle, included in all
   modern distributions)
-- LaTeX2e with the `xparse` package (also included in modern
-  distributions)
+- LaTeX2e of 2022-06-01 or later
 
 ## Installation
 
@@ -88,7 +87,9 @@ presentation hooks as one coherent bundle -- never a partial patch
 the author assembles by hand -- so adding a real journal's house
 style later means adding one more style, not touching any document
 body. See `shmuelsemtex.dtx`, "Style switching", for the full
-mechanism (`l3keys2e`) and design rationale.
+mechanism and design rationale. A document can declare its own style
+in the preamble with `\DeclareSemanticStyle`, starting from an
+existing one and changing only the commands that differ.
 
 `\setupsemanticmarkup` follows the same pattern as `\setupquant` and
 `\setupset`: a runtime command built on plain `l3keys`, called away
@@ -106,6 +107,20 @@ by way of three `\setupsemanticmarkup{...}` calls placed away from
 the use sites, mirroring the papers' own `\setupquant` usage.
 
 ## Building
+
+With `l3build` (part of TeX Live and MiKTeX), configured in `build.lua`:
+
+```sh
+l3build check   # regression tests in testfiles/
+l3build ctan    # tests, documentation, and shmuelsemtex-ctan.zip for upload
+```
+
+`make check` and `make ctan` run the same. The tests compare the
+boxes each command produces with the recorded `testfiles/*.tlg`;
+after an intended change, check the new output and record it with
+`l3build save <test>`.
+
+The documentation alone:
 
 ```sh
 rexx scripts/build-doc.rex shmuelsemtex.dtx
@@ -152,6 +167,9 @@ test-body.tex           -- shared document body for the style tests below
 test-style-default.tex  -- \usepackage[style=default]{shmuelsemtex} + test-body.tex
 test-style-plain.tex    -- \usepackage[style=plain]{shmuelsemtex} + test-body.tex
 test-style-noopts.tex   -- \usepackage{shmuelsemtex} (no options) + test-body.tex
+test-style-declared.tex -- \DeclareSemanticStyle: a style named in the package
+                           option before it is declared, a style based on
+                           another, and a runtime switch
 test-setup-runtime.tex  -- \setupsemanticmarkup{...} called mid-document
 test-catname-decoration.tex -- regression test for \catName's auto-detection
                              against every real argument found in the source

@@ -10,6 +10,9 @@
 #   sty       extract shmuelsemtex.sty from shmuelsemtex.dtx (default)
 #   install   copy shmuelsemtex.sty into STYDIR
 #   doc       typeset shmuelsemtex.pdf (scripts/build-doc.rex)
+#   check     run the regression tests in testfiles/ (l3build check)
+#   ctan      check, typeset and zip the CTAN upload as
+#             shmuelsemtex-ctan.zip (l3build ctan; see build.lua)
 #   clean     remove TeX build leftovers
 #
 # Files are copied, never linked (no symlinks on JFS or FAT32).
@@ -17,8 +20,9 @@
 STYDIR ?= ../texmf/tex/latex
 TEX    ?= tex
 REXX   ?= rexx
+L3BUILD ?= l3build
 
-.PHONY: sty install doc clean
+.PHONY: sty install doc check ctan clean
 
 sty: shmuelsemtex.sty
 
@@ -33,6 +37,12 @@ $(STYDIR)/shmuelsemtex.sty: shmuelsemtex.sty
 
 doc: shmuelsemtex.sty
 	$(REXX) scripts/build-doc.rex shmuelsemtex.dtx
+
+check:
+	$(L3BUILD) check
+
+ctan:
+	$(L3BUILD) ctan
 
 AUX_EXTS := aux log out toc idx ind ilg glo gls hd
 

@@ -1,0 +1,854 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============ quantifiers, initial setup
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line ...
+.
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/jknappen\ursfs.fd
+File: ursfs.fd ....-..-.. rsfs font definition file (jk)
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line ....
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd ....-..-.. v... AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line ....
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd ....-..-.. v... AMS symbols B
+)
+> \box...=
+\hbox(6.94444+1.94444)x24.34148
+.\mathon
+.\OMS/cmsy/m/n/10 9
+.\OML/cmm/m/it/10 x
+.\OML/cmm/m/it/10 y
+.\kern0.35878
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...\HEAD{quantifiers, initial setup}{\QUANT
+                                             }
+> \box...=
+\hbox(6.94444+0.0)x19.07988
+.\mathon
+.\OMS/cmsy/m/n/10 8
+.\OML/cmm/m/it/10 x
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ...\HEAD{quantifiers, initial setup}{\QUANT}
+============ subscript=stacked
+> \box...=
+\hbox(20.13884+6.63849)x28.95488
+.\mathon
+.\hbox(20.13884+0.0)x16.11111
+..\hbox(20.13884+0.0)x0.0
+...\pdfsave
+...\pdfsetmatrix{2.9 0 0 2.9}
+...\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+....\hbox(6.94444+0.0)x5.55557
+.....\mathon
+.....\OMS/cmsy/m/n/10 9
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 16.11111
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\vbox(6.79146+3.29146)x5.03473, shifted 3.34703
+..\hbox(3.01389+0.0)x4.53473
+...\glue(\tabskip) 0.0
+...\hbox(3.01389+0.0)x4.53473
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 x
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+..\glue 0.0
+..\glue(\baselineskip) 2.69405
+..\hbox(3.01389+1.3611)x4.53473
+...\glue(\tabskip) 0.0
+...\hbox(3.01389+1.3611)x4.53473, glue set 0.114fil
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 y
+....\kern0.25116
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......cked}{\setupquant{subscript=stacked}\QUANT
+                                                  }
+> \box...=
+\hbox(13.1944+1.25693)x23.3993
+.\mathon
+.\hbox(13.1944+0.0)x10.55554
+..\hbox(13.1944+0.0)x0.0
+...\pdfsave
+...\pdfsetmatrix{1.9 0 0 1.9}
+...\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+....\hbox(6.94444+0.0)x5.55557
+.....\mathon
+.....\OMS/cmsy/m/n/10 8
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 10.55554
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\vbox(3.25694+-0.24306)x5.03473, shifted 1.49998
+..\hbox(3.01389+0.0)x4.53473
+...\glue(\tabskip) 0.0
+...\hbox(3.01389+0.0)x4.53473
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 x
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......ked}{\setupquant{subscript=stacked}\QUANT}
+============ subscript=multiple, parentheses=single
+> \box...=
+\hbox(8.50005+3.50006)x41.81717
+.\mathon
+.\hbox(8.50005+3.50006)x32.3415
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^@
+..\hbox(8.3333+0.0)x6.66666
+...\hbox(8.3333+0.0)x0.0
+....\pdfsave
+....\pdfsetmatrix{1.2 0 0 1.2}
+....\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+.....\hbox(6.94444+0.0)x5.55557
+......\mathon
+......\OMS/cmsy/m/n/10 9
+......\mathoff
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+....\pdfrestore
+...\kern 6.66666
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\hbox(3.01389+0.0)x5.03473, shifted 1.49998
+...\OML/cmm/m/it/7 x
+..\hbox(8.3333+0.0)x6.66666
+...\hbox(8.3333+0.0)x0.0
+....\pdfsave
+....\pdfsetmatrix{1.2 0 0 1.2}
+....\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+.....\hbox(6.94444+0.0)x5.55557
+......\mathon
+......\OMS/cmsy/m/n/10 9
+......\mathoff
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+....\pdfrestore
+...\kern 6.66666
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\hbox(3.01389+1.3611)x4.80675, shifted 1.49998
+...\OML/cmm/m/it/7 y
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^A
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......script=multiple, parentheses=single}\QUANT
+                                                  }
+> \box...=
+\hbox(8.50005+3.50006)x30.34377
+.\mathon
+.\hbox(8.50005+3.50006)x20.8681
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^@
+..\hbox(8.3333+0.0)x6.66666
+...\hbox(8.3333+0.0)x0.0
+....\pdfsave
+....\pdfsetmatrix{1.2 0 0 1.2}
+....\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+.....\hbox(6.94444+0.0)x5.55557
+......\mathon
+......\OMS/cmsy/m/n/10 8
+......\mathoff
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+....\pdfrestore
+...\kern 6.66666
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\hbox(3.01389+0.0)x5.03473, shifted 1.49998
+...\OML/cmm/m/it/7 x
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^A
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......cript=multiple, parentheses=single}\QUANT}
+============ subscript=multiple, parentheses=multiple
+> \box...=
+\hbox(8.50005+3.50006)x52.65051
+.\mathon
+.\hbox(8.50005+3.50006)x20.8681
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^@
+..\hbox(8.3333+0.0)x6.66666
+...\hbox(8.3333+0.0)x0.0
+....\pdfsave
+....\pdfsetmatrix{1.2 0 0 1.2}
+....\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+.....\hbox(6.94444+0.0)x5.55557
+......\mathon
+......\OMS/cmsy/m/n/10 9
+......\mathoff
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+....\pdfrestore
+...\kern 6.66666
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\hbox(3.01389+0.0)x5.03473, shifted 1.49998
+...\OML/cmm/m/it/7 x
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^A
+.\glue(\thinmuskip) 1.66663
+.\hbox(8.50005+3.50006)x20.64012
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^@
+..\hbox(8.3333+0.0)x6.66666
+...\hbox(8.3333+0.0)x0.0
+....\pdfsave
+....\pdfsetmatrix{1.2 0 0 1.2}
+....\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+.....\hbox(6.94444+0.0)x5.55557
+......\mathon
+......\OMS/cmsy/m/n/10 9
+......\mathoff
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+....\pdfrestore
+...\kern 6.66666
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\hbox(3.01389+1.3611)x4.80675, shifted 1.49998
+...\OML/cmm/m/it/7 y
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^A
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......ript=multiple, parentheses=multiple}\QUANT
+                                                  }
+> \box...=
+\hbox(8.50005+3.50006)x30.34377
+.\mathon
+.\hbox(8.50005+3.50006)x20.8681
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^@
+..\hbox(8.3333+0.0)x6.66666
+...\hbox(8.3333+0.0)x0.0
+....\pdfsave
+....\pdfsetmatrix{1.2 0 0 1.2}
+....\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+.....\hbox(6.94444+0.0)x5.55557
+......\mathon
+......\OMS/cmsy/m/n/10 8
+......\mathoff
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+....\pdfrestore
+...\kern 6.66666
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\hbox(3.01389+0.0)x5.03473, shifted 1.49998
+...\OML/cmm/m/it/7 x
+..\hbox(0.39998+11.60013)x4.58336, shifted -8.10007
+...\OMX/cmex/m/n/10 ^^A
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......ipt=multiple, parentheses=multiple}\QUANT}
+============ subscript=none, parentheses=single, separator
+> \box...=
+\hbox(7.5+2.5)x39.34148
+.\mathon
+.\hbox(7.5+2.5)x27.08803
+..\hbox(7.5+2.5)x3.8889
+...\OT1/cmr/m/n/10 (
+..\OMS/cmsy/m/n/10 9
+..\OML/cmm/m/it/10 x
+..\OML/cmm/m/it/10 :
+..\OML/cmm/m/it/10 y
+..\kern0.35878
+..\hbox(7.5+2.5)x3.8889
+...\OT1/cmr/m/n/10 )
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 :
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......none, parentheses=single, separator}\QUANT
+                                                  }
+> \box...=
+\hbox(7.5+2.5)x31.3021
+.\mathon
+.\hbox(7.5+2.5)x19.04865
+..\hbox(7.5+2.5)x3.8889
+...\OT1/cmr/m/n/10 (
+..\OMS/cmsy/m/n/10 8
+..\OML/cmm/m/it/10 x
+..\hbox(7.5+2.5)x3.8889
+...\OT1/cmr/m/n/10 )
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 :
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......one, parentheses=single, separator}\QUANT}
+============ set
+> \box...=
+\hbox(7.5+2.5)x15.7153
+.\mathon
+.\hbox(7.5+2.5)x15.7153
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 x
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\set{x}}\SHOW{\set{x}[p,q]}
+                                        %
+> \box...=
+\hbox(7.5+2.5)x38.76395
+.\mathon
+.\hbox(7.5+2.5)x38.76395
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 x
+..\hbox(5.55556+1.94444)x2.08347
+...\hbox(7.5+0.0)x2.08347, shifted 1.94444
+....\hbox(7.5+0.0)x2.08347
+.....\hbox(7.5+0.0)x0.0
+......\pdfsave
+......\pdfsetmatrix{.75005 0 0 .75}
+......\hbox(10.0+0.0)x0.0, glue set - 2.77779fil
+.......\hbox(10.0+0.0)x2.77779
+........\hbox(10.0+0.0)x2.77779
+.........\hbox(10.0+0.0)x2.77779
+..........\hbox(10.0+0.0)x2.77779
+...........\hbox(7.5+2.5)x2.77779, shifted -2.5
+............\mathon
+............\hbox(7.5+2.5)x2.77779
+.............\OMS/cmsy/m/n/10 j
+............\mathoff
+.......\glue 0.0 plus 1.0fil minus 1.0fil
+......\pdfrestore
+.....\kern 2.08347
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+..\OML/cmm/m/it/10 p
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\OMS/cmsy/m/n/10 ^
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\OML/cmm/m/it/10 q
+..\kern0.35878
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   \tex_let:D 
+l. ...  \setupset{separator=:}
+                             \SHOW{\set{x}[p]}}
+> \box...=
+\hbox(7.5+2.5)x27.96867
+.\mathon
+.\hbox(7.5+2.5)x27.96867
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 x
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\hbox(4.30554+0.0)x2.77779
+...\OT1/cmr/m/n/10 :
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\OML/cmm/m/it/10 p
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ...  \setupset{separator=:}\SHOW{\set{x}[p]}}
+============ union and intersection
+> \box...=
+\hbox(7.50006+2.50006)x16.7083
+.\mathon
+.\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+..\OMX/cmex/m/n/10 S
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\union{S}}\SHOW{\union[i,j]{S}}
+                                            \SHOW{\intersection[i]{S}}%
+> \box...=
+\hbox(21.75012+8.25653)x35.08856
+.\mathon
+.\hbox(21.75012+7.25015)x24.16669
+..\hbox(21.75012+7.25015)x0.0
+...\pdfsave
+...\pdfsetmatrix{2.9 0 0 2.9}
+...\hbox(7.50006+2.50006)x0.0, glue set - 8.33336fil
+....\hbox(7.50006+2.50006)x8.33336
+.....\mathon
+.....\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+......\OMX/cmex/m/n/10 S
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 24.16669
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\vbox(7.60048+4.10048)x4.21356, shifted 4.15605
+..\hbox(4.63193+0.0)x3.71356
+...\glue(\tabskip) 0.0
+...\hbox(4.63193+0.0)x3.71356, glue set 0.44214fil
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 i
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+..\glue 0.0
+..\glue(\baselineskip) 1.076
+..\hbox(4.63193+1.3611)x3.71356
+...\glue(\tabskip) 0.0
+...\hbox(4.63193+1.3611)x3.71356
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 j
+....\kern0.4045
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......{\union[i,j]{S}}\SHOW{\intersection[i]{S}}
+                                                  %
+> \box...=
+\hbox(14.25006+4.75009)x25.87093
+.\mathon
+.\hbox(14.25006+4.75009)x15.83333
+..\hbox(14.25006+4.75009)x0.0
+...\pdfsave
+...\pdfsetmatrix{1.9 0 0 1.9}
+...\hbox(7.50006+2.50006)x0.0, glue set - 8.33336fil
+....\hbox(7.50006+2.50006)x8.33336
+.....\mathon
+.....\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+......\OMX/cmex/m/n/10 T
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 15.83333
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\vbox(4.06596+0.56596)x3.32928, shifted 1.49998
+..\hbox(4.63193+0.0)x2.82928
+...\glue(\tabskip) 0.0
+...\hbox(4.63193+0.0)x2.82928
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 i
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   \tex_let:D 
+l. ...  \setupset{subscript=multiple}
+                                    \SHOW{\union[i,j]{S}}}
+> \box...=
+\hbox(7.50006+4.36115)x26.12614
+.\mathon
+.\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+..\OMX/cmex/m/n/10 S
+.\hbox(4.63193+1.3611)x9.41785, shifted 3.00005
+..\OML/cmm/m/it/7 i
+..\OML/cmm/m/it/7 ;
+..\OML/cmm/m/it/7 j
+..\kern0.4045
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......{subscript=multiple}\SHOW{\union[i,j]{S}}}
+============ union and intersection, subscript=none
+> \box...=
+\hbox(7.50006+2.50006)x16.7083
+.\mathon
+.\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+..\OMX/cmex/m/n/10 S
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......none}\SHOW{\union{S}}\SHOW{\union[i,j]{S}}
+                                                  %
+> \box...=
+\hbox(7.50006+2.50006)x48.39337
+.\mathon
+.\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+..\OMX/cmex/m/n/10 S
+.\glue(\thinmuskip) 1.66663
+.\hbox(7.5+2.5)x38.39339
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 S
+..\kern0.57637
+..\hbox(6.83333+1.94444)x2.4384
+...\hbox(8.77777+0.0)x2.4384, shifted 1.94444
+....\hbox(8.77777+0.0)x2.4384
+.....\hbox(8.77777+0.0)x0.0
+......\pdfsave
+......\pdfsetmatrix{.87782 0 0 .87778}
+......\hbox(10.0+0.0)x0.0, glue set - 2.77779fil
+.......\hbox(10.0+0.0)x2.77779
+........\hbox(10.0+0.0)x2.77779
+.........\hbox(10.0+0.0)x2.77779
+..........\hbox(10.0+0.0)x2.77779
+...........\hbox(7.5+2.5)x2.77779, shifted -2.5
+............\mathon
+............\hbox(7.5+2.5)x2.77779
+.............\OMS/cmsy/m/n/10 j
+............\mathoff
+.......\glue 0.0 plus 1.0fil minus 1.0fil
+......\pdfrestore
+.....\kern 2.4384
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+..\OML/cmm/m/it/10 i
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\OMS/cmsy/m/n/10 ^
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\OML/cmm/m/it/10 j
+..\kern0.57243
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\intersection[i \in I]{S_i}}
+                                         }
+> \box...=
+\hbox(7.50006+2.50006)x52.62395
+.\mathon
+.\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+..\OMX/cmex/m/n/10 T
+.\glue(\thinmuskip) 1.66663
+.\hbox(7.5+2.5)x42.62396
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 S
+..\hbox(4.63193+0.0)x3.32928, shifted 1.49998
+...\OML/cmm/m/it/7 i
+..\hbox(6.8333+1.49998)x2.31493
+...\hbox(8.33328+0.0)x2.31493, shifted 1.49998
+....\hbox(8.33328+0.0)x2.31493
+.....\hbox(8.33328+0.0)x0.0
+......\pdfsave
+......\pdfsetmatrix{.83337 0 0 .83333}
+......\hbox(10.0+0.0)x0.0, glue set - 2.77779fil
+.......\hbox(10.0+0.0)x2.77779
+........\hbox(10.0+0.0)x2.77779
+.........\hbox(10.0+0.0)x2.77779
+..........\hbox(10.0+0.0)x2.77779
+...........\hbox(7.5+2.5)x2.77779, shifted -2.5
+............\mathon
+............\hbox(7.5+2.5)x2.77779
+.............\OMS/cmsy/m/n/10 j
+............\mathoff
+.......\glue 0.0 plus 1.0fil minus 1.0fil
+......\pdfrestore
+.....\kern 2.31493
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+..\OML/cmm/m/it/10 i
+..\glue(\thickmuskip) 2.77771 plus 2.77771
+..\OMS/cmsy/m/n/10 2
+..\glue(\thickmuskip) 2.77771 plus 2.77771
+..\OML/cmm/m/it/10 I
+..\kern0.7847
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ...  \SHOW{\intersection[i \in I]{S_i}}}
+============ union and intersection, stackbelow and stackunder
+> \box...=
+\hbox(7.50006+2.50006)x16.7083
+.\mathon
+.\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+..\OMX/cmex/m/n/10 S
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......elow}\SHOW{\union{S}}\SHOW{\union[i,j]{S}}
+                                                  %
+> \box...=
+\hbox(7.50006+16.86768)x16.7083
+.\mathon
+.\vbox(7.50006+16.86768)x8.33336
+..\hbox(7.50006+2.50006)x8.33336
+...\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+....\OMX/cmex/m/n/10 S
+..\kern1.66666
+..\hbox(7.60048+4.10048)x8.33336, glue set 2.3099fil
+...\glue 0.0 plus 1.0fil minus 1.0fil
+...\vbox(7.60048+4.10048)x3.71356
+....\hbox(4.63193+0.0)x3.71356
+.....\glue(\tabskip) 0.0
+.....\hbox(4.63193+0.0)x3.71356, glue set 0.44214fil
+......\glue 0.0 plus 1.0fil
+......\mathon
+......\OML/cmm/m/it/7 i
+......\mathoff
+......\glue 0.0 plus 1.0fil
+.....\glue(\tabskip) 0.0
+....\glue 0.0
+....\glue(\baselineskip) 1.076
+....\hbox(4.63193+1.3611)x3.71356
+.....\glue(\tabskip) 0.0
+.....\hbox(4.63193+1.3611)x3.71356
+......\glue 0.0 plus 1.0fil
+......\mathon
+......\OML/cmm/m/it/7 j
+......\kern0.4045
+......\mathoff
+......\glue 0.0 plus 1.0fil
+.....\glue(\tabskip) 0.0
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\kern1.0
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   \tex_let:D 
+l. ...  \setupset{subscript=stackunder}
+                                      \SHOW{\intersection[i \in I]{S_i}}}
+> \box...=
+\hbox(7.50006+10.47978)x23.43425
+.\mathon
+.\vbox(7.50006+10.47978)x12.3064
+..\hbox(7.50006+2.50006)x12.3064, glue set 1.98653fil
+...\glue 0.0 plus 1.0fil minus 1.0fil
+...\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+....\OMX/cmex/m/n/10 T
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\kern1.66666
+..\vbox(4.40654+0.90652)x12.3064
+...\hbox(4.78334+0.52972)x12.3064
+....\glue(\tabskip) 0.0
+....\hbox(4.78334+0.52972)x12.3064
+.....\glue 0.0 plus 1.0fil
+.....\mathon
+.....\OML/cmm/m/it/7 i
+.....\OMS/cmsy/m/n/7 2
+.....\OML/cmm/m/it/7 I
+.....\kern0.5441
+.....\mathoff
+.....\glue 0.0 plus 1.0fil
+....\glue(\tabskip) 0.0
+..\kern1.0
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 S
+.\hbox(4.63193+0.0)x3.32928, shifted 1.49998
+..\OML/cmm/m/it/7 i
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......kunder}\SHOW{\intersection[i \in I]{S_i}}}
+============ seqname
+> \box...=
+\hbox(6.86111+0.0)x8.65547
+.\mathon
+.\hbox(6.86111+0.0)x8.65547
+..\hbox(6.86111+0.0)x8.65547
+...\mathon
+...\OT1/cmr/bx/it/10 A
+...\mathoff
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......ame}{\SHOW{\seqname{A}}\SHOW{\seqname{AB}}
+                                                  }
+> \box...=
+\hbox(6.86111+0.0)x16.87491
+.\mathon
+.\hbox(6.86111+0.0)x16.87491
+..\OT1/cmr/bx/n/10 A
+..\OT1/cmr/bx/n/10 B
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......me}{\SHOW{\seqname{A}}\SHOW{\seqname{AB}}}
+============ settings are local to a group
+> \box...=
+\hbox(6.94444+1.94444)x24.34148
+.\mathon
+.\OMS/cmsy/m/n/10 9
+.\OML/cmm/m/it/10 x
+.\OML/cmm/m/it/10 y
+.\kern0.35878
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \QUANT
+             \SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+> \box...=
+\hbox(6.94444+0.0)x19.07988
+.\mathon
+.\OMS/cmsy/m/n/10 8
+.\OML/cmm/m/it/10 x
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \QUANT\SHOW{\set{x}[p]}
+                              \SHOW{\union[i,j]{S}}}
+> \box...=
+\hbox(7.5+2.5)x22.4827
+.\mathon
+.\hbox(7.5+2.5)x22.4827
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 x
+..\hbox(4.30556+1.94444)x1.73615
+...\hbox(6.25+0.0)x1.73615, shifted 1.94444
+....\hbox(6.25+0.0)x1.73615
+.....\hbox(6.25+0.0)x0.0
+......\pdfsave
+......\pdfsetmatrix{.62502 0 0 .625}
+......\hbox(10.0+0.0)x0.0, glue set - 2.77779fil
+.......\hbox(10.0+0.0)x2.77779
+........\hbox(10.0+0.0)x2.77779
+.........\hbox(10.0+0.0)x2.77779
+..........\hbox(10.0+0.0)x2.77779
+...........\hbox(7.5+2.5)x2.77779, shifted -2.5
+............\mathon
+............\hbox(7.5+2.5)x2.77779
+.............\OMS/cmsy/m/n/10 j
+............\mathoff
+.......\glue 0.0 plus 1.0fil minus 1.0fil
+......\pdfrestore
+.....\kern 1.73615
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+..\OML/cmm/m/it/10 p
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......UANT\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
+                                                  }
+> \box...=
+\hbox(21.75012+8.25653)x35.08856
+.\mathon
+.\hbox(21.75012+7.25015)x24.16669
+..\hbox(21.75012+7.25015)x0.0
+...\pdfsave
+...\pdfsetmatrix{2.9 0 0 2.9}
+...\hbox(7.50006+2.50006)x0.0, glue set - 8.33336fil
+....\hbox(7.50006+2.50006)x8.33336
+.....\mathon
+.....\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+......\OMX/cmex/m/n/10 S
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 24.16669
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\vbox(7.60048+4.10048)x4.21356, shifted 4.15605
+..\hbox(4.63193+0.0)x3.71356
+...\glue(\tabskip) 0.0
+...\hbox(4.63193+0.0)x3.71356, glue set 0.44214fil
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 i
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+..\glue 0.0
+..\glue(\baselineskip) 1.076
+..\hbox(4.63193+1.3611)x3.71356
+...\glue(\tabskip) 0.0
+...\hbox(4.63193+1.3611)x3.71356
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 j
+....\kern0.4045
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......ANT\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}

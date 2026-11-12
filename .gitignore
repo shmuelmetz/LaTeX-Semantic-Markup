@@ -48,3 +48,7 @@ Thumbs.db
 
 # Typeset documentation (built by make doc)
 *.pdf
+
+# l3build working directory and the CTAN upload (make check, make ctan)
+build/
+*.zip

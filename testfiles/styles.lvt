@@ -1,0 +1,34 @@
+% Every user-level command under the built-in styles, and switching
+% between them at run time.
+\input{regression-test}
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{shmuelsemtex}
+% regression-test.tex lets \@@end to \END; bm.sty uses \@@end as a
+% sentinel (\ifx#1\@@end), so \bm loops without the primitive back.
+\makeatletter\let\@@end\@@@end\makeatother
+\newcommand\SHOW[1]{\setbox0=\hbox{$#1$}\showbox0}
+\newcommand\ALL{%
+  \SHOW{\semName{x}}%
+  \SHOW{\catName{C}}\SHOW{\catName{Set}}\SHOW{\catName{C^2}}%
+  \SHOW{\catName{XY}}\SHOW{\catSeqName{A}}%
+  \SHOW{\objName{x}}%
+  \SHOW{\morphName{f}}\SHOW{\morphName{id}}\SHOW{\morphSeqName{f}}%
+  \SHOW{\morphMono}\SHOW{\morphEpi}%
+  \SHOW{\morphCompose}\SHOW{\morphCompose[x]}%
+  \SHOW{\morphComposeHead}\SHOW{\morphComposeTail[y]}%
+  \SHOW{\morphId}\SHOW{\morphId[A]}\SHOW{\morphSeqId[A]}%
+  \SHOW{\morphIncl}\SHOW{\morphIncl[A]}\SHOW{\morphIncl[A,B]}%
+  \SHOW{\morphSeqIncl[{(A,B)},C]}\SHOW{\morphInclArrow}%
+  \SHOW{\chartName{U}}\SHOW{\atlasName{A}}\SHOW{\coordName{x}}%
+}
+\begin{document}
+\START
+\newcommand\HEAD[1]{\TYPE{============ #1}}
+\HEAD{style=default (no option)}{\ALL}
+\HEAD{style=plain at run time}{\setupsemanticmarkup{style=plain}\ALL}
+\HEAD{back to style=default}{\setupsemanticmarkup{style=default}\ALL}
+\HEAD{style is local to a group}{%
+  \begingroup\setupsemanticmarkup{style=plain}\endgroup
+  \SHOW{\catName{C}}}
+\END

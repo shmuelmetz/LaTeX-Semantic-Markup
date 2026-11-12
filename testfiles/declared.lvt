@@ -1,0 +1,49 @@
+% \DeclareSemanticStyle: a style named in the package option before it
+% is declared (applied at \begin{document}), a style based on another,
+% \IfSemanticSymbolTF, and the error messages.
+\input{regression-test}
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[style=journalx]{shmuelsemtex}
+% regression-test.tex lets \@@end to \END; bm.sty uses \@@end as a
+% sentinel (\ifx#1\@@end), so \bm loops without the primitive back.
+\makeatletter\let\@@end\@@@end\makeatother
+\DeclareSemanticStyle{journalx}{
+  catName      = \IfSemanticSymbolTF{#1}{\mathcal{#1}}{\mathsf{#1}},
+  morphEpi     = \to,
+  morphCompose = \mathbin{\star\ifx\relax#1\relax\else_{#1}\fi},
+  morphIncl    = \iota^{#1}_{#2},
+}
+\DeclareSemanticStyle{journaly}{base = journalx, catName = \mathfrak{#1}}
+\DeclareSemanticStyle{journalq}{
+  setupquant = {subscript=stacked, parentheses=single},
+  setupset   = {subscript=multiple, separator=:},
+}
+\newcommand\SHOW[1]{\setbox0=\hbox{$#1$}\showbox0}
+\begin{document}
+\START
+\newcommand\HEAD[1]{\TYPE{============ #1}}
+\HEAD{journalx from the package option}{%
+  \SHOW{\catName{C}}\SHOW{\catName{Set}}\SHOW{\morphEpi}%
+  \SHOW{\morphCompose}\SHOW{\morphCompose[x]}\SHOW{\morphIncl[A,B]}%
+  \SHOW{\catSeqName{A}}\SHOW{\morphMono}}
+\HEAD{journaly, based on journalx}{%
+  \setupsemanticmarkup{style=journaly}%
+  \SHOW{\catName{C}}\SHOW{\morphEpi}\SHOW{\morphCompose}}
+\HEAD{IfSemanticSymbolTF}{%
+  \TYPE{\IfSemanticSymbolTF{C}{symbol}{name}}%
+  \TYPE{\IfSemanticSymbolTF{Set}{symbol}{name}}%
+  \TYPE{\IfSemanticSymbolTF{E^i}{symbol}{name}}%
+  \TYPE{\IfSemanticSymbolTF{XY}{symbol}{name}}}
+\HEAD{journalq sets quantifiers and sets}{%
+  \setupsemanticmarkup{style=journalq}%
+  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+\HEAD{setupquant adjusts within the style}{%
+  \setupquant{subscript=multiple}\SHOW{\equant{x,y}{P}}}
+\HEAD{selecting default resets them}{%
+  \setupsemanticmarkup{style=default}%
+  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+\HEAD{errors}{%
+  \DeclareSemanticStyle{bad}{base = nosuch, nosuchcommand = x}%
+  \setupsemanticmarkup{style=nosuch}}
+\END

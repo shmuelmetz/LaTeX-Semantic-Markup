@@ -1,0 +1,416 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============ journalx from the package option
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line ...
+.
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/jknappen\ursfs.fd
+File: ursfs.fd ....-..-.. rsfs font definition file (jk)
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line ....
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd ....-..-.. v... AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line ....
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd ....-..-.. v... AMS symbols B
+)
+> \box...=
+\hbox(6.83331+0.0)x5.84865
+.\mathon
+.\OMS/cmsy/m/n/10 C
+.\kern0.58336
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\catName{C}}\SHOW{\catName{Set}}
+                                             \SHOW{\morphEpi}%
+> \box...=
+\hbox(6.94444+0.0)x13.61113
+.\mathon
+.\hbox(6.94444+0.0)x13.61113
+..\OT1/cmss/m/n/10 S
+..\OT1/cmss/m/n/10 e
+..\OT1/cmss/m/n/10 t
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......me{C}}\SHOW{\catName{Set}}\SHOW{\morphEpi}
+                                                  %
+> \box...=
+\hbox(3.66875+0.0)x10.00002
+.\mathon
+.\OMS/cmsy/m/n/10 !
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\morphCompose}
+                           \SHOW{\morphCompose[x]}\SHOW{\morphIncl[A,B]}%
+> \box...=
+\hbox(4.65279+0.0)x5.00002
+.\mathon
+.\hbox(4.65279+0.0)x5.00002
+..\OML/cmm/m/it/10 ?
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\morphCompose}\SHOW{\morphCompose[x]}
+                                                  \SHOW{\morphIncl[A,B]}%
+> \box...=
+\hbox(4.65279+1.49998)x10.03474
+.\mathon
+.\hbox(4.65279+1.49998)x10.03474
+..\OML/cmm/m/it/10 ?
+..\hbox(3.01389+0.0)x5.03473, shifted 1.49998
+...\OML/cmm/m/it/7 x
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......OW{\morphCompose[x]}\SHOW{\morphIncl[A,B]}
+                                                  %
+> \box...=
+\hbox(8.41226+2.75433)x10.42236
+.\mathon
+.\OML/cmm/m/it/10 ^^S
+.\vbox(11.1666+0.0)x6.883, shifted 2.75433
+..\hbox(4.78334+0.0)x6.51392
+...\OML/cmm/m/it/7 A
+..\kern1.59991
+..\hbox(4.78334+0.0)x6.883
+...\OML/cmm/m/it/7 B
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\catSeqName{A}}
+                            \SHOW{\morphMono}}
+> \box...=
+\hbox(6.99998+0.0)x10.31778
+.\mathon
+.\hbox(6.99998+0.0)x10.31778
+..\hbox(6.99998+0.0)x10.31778
+...\mathon
+...\U/rsfs/m/n/10 A
+...\kern2.29253
+...\mathoff
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\catSeqName{A}}\SHOW{\morphMono}
+                                             }
+> \box...=
+\hbox(5.22394+0.13539)x11.11115
+.\mathon
+.\U/msa/m/n/10 ^^Z
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ...  \SHOW{\catSeqName{A}}\SHOW{\morphMono}}
+============ journaly, based on journalx
+LaTeX Font Info:    Trying to load font information for U+euf on input line ....
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\ueuf.fd
+File: ueuf.fd ....-..-.. v... Euler Fraktur
+)
+> \box...=
+\hbox(6.91406+0.0)x6.12543
+.\mathon
+.\U/euf/m/n/10 C
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\catName{C}}\SHOW{\morphEpi}
+                                         \SHOW{\morphCompose}}
+> \box...=
+\hbox(3.66875+0.0)x10.00002
+.\mathon
+.\OMS/cmsy/m/n/10 !
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......me{C}}\SHOW{\morphEpi}\SHOW{\morphCompose}
+                                                  }
+> \box...=
+\hbox(4.65279+0.0)x5.00002
+.\mathon
+.\hbox(4.65279+0.0)x5.00002
+..\OML/cmm/m/it/10 ?
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......e{C}}\SHOW{\morphEpi}\SHOW{\morphCompose}}
+============ IfSemanticSymbolTF
+\IfSemanticSymbolTF {C}{symbol}{name}
+\IfSemanticSymbolTF {Set}{symbol}{name}
+\IfSemanticSymbolTF {E^i}{symbol}{name}
+\IfSemanticSymbolTF {XY}{symbol}{name}
+============ journalq sets quantifiers and sets
+> \box...=
+\hbox(20.50017+15.50017)x48.12154
+.\mathon
+.\hbox(20.50017+15.50017)x38.64587
+..\vbox(0.39998+35.60036)x8.75002, shifted -20.10019
+...\hbox(0.39998+17.60019)x8.75002
+....\OMX/cmex/m/n/10 0
+...\hbox(0.39998+17.60019)x8.75002
+....\OMX/cmex/m/n/10 @
+..\hbox(20.13884+0.0)x16.11111
+...\hbox(20.13884+0.0)x0.0
+....\pdfsave
+....\pdfsetmatrix{2.9 0 0 2.9}
+....\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+.....\hbox(6.94444+0.0)x5.55557
+......\mathon
+......\OMS/cmsy/m/n/10 9
+......\mathoff
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+....\pdfrestore
+...\kern 16.11111
+...\glue 0.0 plus 1.0fil minus 1.0fil
+..\vbox(6.79146+3.29146)x5.03473, shifted 3.34703
+...\hbox(3.01389+0.0)x4.53473
+....\glue(\tabskip) 0.0
+....\hbox(3.01389+0.0)x4.53473
+.....\glue 0.0 plus 1.0fil
+.....\mathon
+.....\OML/cmm/m/it/7 x
+.....\mathoff
+.....\glue 0.0 plus 1.0fil
+....\glue(\tabskip) 0.0
+...\glue 0.0
+...\glue(\baselineskip) 2.69405
+...\hbox(3.01389+1.3611)x4.53473
+....\glue(\tabskip) 0.0
+....\hbox(3.01389+1.3611)x4.53473, glue set 0.114fil
+.....\glue 0.0 plus 1.0fil
+.....\mathon
+.....\OML/cmm/m/it/7 y
+.....\kern0.25116
+.....\mathoff
+.....\glue 0.0 plus 1.0fil
+....\glue(\tabskip) 0.0
+..\vbox(0.39998+35.60036)x8.75002, shifted -20.10019
+...\hbox(0.39998+17.60019)x8.75002
+....\OMX/cmex/m/n/10 1
+...\hbox(0.39998+17.60019)x8.75002
+....\OMX/cmex/m/n/10 A
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}
+                                              \SHOW{\union[i,j]{S}}}
+> \box...=
+\hbox(7.5+2.5)x27.96867
+.\mathon
+.\hbox(7.5+2.5)x27.96867
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 x
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\hbox(4.30554+0.0)x2.77779
+...\OT1/cmr/m/n/10 :
+..\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+..\OML/cmm/m/it/10 p
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
+                                                  }
+> \box...=
+\hbox(7.50006+4.36115)x26.12614
+.\mathon
+.\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+..\OMX/cmex/m/n/10 S
+.\hbox(4.63193+1.3611)x9.41785, shifted 3.00005
+..\OML/cmm/m/it/7 i
+..\OML/cmm/m/it/7 ;
+..\OML/cmm/m/it/7 j
+..\kern0.4045
+.\glue(\thinmuskip) 1.66663
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+============ setupquant adjusts within the style
+> \box...=
+\hbox(8.3333+2.86108)x30.98383
+.\mathon
+.\hbox(8.3333+0.0)x6.66666
+..\hbox(8.3333+0.0)x0.0
+...\pdfsave
+...\pdfsetmatrix{1.2 0 0 1.2}
+...\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+....\hbox(6.94444+0.0)x5.55557
+.....\mathon
+.....\OMS/cmsy/m/n/10 9
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 6.66666
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\hbox(3.01389+0.0)x5.03473, shifted 1.49998
+..\OML/cmm/m/it/7 x
+.\hbox(8.3333+0.0)x6.66666
+..\hbox(8.3333+0.0)x0.0
+...\pdfsave
+...\pdfsetmatrix{1.2 0 0 1.2}
+...\hbox(6.94444+0.0)x0.0, glue set - 5.55557fil
+....\hbox(6.94444+0.0)x5.55557
+.....\mathon
+.....\OMS/cmsy/m/n/10 9
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 6.66666
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\hbox(3.01389+1.3611)x4.80675, shifted 1.49998
+..\OML/cmm/m/it/7 y
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......subscript=multiple}\SHOW{\equant{x,y}{P}}}
+============ selecting default resets them
+> \box...=
+\hbox(6.94444+1.94444)x24.34148
+.\mathon
+.\OMS/cmsy/m/n/10 9
+.\OML/cmm/m/it/10 x
+.\OML/cmm/m/it/10 y
+.\kern0.35878
+.\OML/cmm/m/it/10 P
+.\kern1.3889
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}
+                                              \SHOW{\union[i,j]{S}}}
+> \box...=
+\hbox(7.5+2.5)x22.4827
+.\mathon
+.\hbox(7.5+2.5)x22.4827
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 f
+..\OML/cmm/m/it/10 x
+..\hbox(4.30556+1.94444)x1.73615
+...\hbox(6.25+0.0)x1.73615, shifted 1.94444
+....\hbox(6.25+0.0)x1.73615
+.....\hbox(6.25+0.0)x0.0
+......\pdfsave
+......\pdfsetmatrix{.62502 0 0 .625}
+......\hbox(10.0+0.0)x0.0, glue set - 2.77779fil
+.......\hbox(10.0+0.0)x2.77779
+........\hbox(10.0+0.0)x2.77779
+.........\hbox(10.0+0.0)x2.77779
+..........\hbox(10.0+0.0)x2.77779
+...........\hbox(7.5+2.5)x2.77779, shifted -2.5
+............\mathon
+............\hbox(7.5+2.5)x2.77779
+.............\OMS/cmsy/m/n/10 j
+............\mathoff
+.......\glue 0.0 plus 1.0fil minus 1.0fil
+......\pdfrestore
+.....\kern 1.73615
+.....\glue 0.0 plus 1.0fil minus 1.0fil
+..\OML/cmm/m/it/10 p
+..\hbox(7.5+2.5)x5.00002
+...\OMS/cmsy/m/n/10 g
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ......{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
+                                                  }
+> \box...=
+\hbox(21.75012+8.25653)x35.08856
+.\mathon
+.\hbox(21.75012+7.25015)x24.16669
+..\hbox(21.75012+7.25015)x0.0
+...\pdfsave
+...\pdfsetmatrix{2.9 0 0 2.9}
+...\hbox(7.50006+2.50006)x0.0, glue set - 8.33336fil
+....\hbox(7.50006+2.50006)x8.33336
+.....\mathon
+.....\hbox(0.0+10.00012)x8.33336, shifted -7.50006
+......\OMX/cmex/m/n/10 S
+.....\mathoff
+....\glue 0.0 plus 1.0fil minus 1.0fil
+...\pdfrestore
+..\kern 24.16669
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\vbox(7.60048+4.10048)x4.21356, shifted 4.15605
+..\hbox(4.63193+0.0)x3.71356
+...\glue(\tabskip) 0.0
+...\hbox(4.63193+0.0)x3.71356, glue set 0.44214fil
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 i
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+..\glue 0.0
+..\glue(\baselineskip) 1.076
+..\hbox(4.63193+1.3611)x3.71356
+...\glue(\tabskip) 0.0
+...\hbox(4.63193+1.3611)x3.71356
+....\glue 0.0 plus 1.0fil
+....\mathon
+....\OML/cmm/m/it/7 j
+....\kern0.4045
+....\mathoff
+....\glue 0.0 plus 1.0fil
+...\glue(\tabskip) 0.0
+.\OML/cmm/m/it/10 S
+.\kern0.57637
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+============ errors
+! Package shmuelsemtex Error: `nosuchcommand' is not a command a style can set.
+Type <return> to continue.
+ ...                                              
+l. ......yle{bad}{base = nosuch, nosuchcommand = x}
+                                                  %
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+! Package shmuelsemtex Error: Unknown base style `nosuch' for style `bad'; usin
+g `default'.
+Type <return> to continue.
+ ...                                              
+l. ......yle{bad}{base = nosuch, nosuchcommand = x}
+                                                  %
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+! Package shmuelsemtex Error: Unknown style `nosuch'.
+Type <return> to continue.
+ ...                                              
+l. ...  \setupsemanticmarkup{style=nosuch}
+                                         }
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
