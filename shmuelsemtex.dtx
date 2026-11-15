@@ -550,6 +550,52 @@
 % $\hookrightarrow$, distinct from the tail arrow of \cs{morphMono}.
 % \end{function}
 %
+% \begin{function}{\morphDomain, \morphCodomain, \morphImage}
+% \begin{syntax}
+% \cs{morphDomain}\marg{morphism}
+% \cs{morphCodomain}\marg{morphism}
+% \cs{morphImage}\marg{morphism}
+% \end{syntax}
+% The domain, the codomain and the image of a morphism; under the
+% \texttt{default} style $\morphDomain{f}$, $\morphCodomain{f}$ and
+% $\morphImage{f}$. The codomain is what the morphism is declared to map
+% into; the image is the part of it the morphism reaches. They are
+% different things, so they are different commands. Texts use the word
+% ``range'' for either one, so the package has no command of that name.
+% \end{function}
+%
+% \begin{function}{\morphSeqDomain, \morphSeqCodomain, \morphSeqImage}
+% \begin{syntax}
+% \cs{morphSeqDomain}\marg{sequence of morphisms}
+% \cs{morphSeqCodomain}\marg{sequence of morphisms}
+% \cs{morphSeqImage}\marg{sequence of morphisms}
+% \end{syntax}
+% The same for a sequence or tuple of morphisms: the sequence of their
+% domains, codomains or images; under the \texttt{default} style
+% $\morphSeqDomain{\morphSeqName{f}}$. A sequence of sets is not a set,
+% so these are separate commands, as \cs{morphSeqName} is from
+% \cs{morphName}.
+% \end{function}
+%
+% \begin{function}{\morphRestrict}
+% \begin{syntax}
+% \cs{morphRestrict}\marg{morphism}\marg{domain}\oarg{codomain}
+% \end{syntax}
+% The restriction of a morphism to part of its domain, and optionally
+% to part of its codomain; under the \texttt{default} style
+% $\morphRestrict{f}{S}$ and $\morphRestrict{f}{S}[T]$.
+% \end{function}
+%
+% \begin{function}{\morphEmbedArrow}
+% \begin{syntax}
+% \cs{morphEmbedArrow}
+% \end{syntax}
+% The arrow symbol for an embedding, $\morphEmbedArrow$ under the
+% \texttt{default} style. An embedding is not in general an inclusion
+% map; the two are drawn alike by default but are separate commands, so
+% that a style can tell them apart.
+% \end{function}
+%
 % \subsection{Charts, atlases, and coordinates}
 %
 % \begin{function}{\chartName}
@@ -644,7 +690,14 @@
 % of that command, written in terms of the command's arguments:
 % \begin{description}
 % \item[No argument] \texttt{morphMono}, \texttt{morphEpi},
-%   \texttt{morphInclArrow}.
+%   \texttt{morphInclArrow}, \texttt{morphEmbedArrow}.
+% \item[\texttt{\#1}, the morphism] \mbox{}\\ \texttt{morphDomain},
+%   \texttt{morphSeqDomain}, \texttt{morphCodomain},
+%   \texttt{morphSeqCodomain}, \texttt{morphImage},
+%   \texttt{morphSeqImage}.
+% \item[\texttt{\#1}, \texttt{\#2}, \texttt{\#3}, the morphism, the
+%   domain and the codomain] \texttt{morphRestrict}; \texttt{\#3} is
+%   empty when no codomain is given.
 % \item[\texttt{\#1}, the text] \texttt{semName}, \texttt{catName},
 %   \texttt{catSeqName}, \texttt{objName}, \texttt{morphName},
 %   \texttt{morphSeqName}, \texttt{chartName}, \texttt{atlasName},
@@ -752,6 +805,7 @@
 % \begin{syntax}
 % \cs{set}\marg{elements}\oarg{propositions}
 % \cs{set}\marg{elements}\oarg{propositions}*
+% \cs{set}<\meta{size}>\marg{elements}\oarg{propositions}
 % \end{syntax}
 % Set-builder notation: \meta{elements} in braces, followed, when
 % \meta{propositions} is given, by the separator and the
@@ -762,6 +816,13 @@
 % inside a \env{multline} environment, since \LaTeX{} cannot otherwise
 % break a line inside a macro argument. The star follows the
 % arguments.
+%
+% The braces normally grow to fit their contents. The optional
+% \meta{size} in angle brackets, \texttt{big}, \texttt{Big},
+% \texttt{bigg} or \texttt{Bigg}, sets them, and a vertical-bar
+% separator, to that size instead: \verb|\set<Big>{x}[p,q]| gives
+% $\set<Big>{x}[p,q]$. It is a per-use override of presentation, for
+% the rare case where the automatic size looks wrong.
 % \end{function}
 %
 % \begin{function}{\setupset}
@@ -837,7 +898,7 @@
 % \begin{syntax}
 % \cs{seqname}\marg{text}
 % \end{syntax}
-% The name of a sequence, set or tuple: bold upright for a
+% The name of a sequence or tuple: bold upright for a
 % multi-character name, bold italic for a single character, the same
 % length-based split \cs{catName} uses. It is a separate macro because
 % a sequence is a different kind of object from a category.
@@ -910,6 +971,7 @@
 % \section{Implementation}
 %
 %<*package>
+%<@@=lsm>
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage{shmuelsemtex}{2026-11-11}{0.7.0}
@@ -946,17 +1008,17 @@
 %
 % \subsection{Internal variables}
 %
-% \begin{variable}[no-user-doc]{\l_lsm_str_tl, \l_lsm_upper_tl}
+% \begin{variable}[no-user-doc]{\l_@@_str_tl, \l_@@_upper_tl}
 % Scratch variables used by \cs{lsm_if_arbitrary_symbol:nTF} (below)
 % to hold an argument's detokenized string and its uppercased form,
 % for comparison.
 %    \begin{macrocode}
-\tl_new:N \l_lsm_str_tl
-\tl_new:N \l_lsm_upper_tl
+\tl_new:N \l_@@_str_tl
+\tl_new:N \l_@@_upper_tl
 %    \end{macrocode}
 % \end{variable}
 %
-% \begin{macro}[no-user-doc]{\lsm_if_arbitrary_symbol:nTF}
+% \begin{macro}[no-user-doc]{\@@_if_arbitrary_symbol:nTF}
 % Shared classification test behind \cs{catName}'s and
 % \cs{morphName}\slash \cs{morphSeqName}'s auto-detection
 % (\pagecrefn{sec:style-impl}): is \texttt{\#1} an \emph{arbitrary symbol}
@@ -970,7 +1032,7 @@
 % \texttt{p} outcome this test never requires) since its branches are
 % used exactly like an ordinary \texttt{TF} conditional's.
 %    \begin{macrocode}
-\cs_new_protected:Npn \lsm_if_arbitrary_symbol:nTF #1#2#3
+\cs_new_protected:Npn \@@_if_arbitrary_symbol:nTF #1#2#3
   {
     \str_if_in:nnTF {#1} { ^ }
       {#2}
@@ -981,10 +1043,10 @@
             \tl_if_single:nTF {#1}
               {#2}
               {
-                \tl_set:Nx \l_lsm_str_tl { \tl_to_str:n {#1} }
-                \tl_set:Nx \l_lsm_upper_tl
+                \tl_set:Nx \l_@@_str_tl { \tl_to_str:n {#1} }
+                \tl_set:Nx \l_@@_upper_tl
                   { \str_uppercase:f { \tl_to_str:n {#1} } }
-                \tl_if_eq:NNTF \l_lsm_str_tl \l_lsm_upper_tl
+                \tl_if_eq:NNTF \l_@@_str_tl \l_@@_upper_tl
                   {#2}
                   {#3}
               }
@@ -1004,61 +1066,77 @@
 % \begin{macro}{\semName, \catName, \catSeqName, \objName, \morphName,
 %   \morphSeqName, \morphMono, \morphEpi, \morphCompose,
 %   \morphComposeHead, \morphComposeTail, \morphId, \morphSeqId,
-%   \morphIncl, \morphSeqIncl, \morphInclArrow, \chartName, \atlasName,
+%   \morphIncl, \morphSeqIncl, \morphInclArrow, \morphDomain,
+%   \morphSeqDomain, \morphCodomain, \morphSeqCodomain, \morphImage,
+%   \morphSeqImage, \morphRestrict, \morphEmbedArrow, \chartName, \atlasName,
 %   \coordName}
 % \cs{morphIncl} and \cs{morphSeqIncl} split their optional comma list
 % into the included object and the containing object before calling
 % their hooks; more than two items is an error.
 %    \begin{macrocode}
-\NewDocumentCommand \semName { m } { \lsm_sem_name:n {#1} }
-\NewDocumentCommand \catName { m } { \lsm_cat_name:n {#1} }
-\NewDocumentCommand \catSeqName { m } { \lsm_cat_seqname:n {#1} }
-\NewDocumentCommand \objName { m } { \lsm_obj_name:n {#1} }
-\NewDocumentCommand \morphName { m } { \lsm_morph_name:n {#1} }
-\NewDocumentCommand \morphSeqName { m } { \lsm_morph_seqname:n {#1} }
-\NewDocumentCommand \morphMono { } { \lsm_morph_mono: }
-\NewDocumentCommand \morphEpi { } { \lsm_morph_epi: }
-\NewDocumentCommand \morphCompose { O{} } { \lsm_morph_compose:n {#1} }
+\NewDocumentCommand \semName { m } { \@@_sem_name:n {#1} }
+\NewDocumentCommand \catName { m } { \@@_cat_name:n {#1} }
+\NewDocumentCommand \catSeqName { m } { \@@_cat_seqname:n {#1} }
+\NewDocumentCommand \objName { m } { \@@_obj_name:n {#1} }
+\NewDocumentCommand \morphName { m } { \@@_morph_name:n {#1} }
+\NewDocumentCommand \morphSeqName { m } { \@@_morph_seqname:n {#1} }
+\NewDocumentCommand \morphMono { } { \@@_morph_mono: }
+\NewDocumentCommand \morphEpi { } { \@@_morph_epi: }
+\NewDocumentCommand \morphCompose { O{} } { \@@_morph_compose:n {#1} }
 \NewDocumentCommand \morphComposeHead { O{} }
-  { \lsm_morph_compose_head:n {#1} }
+  { \@@_morph_compose_head:n {#1} }
 \NewDocumentCommand \morphComposeTail { O{} }
-  { \lsm_morph_compose_tail:n {#1} }
-\NewDocumentCommand \morphId { O{} } { \lsm_morph_id:n {#1} }
-\NewDocumentCommand \morphSeqId { O{} } { \lsm_morph_seqid:n {#1} }
+  { \@@_morph_compose_tail:n {#1} }
+\NewDocumentCommand \morphId { O{} } { \@@_morph_id:n {#1} }
+\NewDocumentCommand \morphSeqId { O{} } { \@@_morph_seqid:n {#1} }
 \NewDocumentCommand \morphIncl { O{} }
-  { \lsm_incl_split:Nnn \lsm_morph_incl:nn { morphIncl } {#1} }
+  { \@@_incl_split:Nnn \@@_morph_incl:nn { morphIncl } {#1} }
 \NewDocumentCommand \morphSeqIncl { O{} }
-  { \lsm_incl_split:Nnn \lsm_morph_seqincl:nn { morphSeqIncl } {#1} }
-\NewDocumentCommand \morphInclArrow { } { \lsm_morph_incl_arrow: }
+  { \@@_incl_split:Nnn \@@_morph_seqincl:nn { morphSeqIncl } {#1} }
+\NewDocumentCommand \morphInclArrow { } { \@@_morph_incl_arrow: }
+\NewDocumentCommand \morphDomain { m } { \@@_morph_domain:n {#1} }
+\NewDocumentCommand \morphSeqDomain { m } { \@@_morph_seqdomain:n {#1} }
+\NewDocumentCommand \morphCodomain { m } { \@@_morph_codomain:n {#1} }
+\NewDocumentCommand \morphSeqCodomain { m }
+  { \@@_morph_seqcodomain:n {#1} }
+\NewDocumentCommand \morphImage { m } { \@@_morph_image:n {#1} }
+\NewDocumentCommand \morphSeqImage { m } { \@@_morph_seqimage:n {#1} }
+\NewDocumentCommand \morphRestrict { m m o }
+  {
+    \IfValueTF {#3}
+      { \@@_morph_restrict:nnn {#1} {#2} {#3} }
+      { \@@_morph_restrict:nnn {#1} {#2} { } }
+  }
+\NewDocumentCommand \morphEmbedArrow { } { \@@_morph_embed_arrow: }
 
-\clist_new:N \l_lsm_incl_tmp_clist
+\clist_new:N \l_@@_incl_tmp_clist
 \msg_new:nnn { shmuelsemtex } { incl-items }
   { More~than~two~items~for~\c_backslash_str #1:~[#2] }
-\cs_new_protected:Npn \lsm_incl_split:Nnn #1 #2 #3
+\cs_new_protected:Npn \@@_incl_split:Nnn #1 #2 #3
   {
-    \clist_set:Nn \l_lsm_incl_tmp_clist {#3}
-    \int_case:nnF { \clist_count:N \l_lsm_incl_tmp_clist }
+    \clist_set:Nn \l_@@_incl_tmp_clist {#3}
+    \int_case:nnF { \clist_count:N \l_@@_incl_tmp_clist }
       {
         { 0 } { #1 { } { } }
         { 1 }
           {
             \exp_args:Ne #1
-              { \clist_item:Nn \l_lsm_incl_tmp_clist { 1 } } { }
+              { \clist_item:Nn \l_@@_incl_tmp_clist { 1 } } { }
           }
         { 2 }
           {
             \exp_args:Nee #1
-              { \clist_item:Nn \l_lsm_incl_tmp_clist { 1 } }
-              { \clist_item:Nn \l_lsm_incl_tmp_clist { 2 } }
+              { \clist_item:Nn \l_@@_incl_tmp_clist { 1 } }
+              { \clist_item:Nn \l_@@_incl_tmp_clist { 2 } }
           }
       }
       {
         \msg_error:nnnn { shmuelsemtex } { incl-items } {#2} {#3}
       }
   }
-\NewDocumentCommand \chartName { m } { \lsm_chart_name:n {#1} }
-\NewDocumentCommand \atlasName { m } { \lsm_atlas_name:n {#1} }
-\NewDocumentCommand \coordName { m } { \lsm_coord_name:n {#1} }
+\NewDocumentCommand \chartName { m } { \@@_chart_name:n {#1} }
+\NewDocumentCommand \atlasName { m } { \@@_atlas_name:n {#1} }
+\NewDocumentCommand \coordName { m } { \@@_coord_name:n {#1} }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1072,8 +1150,8 @@
 % style will assign the same hook name). A style is applied by
 % calling its function, never by patching individual hooks.
 %
-% \begin{macro}[no-user-doc]{\lsm_base_decoration:Nn, \lsm_script:nn,
-%   \lsm_bold_script:nn}
+% \begin{macro}[no-user-doc]{\@@_base_decoration:Nn, \@@_script:nn,
+%   \@@_bold_script:nn}
 % Splits \texttt{\#2} into its base, everything before the first
 % superscript or subscript token, and its decoration, the rest with
 % braces kept, and passes the two to \texttt{\#1} as plain tokens.
@@ -1083,103 +1161,104 @@
 % loses them. The split comes first because \cs{bm} cannot take
 % \pkg{expl3} code in its argument.
 %    \begin{macrocode}
-\tl_new:N \l_lsm_base_tl
-\tl_new:N \l_lsm_deco_tl
-\bool_new:N \l_lsm_deco_bool
-\cs_new_protected:Npn \lsm_base_decoration:Nn #1 #2
+\tl_new:N \l_@@_base_tl
+\tl_new:N \l_@@_deco_tl
+\bool_new:N \l_@@_deco_bool
+\cs_new_protected:Npn \@@_base_decoration:Nn #1 #2
   {
-    \tl_clear:N \l_lsm_base_tl
-    \tl_clear:N \l_lsm_deco_tl
-    \bool_set_false:N \l_lsm_deco_bool
+    \tl_clear:N \l_@@_base_tl
+    \tl_clear:N \l_@@_deco_tl
+    \bool_set_false:N \l_@@_deco_bool
     \tl_map_inline:nn {#2}
       {
-        \bool_if:NF \l_lsm_deco_bool
+        \bool_if:NF \l_@@_deco_bool
           {
             \tl_if_single_token:nT {##1}
               {
                 \bool_lazy_or:nnT
                   { \token_if_math_superscript_p:N ##1 }
                   { \token_if_math_subscript_p:N ##1 }
-                  { \bool_set_true:N \l_lsm_deco_bool }
+                  { \bool_set_true:N \l_@@_deco_bool }
               }
           }
         \tl_if_single_token:nTF {##1}
           {
-            \bool_if:NTF \l_lsm_deco_bool
-              { \tl_put_right:Nn \l_lsm_deco_tl {##1} }
-              { \tl_put_right:Nn \l_lsm_base_tl {##1} }
+            \bool_if:NTF \l_@@_deco_bool
+              { \tl_put_right:Nn \l_@@_deco_tl {##1} }
+              { \tl_put_right:Nn \l_@@_base_tl {##1} }
           }
           {
-            \bool_if:NTF \l_lsm_deco_bool
-              { \tl_put_right:Nn \l_lsm_deco_tl { {##1} } }
-              { \tl_put_right:Nn \l_lsm_base_tl { {##1} } }
+            \bool_if:NTF \l_@@_deco_bool
+              { \tl_put_right:Nn \l_@@_deco_tl { {##1} } }
+              { \tl_put_right:Nn \l_@@_base_tl { {##1} } }
           }
       }
-    \exp_args:NVV #1 \l_lsm_base_tl \l_lsm_deco_tl
+    \exp_args:NVV #1 \l_@@_base_tl \l_@@_deco_tl
   }
-\cs_new_protected:Npn \lsm_script:nn #1 #2 { \mathscr{#1} #2 }
-\cs_new_protected:Npn \lsm_bold_script:nn #1 #2 { \bm{ \mathscr{#1} #2 } }
+\cs_new_protected:Npn \@@_script:nn #1 #2 { \mathscr{#1} #2 }
+\cs_new_protected:Npn \@@_bold_script:nn #1 #2 { \bm{ \mathscr{#1} #2 } }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}[no-user-doc]{\lsm_style_default:}
+% \begin{macro}[no-user-doc]{\@@_style_default:}
 % The \texttt{default} style: the presentation choices justified,
 % macro by macro, in the documentation above.
 %    \begin{macrocode}
-\cs_new_protected:Npn \lsm_style_default:
+\cs_new_protected:Npn \@@_style_default:
   {
-    \cs_set_protected:Npn \lsm_sem_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_cat_name:n ##1
+    \cs_set_protected:Npn \@@_sem_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_cat_name:n ##1
       {
-        \lsm_if_arbitrary_symbol:nTF {##1}
-          { \lsm_base_decoration:Nn \lsm_script:nn {##1} }
+        \@@_if_arbitrary_symbol:nTF {##1}
+          { \@@_base_decoration:Nn \@@_script:nn {##1} }
           { \mathbf{##1} }
       }
-    \cs_set_protected:Npn \lsm_cat_seqname:n ##1
-      { \lsm_base_decoration:Nn \lsm_bold_script:nn {##1} }
-    \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_morph_name:n ##1
+    \cs_set_protected:Npn \@@_cat_seqname:n ##1
+      { \@@_base_decoration:Nn \@@_bold_script:nn {##1} }
+    \cs_set_protected:Npn \@@_obj_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_morph_name:n ##1
       {
-        \lsm_if_arbitrary_symbol:nTF {##1}
+        \@@_if_arbitrary_symbol:nTF {##1}
           { \mathit{##1} }
           { \mathrm{##1} }
       }
-    \cs_set_protected:Npn \lsm_morph_seqname:n ##1
+    \cs_set_protected:Npn \@@_morph_seqname:n ##1
       {
-        \lsm_if_arbitrary_symbol:nTF {##1}
+        \@@_if_arbitrary_symbol:nTF {##1}
           { \bm{\mathit{##1}} }
           { \bm{\mathrm{##1}} }
       }
-    \cs_set_protected:Npn \lsm_morph_mono: { \rightarrowtail }
-    \cs_set_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
-    \cs_set_protected:Npn \lsm_morph_compose:n ##1
+    \cs_set_protected:Npn \@@_morph_mono: { \rightarrowtail }
+    \cs_set_protected:Npn \@@_morph_epi: { \twoheadrightarrow }
+    \cs_set_protected:Npn \@@_morph_compose:n ##1
       {
         \tl_if_empty:nTF {##1}
           { \mathbin{\circ} }
           { \mathbin{\overset{##1}{\circ}} }
       }
-    \cs_set_protected:Npn \lsm_morph_compose_head:n ##1
+    \cs_set_protected:Npn \@@_morph_compose_head:n ##1
       {
         \tl_if_empty:nTF {##1}
           { \mathbin{\odot} }
           { \mathbin{\overset{##1}{\odot}} }
       }
-    \cs_set_protected:Npn \lsm_morph_compose_tail:n ##1
+    \cs_set_protected:Npn \@@_morph_compose_tail:n ##1
       {
         \tl_if_empty:nTF {##1}
           { \mathbin{\cdot} }
           { \mathbin{\overset{##1}{\cdot}} }
       }
-    \lsm_style_id_incl:
-    \cs_set_protected:Npn \lsm_chart_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_atlas_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_coord_name:n ##1 { ##1 }
-    \lsm_style_quantset:
+    \@@_style_id_incl:
+    \cs_set_protected:Npn \@@_chart_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_atlas_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_coord_name:n ##1 { ##1 }
+    \@@_style_maps:
+    \@@_style_quantset:
   }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}[no-user-doc]{\lsm_style_id_incl:}
+% \begin{macro}[no-user-doc]{\@@_style_id_incl:}
 % The identity and inclusion hooks, shared by both built-in styles:
 % upright Id, bold for a sequence, with the identity's object as a
 % subscript and an inclusion's included and containing objects as
@@ -1187,32 +1266,63 @@
 % Identity and inclusion are separate hooks even where, as here, they
 % render alike, so that a style can tell them apart.
 %    \begin{macrocode}
-\cs_new_protected:Npn \lsm_id_incl:nnn #1 #2 #3
+\cs_new_protected:Npn \@@_id_incl:nnn #1 #2 #3
   {
     \operatorname{#1}
     \tl_if_empty:nF {#2} { \sp {#2} }
     \tl_if_empty:nF {#3} { \sb {#3} }
   }
-\cs_new_protected:Npn \lsm_style_id_incl:
+\cs_new_protected:Npn \@@_style_id_incl:
   {
-    \cs_set_protected:Npn \lsm_morph_id:n ##1
-      { \lsm_id_incl:nnn { Id } { } {##1} }
-    \cs_set_protected:Npn \lsm_morph_seqid:n ##1
-      { \lsm_id_incl:nnn { \mathbf{Id} } { } {##1} }
-    \cs_set_protected:Npn \lsm_morph_incl:nn ##1 ##2
-      { \lsm_id_incl:nnn { Id } {##1} {##2} }
-    \cs_set_protected:Npn \lsm_morph_seqincl:nn ##1 ##2
-      { \lsm_id_incl:nnn { \mathbf{Id} } {##1} {##2} }
-    \cs_set_protected:Npn \lsm_morph_incl_arrow: { \hookrightarrow }
+    \cs_set_protected:Npn \@@_morph_id:n ##1
+      { \@@_id_incl:nnn { Id } { } {##1} }
+    \cs_set_protected:Npn \@@_morph_seqid:n ##1
+      { \@@_id_incl:nnn { \mathbf{Id} } { } {##1} }
+    \cs_set_protected:Npn \@@_morph_incl:nn ##1 ##2
+      { \@@_id_incl:nnn { Id } {##1} {##2} }
+    \cs_set_protected:Npn \@@_morph_seqincl:nn ##1 ##2
+      { \@@_id_incl:nnn { \mathbf{Id} } {##1} {##2} }
+    \cs_set_protected:Npn \@@_morph_incl_arrow: { \hookrightarrow }
   }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}[no-user-doc]{\lsm_style_quantset:}
+% \begin{macro}[no-user-doc]{\@@_style_maps:}
+% Domain, codomain, image, restriction and the embedding arrow, shared
+% by both built-in styles: the abbreviations dom, cod and im as
+% operators with the argument in parentheses, bold for a sequence; the
+% restriction as a vertical bar with the domain below and any codomain
+% above; a hook arrow for an embedding.
+%    \begin{macrocode}
+\cs_new_protected:Npn \@@_style_maps:
+  {
+    \cs_set_protected:Npn \@@_morph_domain:n ##1
+      { \operatorname{dom} ( ##1 ) }
+    \cs_set_protected:Npn \@@_morph_seqdomain:n ##1
+      { \operatorname{\mathbf{dom}} ( ##1 ) }
+    \cs_set_protected:Npn \@@_morph_codomain:n ##1
+      { \operatorname{cod} ( ##1 ) }
+    \cs_set_protected:Npn \@@_morph_seqcodomain:n ##1
+      { \operatorname{\mathbf{cod}} ( ##1 ) }
+    \cs_set_protected:Npn \@@_morph_image:n ##1
+      { \operatorname{im} ( ##1 ) }
+    \cs_set_protected:Npn \@@_morph_seqimage:n ##1
+      { \operatorname{\mathbf{im}} ( ##1 ) }
+    \cs_set_protected:Npn \@@_morph_restrict:nnn ##1 ##2 ##3
+      {
+        ##1 \rvert \sb {##2}
+        \tl_if_empty:nF {##3} { \sp {##3} }
+      }
+    \cs_set_protected:Npn \@@_morph_embed_arrow: { \hookrightarrow }
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}[no-user-doc]{\@@_style_quantset:}
 % The quantifier and set settings of both built-in styles: the initial
 % values of the \cs{setupquant} and \cs{setupset} keys.
 %    \begin{macrocode}
-\cs_new_protected:Npn \lsm_style_quantset:
+\cs_new_protected:Npn \@@_style_quantset:
   {
     \keys_set:nn { lsm-quant }
       { subscript = none , parentheses = none , separator = }
@@ -1221,46 +1331,47 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}[no-user-doc]{\lsm_style_plain:}
+% \begin{macro}[no-user-doc]{\@@_style_plain:}
 % The \texttt{plain} style: every \texttt{*Name} family macro
 % unstyled; mono/epi/compose glyphs unchanged from \texttt{default}
 % (see the documentation above for why). Demonstrates that a style is
 % a real, independent, complete bundle, not a variant of
 % \cs{lsm_style_default:}.
 %    \begin{macrocode}
-\cs_new_protected:Npn \lsm_style_plain:
+\cs_new_protected:Npn \@@_style_plain:
   {
-    \cs_set_protected:Npn \lsm_sem_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_cat_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_cat_seqname:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_obj_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_morph_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_morph_seqname:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_morph_mono: { \rightarrowtail }
-    \cs_set_protected:Npn \lsm_morph_epi: { \twoheadrightarrow }
-    \cs_set_protected:Npn \lsm_morph_compose:n ##1
+    \cs_set_protected:Npn \@@_sem_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_cat_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_cat_seqname:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_obj_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_morph_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_morph_seqname:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_morph_mono: { \rightarrowtail }
+    \cs_set_protected:Npn \@@_morph_epi: { \twoheadrightarrow }
+    \cs_set_protected:Npn \@@_morph_compose:n ##1
       {
         \tl_if_empty:nTF {##1}
           { \mathbin{\circ} }
           { \mathbin{\overset{##1}{\circ}} }
       }
-    \cs_set_protected:Npn \lsm_morph_compose_head:n ##1
+    \cs_set_protected:Npn \@@_morph_compose_head:n ##1
       {
         \tl_if_empty:nTF {##1}
           { \mathbin{\odot} }
           { \mathbin{\overset{##1}{\odot}} }
       }
-    \cs_set_protected:Npn \lsm_morph_compose_tail:n ##1
+    \cs_set_protected:Npn \@@_morph_compose_tail:n ##1
       {
         \tl_if_empty:nTF {##1}
           { \mathbin{\cdot} }
           { \mathbin{\overset{##1}{\cdot}} }
       }
-    \lsm_style_id_incl:
-    \cs_set_protected:Npn \lsm_chart_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_atlas_name:n ##1 { ##1 }
-    \cs_set_protected:Npn \lsm_coord_name:n ##1 { ##1 }
-    \lsm_style_quantset:
+    \@@_style_id_incl:
+    \cs_set_protected:Npn \@@_chart_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_atlas_name:n ##1 { ##1 }
+    \cs_set_protected:Npn \@@_coord_name:n ##1 { ##1 }
+    \@@_style_maps:
+    \@@_style_quantset:
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1279,27 +1390,27 @@
 % may still declare it, and applied at \verb|\begin{document}|; in the
 % body it is an error.
 %    \begin{macrocode}
-\tl_new:N \g_lsm_style_pending_tl
-\bool_new:N \g_lsm_in_body_bool
+\tl_new:N \g_@@_style_pending_tl
+\bool_new:N \g_@@_in_body_bool
 \msg_new:nnn { shmuelsemtex } { unknown-style }
   { Unknown~style~`#1'. }
-\cs_new_protected:Npn \lsm_style_apply:n #1
+\cs_new_protected:Npn \@@_style_apply:n #1
   {
-    \tl_gclear:N \g_lsm_style_pending_tl
-    \use:c { lsm_style_ #1 : }
+    \tl_gclear:N \g_@@_style_pending_tl
+    \use:c { @@_style_ #1 : }
   }
 \keys_define:nn { lsm }
   {
     style .choice: ,
-    style / default .code:n = { \lsm_style_apply:n { default } } ,
-    style / plain .code:n = { \lsm_style_apply:n { plain } } ,
+    style / default .code:n = { \@@_style_apply:n { default } } ,
+    style / plain .code:n = { \@@_style_apply:n { plain } } ,
     style / unknown .code:n =
       {
-        \bool_if:NTF \g_lsm_in_body_bool
+        \bool_if:NTF \g_@@_in_body_bool
           {
             \msg_error:nnn { shmuelsemtex } { unknown-style } {#1}
           }
-          { \tl_gset:Nn \g_lsm_style_pending_tl {#1} }
+          { \tl_gset:Nn \g_@@_style_pending_tl {#1} }
       } ,
   }
 %    \end{macrocode}
@@ -1327,59 +1438,67 @@
 % the same list, after the base style's settings. The style becomes one
 % more choice of the \texttt{style} key.
 %    \begin{macrocode}
-\tl_new:N \l_lsm_decl_style_tl
-\tl_new:N \l_lsm_decl_base_tl
-\tl_new:N \l_lsm_decl_hooks_tl
+\tl_new:N \l_@@_decl_style_tl
+\tl_new:N \l_@@_decl_base_tl
+\tl_new:N \l_@@_decl_hooks_tl
 \msg_new:nnn { shmuelsemtex } { unknown-base }
   { Unknown~base~style~`#1'~for~style~`#2';~using~`default'. }
 \msg_new:nnn { shmuelsemtex } { unknown-command }
   { `#1'~is~not~a~command~a~style~can~set. }
-\cs_new_protected:Npn \lsm_decl_hook_key:nn #1 #2
+\cs_new_protected:Npn \@@_decl_hook_key:nn #1 #2
   {
     \keys_define:nn { lsm / declare }
       {
         #1 .code:n =
           {
             \cs_set_protected:cn
-              { lsm_user_ \l_lsm_decl_style_tl _ #2 } {##1}
-            \tl_put_right:Ne \l_lsm_decl_hooks_tl
+              { @@_user_ \l_@@_decl_style_tl _ #2 } {##1}
+            \tl_put_right:Ne \l_@@_decl_hooks_tl
               {
-                \cs_set_eq:NN \exp_not:c { lsm_ #2 }
-                  \exp_not:c { lsm_user_ \l_lsm_decl_style_tl _ #2 }
+                \cs_set_eq:NN \exp_not:c { @@_ #2 }
+                  \exp_not:c { @@_user_ \l_@@_decl_style_tl _ #2 }
               }
           }
       }
   }
-\lsm_decl_hook_key:nn { semName } { sem_name:n }
-\lsm_decl_hook_key:nn { catName } { cat_name:n }
-\lsm_decl_hook_key:nn { catSeqName } { cat_seqname:n }
-\lsm_decl_hook_key:nn { objName } { obj_name:n }
-\lsm_decl_hook_key:nn { morphName } { morph_name:n }
-\lsm_decl_hook_key:nn { morphSeqName } { morph_seqname:n }
-\lsm_decl_hook_key:nn { morphMono } { morph_mono: }
-\lsm_decl_hook_key:nn { morphEpi } { morph_epi: }
-\lsm_decl_hook_key:nn { morphCompose } { morph_compose:n }
-\lsm_decl_hook_key:nn { morphComposeHead } { morph_compose_head:n }
-\lsm_decl_hook_key:nn { morphComposeTail } { morph_compose_tail:n }
-\lsm_decl_hook_key:nn { morphId } { morph_id:n }
-\lsm_decl_hook_key:nn { morphSeqId } { morph_seqid:n }
-\lsm_decl_hook_key:nn { morphIncl } { morph_incl:nn }
-\lsm_decl_hook_key:nn { morphSeqIncl } { morph_seqincl:nn }
-\lsm_decl_hook_key:nn { morphInclArrow } { morph_incl_arrow: }
-\lsm_decl_hook_key:nn { chartName } { chart_name:n }
-\lsm_decl_hook_key:nn { atlasName } { atlas_name:n }
-\lsm_decl_hook_key:nn { coordName } { coord_name:n }
+\@@_decl_hook_key:nn { semName } { sem_name:n }
+\@@_decl_hook_key:nn { catName } { cat_name:n }
+\@@_decl_hook_key:nn { catSeqName } { cat_seqname:n }
+\@@_decl_hook_key:nn { objName } { obj_name:n }
+\@@_decl_hook_key:nn { morphName } { morph_name:n }
+\@@_decl_hook_key:nn { morphSeqName } { morph_seqname:n }
+\@@_decl_hook_key:nn { morphMono } { morph_mono: }
+\@@_decl_hook_key:nn { morphEpi } { morph_epi: }
+\@@_decl_hook_key:nn { morphCompose } { morph_compose:n }
+\@@_decl_hook_key:nn { morphComposeHead } { morph_compose_head:n }
+\@@_decl_hook_key:nn { morphComposeTail } { morph_compose_tail:n }
+\@@_decl_hook_key:nn { morphId } { morph_id:n }
+\@@_decl_hook_key:nn { morphSeqId } { morph_seqid:n }
+\@@_decl_hook_key:nn { morphIncl } { morph_incl:nn }
+\@@_decl_hook_key:nn { morphSeqIncl } { morph_seqincl:nn }
+\@@_decl_hook_key:nn { morphInclArrow } { morph_incl_arrow: }
+\@@_decl_hook_key:nn { chartName } { chart_name:n }
+\@@_decl_hook_key:nn { atlasName } { atlas_name:n }
+\@@_decl_hook_key:nn { coordName } { coord_name:n }
+\@@_decl_hook_key:nn { morphDomain } { morph_domain:n }
+\@@_decl_hook_key:nn { morphSeqDomain } { morph_seqdomain:n }
+\@@_decl_hook_key:nn { morphCodomain } { morph_codomain:n }
+\@@_decl_hook_key:nn { morphSeqCodomain } { morph_seqcodomain:n }
+\@@_decl_hook_key:nn { morphImage } { morph_image:n }
+\@@_decl_hook_key:nn { morphSeqImage } { morph_seqimage:n }
+\@@_decl_hook_key:nn { morphRestrict } { morph_restrict:nnn }
+\@@_decl_hook_key:nn { morphEmbedArrow } { morph_embed_arrow: }
 \keys_define:nn { lsm / declare }
   {
-    base .tl_set:N = \l_lsm_decl_base_tl ,
+    base .tl_set:N = \l_@@_decl_base_tl ,
     setupquant .code:n =
       {
-        \tl_put_right:Nn \l_lsm_decl_hooks_tl
+        \tl_put_right:Nn \l_@@_decl_hooks_tl
           { \keys_set:nn { lsm-quant } {#1} }
       } ,
     setupset .code:n =
       {
-        \tl_put_right:Nn \l_lsm_decl_hooks_tl
+        \tl_put_right:Nn \l_@@_decl_hooks_tl
           { \keys_set:nn { lsm-set } {#1} }
       } ,
     unknown .code:n =
@@ -1390,23 +1509,23 @@
   }
 \NewDocumentCommand \DeclareSemanticStyle { m m }
   {
-    \tl_set:Nn \l_lsm_decl_style_tl {#1}
-    \tl_set:Nn \l_lsm_decl_base_tl { default }
-    \tl_clear:N \l_lsm_decl_hooks_tl
+    \tl_set:Nn \l_@@_decl_style_tl {#1}
+    \tl_set:Nn \l_@@_decl_base_tl { default }
+    \tl_clear:N \l_@@_decl_hooks_tl
     \keys_set:nn { lsm / declare } {#2}
-    \cs_if_exist:cF { lsm_style_ \l_lsm_decl_base_tl : }
+    \cs_if_exist:cF { @@_style_ \l_@@_decl_base_tl : }
       {
         \msg_error:nnVn { shmuelsemtex } { unknown-base }
-          \l_lsm_decl_base_tl {#1}
-        \tl_set:Nn \l_lsm_decl_base_tl { default }
+          \l_@@_decl_base_tl {#1}
+        \tl_set:Nn \l_@@_decl_base_tl { default }
       }
-    \cs_set_protected:cpe { lsm_style_ #1 : }
+    \cs_set_protected:cpe { @@_style_ #1 : }
       {
-        \exp_not:c { lsm_style_ \l_lsm_decl_base_tl : }
-        \exp_not:V \l_lsm_decl_hooks_tl
+        \exp_not:c { @@_style_ \l_@@_decl_base_tl : }
+        \exp_not:V \l_@@_decl_hooks_tl
       }
     \keys_define:nn { lsm }
-      { style / #1 .code:n = { \lsm_style_apply:n {#1} } }
+      { style / #1 .code:n = { \@@_style_apply:n {#1} } }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1415,7 +1534,7 @@
 % The document-level form of \cs{lsm_if_arbitrary_symbol:nTF}.
 %    \begin{macrocode}
 \NewDocumentCommand \IfSemanticSymbolTF { m m m }
-  { \lsm_if_arbitrary_symbol:nTF {#1} {#2} {#3} }
+  { \@@_if_arbitrary_symbol:nTF {#1} {#2} {#3} }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1432,21 +1551,21 @@
 % another's argument (e.g.\ a \cs{union} inside a \cs{set} predicate)
 % is safe.
 %
-% \begin{variable}[no-user-doc]{\l_lsm_quant_tmp_clist, \l_lsm_quant_tmp_fp,
-%   \l_lsm_set_tmp_clist, \l_lsm_set_tmp_tl, \l_lsm_set_star_bool,
-%   \l_lsm_unint_tmp_clist, \l_lsm_unint_tmp_fp}
+% \begin{variable}[no-user-doc]{\l_@@_quant_tmp_clist, \l_@@_quant_tmp_fp,
+%   \l_@@_set_tmp_clist, \l_@@_set_tmp_tl, \l_@@_set_star_bool,
+%   \l_@@_unint_tmp_clist, \l_@@_unint_tmp_fp}
 % Each macro family below gets its own uniquely-named scratch
 % variables, declared together here rather than reusing a shared
 % \texttt{tmpa}-style name across families -- the fix for the latent
 % nesting bug described above.
 %    \begin{macrocode}
-\clist_new:N \l_lsm_quant_tmp_clist
-\fp_new:N    \l_lsm_quant_tmp_fp
-\clist_new:N \l_lsm_set_tmp_clist
-\tl_new:N    \l_lsm_set_tmp_tl
-\bool_new:N  \l_lsm_set_star_bool
-\clist_new:N \l_lsm_unint_tmp_clist
-\fp_new:N    \l_lsm_unint_tmp_fp
+\clist_new:N \l_@@_quant_tmp_clist
+\fp_new:N    \l_@@_quant_tmp_fp
+\clist_new:N \l_@@_set_tmp_clist
+\tl_new:N    \l_@@_set_tmp_tl
+\bool_new:N  \l_@@_set_star_bool
+\clist_new:N \l_@@_unint_tmp_clist
+\fp_new:N    \l_@@_unint_tmp_fp
 %    \end{macrocode}
 % \end{variable}
 %
@@ -1459,15 +1578,15 @@
 % \texttt{lsm}'s, since it predates and is unrelated to the
 % default/plain style choice.
 %    \begin{macrocode}
-\int_new:N \l_lsm_quant_parens_int
-\int_new:N \l_lsm_quant_subscr_int
-\tl_new:N \l_lsm_quant_sep_tl
+\int_new:N \l_@@_quant_parens_int
+\int_new:N \l_@@_quant_subscr_int
+\tl_new:N \l_@@_quant_sep_tl
 
 \NewDocumentCommand{\equant}{mm}
-  { \lsm_quant:nnn {\exists} {#1} {#2} }
+  { \@@_quant:nnn {\exists} {#1} {#2} }
 
 \NewDocumentCommand{\uquant}{mm}
-  { \lsm_quant:nnn {\forall} {#1} {#2} }
+  { \@@_quant:nnn {\forall} {#1} {#2} }
 
 \NewDocumentCommand \setupquant {m}
   { \keys_set:nn {lsm-quant} {#1} }
@@ -1477,55 +1596,55 @@
   subscript   .choices:nn =
     {
       {none, stacked, multiple}
-      { \int_set:Nn \l_lsm_quant_subscr_int {\l_keys_choice_int - 1} }
+      { \int_set:Nn \l_@@_quant_subscr_int {\l_keys_choice_int - 1} }
     },
   subscript   .default:n = multiple,
   subscript   .initial:n = none,
   parentheses .choices:nn =
     {
       {none, single, multiple}
-      { \int_set:Nn \l_lsm_quant_parens_int {\l_keys_choice_int - 1} }
+      { \int_set:Nn \l_@@_quant_parens_int {\l_keys_choice_int - 1} }
     },
   parentheses .default:n = multiple,
   parentheses .initial:n = none,
-  separator   .tl_set:N  = \l_lsm_quant_sep_tl,
+  separator   .tl_set:N  = \l_@@_quant_sep_tl,
   separator   .default:n = {.},
   separator   .initial:n = {},
  }
 
-\cs_new_protected:Npn \lsm_quant:nnn #1 #2 #3
+\cs_new_protected:Npn \@@_quant:nnn #1 #2 #3
   {
-    \clist_set:Nn \l_lsm_quant_tmp_clist {#2}
-    \int_case:nn {\l_lsm_quant_subscr_int}
+    \clist_set:Nn \l_@@_quant_tmp_clist {#2}
+    \int_case:nn {\l_@@_quant_subscr_int}
       {
         {0}
         {
-          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\left (}
+          \int_compare:nT {\l_@@_quant_parens_int > 0} {\left (}
           #1
-          \clist_use:Nn \l_lsm_quant_tmp_clist {\l_lsm_quant_sep_tl}
-          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\right )}
-          \l_lsm_quant_sep_tl #3
+          \clist_use:Nn \l_@@_quant_tmp_clist {\l_@@_quant_sep_tl}
+          \int_compare:nT {\l_@@_quant_parens_int > 0} {\right )}
+          \l_@@_quant_sep_tl #3
         }
         {1}
         {
-          \fp_set:Nn \l_lsm_quant_tmp_fp
-            {ceil{\clist_count:N \l_lsm_quant_tmp_clist - 1} * .1 + 1}
-          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\left (}
-          \scaleobj{\fp_to_decimal:N \l_lsm_quant_tmp_fp}{#1} \sb
-            { \substack { \clist_use:Nn \l_lsm_quant_tmp_clist { \\ } } }
-          \int_compare:nT {\l_lsm_quant_parens_int > 0} {\right )}
+          \fp_set:Nn \l_@@_quant_tmp_fp
+            {ceil{\clist_count:N \l_@@_quant_tmp_clist - 1} * .1 + 1}
+          \int_compare:nT {\l_@@_quant_parens_int > 0} {\left (}
+          \scaleobj{\fp_to_decimal:N \l_@@_quant_tmp_fp}{#1} \sb
+            { \substack { \clist_use:Nn \l_@@_quant_tmp_clist { \\ } } }
+          \int_compare:nT {\l_@@_quant_parens_int > 0} {\right )}
           #3
         }
         {2}
         {
-          \int_compare:nT {\l_lsm_quant_parens_int = 1} {\left (}
-          \clist_map_inline:Nn \l_lsm_quant_tmp_clist
+          \int_compare:nT {\l_@@_quant_parens_int = 1} {\left (}
+          \clist_map_inline:Nn \l_@@_quant_tmp_clist
             {
-              \int_compare:nT {\l_lsm_quant_parens_int = 2} {\left (}
+              \int_compare:nT {\l_@@_quant_parens_int = 2} {\left (}
               \scaleobj{1.2}{#1} \sb {##1}
-              \int_compare:nT {\l_lsm_quant_parens_int = 2} {\right )}
+              \int_compare:nT {\l_@@_quant_parens_int = 2} {\right )}
             }
-          \int_compare:nT {\l_lsm_quant_parens_int = 1} {\right )}
+          \int_compare:nT {\l_@@_quant_parens_int = 1} {\right )}
           #3
         }
       }
@@ -1548,15 +1667,16 @@
 % \texttt{subscript} key applies to \cs{union} and \cs{intersection}
 % (below).
 %    \begin{macrocode}
-\tl_new:N \l_lsm_set_sep_tl
-\int_new:N \l_lsm_set_subscr_int
+\tl_new:N \l_@@_set_sep_tl
+\int_new:N \l_@@_set_subscr_int
 
-\NewDocumentCommand{\set}{mos}
+\NewDocumentCommand{\set}{D<>{}mos}
   {
-    \IfBooleanTF {#3}
-      { \bool_set_true:N  \l_lsm_set_star_bool }
-      { \bool_set_false:N \l_lsm_set_star_bool }
-    \lsm_set_of:nnn {#1} {#2} {\l_lsm_set_star_bool}
+    \tl_set:Nn \l_@@_set_size_tl {#1}
+    \IfBooleanTF {#4}
+      { \bool_set_true:N  \l_@@_set_star_bool }
+      { \bool_set_false:N \l_@@_set_star_bool }
+    \@@_set_of:nnn {#2} {#3} {\l_@@_set_star_bool}
   }
 
 \NewDocumentCommand \setupset {m}
@@ -1564,55 +1684,79 @@
 
 \keys_define:nn {lsm-set}
   {
-    separator .tl_set:N  = \l_lsm_set_sep_tl,
+    separator .tl_set:N  = \l_@@_set_sep_tl,
     separator .initial:n = {\mid},
     subscript .choices:nn =
       {
         {none, stacked, multiple, stackbelow, stackunder}
-        { \int_set:Nn \l_lsm_set_subscr_int {\l_keys_choice_int - 1} }
+        { \int_set:Nn \l_@@_set_subscr_int {\l_keys_choice_int - 1} }
       },
     subscript .initial:n = stacked,
   }
 
-\cs_new_protected:Npn \lsm_set_sep:n #1
+\cs_new_protected:Npn \@@_set_sep:n #1
   {
-    \exp_args:NV \str_case:nnTF \l_lsm_set_sep_tl
+    \exp_args:NV \str_case:nnTF \l_@@_set_sep_tl
       {
         { | } { } { \mid } { } { \vert } { } { \Vert } { }
         { \| } { } { \parallel } { } { \lvert } { } { \rvert } { }
       }
-      { \scalerel*{\mathbin{\l_lsm_set_sep_tl}}{#1} }
-      { \mathbin{\l_lsm_set_sep_tl} }
+      { \scalerel*{\mathbin{\l_@@_set_sep_tl}}{#1} }
+      { \mathbin{\l_@@_set_sep_tl} }
   }
-\cs_new_protected:Npn \lsm_set_of:nnn #1 #2 #3
+\tl_new:N \l_@@_set_size_tl
+\cs_new_protected:Npn \@@_set_open:n #1
+  {
+    \tl_if_empty:NTF \l_@@_set_size_tl
+      { \left \{ }
+      { \use:c { \l_@@_set_size_tl l } \{ }
+  }
+\cs_new_protected:Npn \@@_set_close:n #1
+  {
+    \tl_if_empty:NTF \l_@@_set_size_tl
+      { \right \} }
+      { \use:c { \l_@@_set_size_tl r } \} }
+  }
+\cs_new_protected:Npn \@@_set_sized_sep:n #1
+  {
+    \tl_if_empty:NTF \l_@@_set_size_tl
+      { \@@_set_sep:n {#1} }
+      {
+        \exp_args:NV \str_case:nnTF \l_@@_set_sep_tl
+          { { | } { } { \mid } { } { \vert } { } }
+          { \use:c { \l_@@_set_size_tl m } \vert }
+          { \mathbin { \l_@@_set_sep_tl } }
+      }
+  }
+\cs_new_protected:Npn \@@_set_of:nnn #1 #2 #3
   {
     \IfValueTF {#2}
       {
-        \clist_set:Nn \l_lsm_set_tmp_clist {#2}
-        \tl_set:Nx \l_lsm_set_tmp_tl
-          { \clist_use:Nn \l_lsm_set_tmp_clist {\land} }
+        \clist_set:Nn \l_@@_set_tmp_clist {#2}
+        \tl_set:Nx \l_@@_set_tmp_tl
+          { \clist_use:Nn \l_@@_set_tmp_clist {\land} }
         \bool_if:nTF {#3}
           {
-            \scalerel*{\{}{#1 \l_lsm_set_tmp_tl}
+            \scalerel*{\{}{#1 \l_@@_set_tmp_tl}
             #1
-            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
-            \lsm_set_sep:n {#1 \l_lsm_set_tmp_tl}
+            \clist_set:Nn \l_@@_set_tmp_clist {#2}
+            \@@_set_sep:n {#1 \l_@@_set_tmp_tl}
             \\
-            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
-            \l_lsm_set_tmp_tl
-            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
-            \scalerel*{\}}{#1 \l_lsm_set_tmp_tl}
+            \clist_set:Nn \l_@@_set_tmp_clist {#2}
+            \l_@@_set_tmp_tl
+            \clist_set:Nn \l_@@_set_tmp_clist {#2}
+            \scalerel*{\}}{#1 \l_@@_set_tmp_tl}
           }
           {
-            \left \{
+            \@@_set_open:n { }
             #1
-            \clist_set:Nn \l_lsm_set_tmp_clist {#2}
-            \lsm_set_sep:n {#1 \l_lsm_set_tmp_tl}
-            \l_lsm_set_tmp_tl
-            \right \}
+            \clist_set:Nn \l_@@_set_tmp_clist {#2}
+            \@@_set_sized_sep:n {#1 \l_@@_set_tmp_tl}
+            \l_@@_set_tmp_tl
+            \@@_set_close:n { }
           }
       }
-      { \left \{ #1 \right \} }
+      { \@@_set_open:n { } #1 \@@_set_close:n { } }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1628,37 +1772,40 @@
 % notation.
 %    \begin{macrocode}
 \NewDocumentCommand{\intersection}{om}
-  { \lsm_unint_of:nnn \bigcap {#1} {#2} }
+  { \@@_unint_of:nnn \bigcap {#1} {#2} }
 
 \NewDocumentCommand{\union}{om}
-  { \lsm_unint_of:nnn \bigcup {#1} {#2} }
+  { \@@_unint_of:nnn \bigcup {#1} {#2} }
 
-\cs_new_protected:Npn \lsm_unint_of:nnn #1 #2 #3
+\cs_new_protected:Npn \@@_unint_of:nnn #1 #2 #3
   {
     \IfValueTF {#2}
       {
-        \clist_set:Nn \l_lsm_unint_tmp_clist {#2}
-        \int_compare:nNnT {\l_lsm_set_subscr_int} > { 2 }
+        \clist_set:Nn \l_@@_unint_tmp_clist {#2}
+        \int_compare:nNnT {\l_@@_set_subscr_int} > { 2 }
           {
             \mathop{#1}\limits \sb
-              { \substack { \clist_use:Nn \l_lsm_unint_tmp_clist { \\ } } }
+              { \substack { \clist_use:Nn \l_@@_unint_tmp_clist { \\ } } }
             #3
           }
-        \int_case:nn {\l_lsm_set_subscr_int}
+        \int_case:nn {\l_@@_set_subscr_int}
           {
             {0}
-            { #1 \lsm_set_of:nnn {#3} {#2} { \c_false_bool } }
+            {
+              \tl_clear:N \l_@@_set_size_tl
+              #1 \@@_set_of:nnn {#3} {#2} { \c_false_bool }
+            }
             {1}
             {
-              \fp_set:Nn \l_lsm_unint_tmp_fp
-                {ceil{\clist_count:N \l_lsm_unint_tmp_clist - 1} * .1 + 1}
-              \scaleobj{\fp_to_decimal:N \l_lsm_unint_tmp_fp}{#1} \sb
-                { \substack { \clist_use:Nn \l_lsm_unint_tmp_clist { \\ } } }
+              \fp_set:Nn \l_@@_unint_tmp_fp
+                {ceil{\clist_count:N \l_@@_unint_tmp_clist - 1} * .1 + 1}
+              \scaleobj{\fp_to_decimal:N \l_@@_unint_tmp_fp}{#1} \sb
+                { \substack { \clist_use:Nn \l_@@_unint_tmp_clist { \\ } } }
               #3
             }
             {2}
             {
-              #1 \sb {\clist_use:Nn \l_lsm_unint_tmp_clist {,}}
+              #1 \sb {\clist_use:Nn \l_@@_unint_tmp_clist {,}}
               #3
             }
           }
@@ -1669,16 +1816,16 @@
 % \end{macro}
 %
 % \begin{macro}{\seqname}
-% Render a sequence/set/tuple name: bold upright for a multi-character
+% Render a sequence or tuple name: bold upright for a multi-character
 % name, bold italic for a single character -- the same
 % length-based split \cs{catName} uses, kept as its own macro since it
 % is semantically a different kind of object (a sequence, not a
 % category) even though the rendering rule happens to coincide.
 %    \begin{macrocode}
 \NewDocumentCommand{\seqname}{m}
-  { \lsm_seqname:n {#1} }
+  { \@@_seqname:n {#1} }
 
-\cs_new_protected:Npn \lsm_seqname:n #1
+\cs_new_protected:Npn \@@_seqname:n #1
   {
     \int_compare:nTF {\tl_count:n {#1} > 1}
       { {\mathbf{#1}} }
@@ -1704,14 +1851,14 @@
 \ProcessKeyOptions [ lsm ]
 \hook_gput_code:nnn { begindocument } { shmuelsemtex }
   {
-    \bool_gset_true:N \g_lsm_in_body_bool
-    \tl_if_empty:NF \g_lsm_style_pending_tl
+    \bool_gset_true:N \g_@@_in_body_bool
+    \tl_if_empty:NF \g_@@_style_pending_tl
       {
-        \cs_if_exist:cTF { lsm_style_ \g_lsm_style_pending_tl : }
-          { \exp_args:NV \lsm_style_apply:n \g_lsm_style_pending_tl }
+        \cs_if_exist:cTF { @@_style_ \g_@@_style_pending_tl : }
+          { \exp_args:NV \@@_style_apply:n \g_@@_style_pending_tl }
           {
             \msg_error:nnV { shmuelsemtex } { unknown-style }
-              \g_lsm_style_pending_tl
+              \g_@@_style_pending_tl
           }
       }
   }

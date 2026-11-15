@@ -32,6 +32,9 @@
 \HEAD{union and intersection, stackbelow and stackunder}{%
   \setupset{subscript=stackbelow}\SHOW{\union{S}}\SHOW{\union[i,j]{S}}%
   \setupset{subscript=stackunder}\SHOW{\intersection[i \in I]{S_i}}}
+\HEAD{set with an explicit size}{%
+  \SHOW{\set<big>{x}}\SHOW{\set<Big>{x}[p,q]}%
+  \setupset{separator=:}\SHOW{\set<big>{x}[p]}}
 \HEAD{seqname}{\SHOW{\seqname{A}}\SHOW{\seqname{AB}}}
 \HEAD{settings are local to a group}{%
   \setupquant{subscript=none, parentheses=none, separator=}%

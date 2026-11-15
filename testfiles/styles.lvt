@@ -21,6 +21,9 @@
   \SHOW{\morphIncl}\SHOW{\morphIncl[A]}\SHOW{\morphIncl[A,B]}%
   \SHOW{\morphSeqIncl[{(A,B)},C]}\SHOW{\morphInclArrow}%
   \SHOW{\chartName{U}}\SHOW{\atlasName{A}}\SHOW{\coordName{x}}%
+  \SHOW{\morphDomain{f}}\SHOW{\morphSeqCodomain{f}}\SHOW{\morphImage{f}}%
+  \SHOW{\morphRestrict{f}{S}}\SHOW{\morphRestrict{f}{S}[T]}%
+  \SHOW{\morphEmbedArrow}%
 }
 \begin{document}
 \START

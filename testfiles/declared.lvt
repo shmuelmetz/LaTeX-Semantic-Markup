@@ -13,6 +13,7 @@
   morphEpi     = \to,
   morphCompose = \mathbin{\star\ifx\relax#1\relax\else_{#1}\fi},
   morphIncl    = \iota^{#1}_{#2},
+  morphRestrict = #1\restriction_{#2\ifx\relax#3\relax\else,#3\fi},
 }
 \DeclareSemanticStyle{journaly}{base = journalx, catName = \mathfrak{#1}}
 \DeclareSemanticStyle{journalq}{
@@ -26,7 +27,8 @@
 \HEAD{journalx from the package option}{%
   \SHOW{\catName{C}}\SHOW{\catName{Set}}\SHOW{\morphEpi}%
   \SHOW{\morphCompose}\SHOW{\morphCompose[x]}\SHOW{\morphIncl[A,B]}%
-  \SHOW{\catSeqName{A}}\SHOW{\morphMono}}
+  \SHOW{\catSeqName{A}}\SHOW{\morphMono}%
+  \SHOW{\morphRestrict{f}{S}}\SHOW{\morphRestrict{f}{S}[T]}}
 \HEAD{journaly, based on journalx}{%
   \setupsemanticmarkup{style=journaly}%
   \SHOW{\catName{C}}\SHOW{\morphEpi}\SHOW{\morphCompose}}

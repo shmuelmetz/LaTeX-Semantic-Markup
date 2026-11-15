@@ -715,6 +715,110 @@ l. ...  \setupset{subscript=stackunder}
 <to be read again> 
                    }
 l. ......kunder}\SHOW{\intersection[i \in I]{S_i}}}
+============ set with an explicit size
+> \box...=
+\hbox(8.50005+3.50006)x17.38199
+.\mathon
+.\hbox(8.50005+3.50006)x5.83336
+..\mathon
+..\hbox(8.50005+3.50006)x5.83336
+...\hbox(0.39998+11.60013)x5.83336, shifted -8.10007
+....\OMX/cmex/m/n/10 ^^H
+...\vbox(8.49998+3.49997)x0.0
+...\hbox(0.0+0.0)x0.0, shifted -2.5
+..\mathoff
+.\OML/cmm/m/it/10 x
+.\hbox(8.50005+3.50006)x5.83336
+..\mathon
+..\hbox(8.50005+3.50006)x5.83336
+...\hbox(0.39998+11.60013)x5.83336, shifted -8.10007
+....\OMX/cmex/m/n/10 ^^I
+...\vbox(8.49998+3.49997)x0.0
+...\hbox(0.0+0.0)x0.0, shifted -2.5
+..\mathoff
+.\mathoff
+! OK.
+<to be read again> 
+                   \setbox 
+l. ...  \SHOW{\set<big>{x}}\SHOW{\set<Big>{x}[p,q]}
+                                                  %
+> \box...=
+\hbox(11.50009+6.50009)x48.90257
+.\mathon
+.\hbox(11.50008+6.50009)x6.66669
+..\mathon
+..\hbox(11.50008+6.50009)x6.66669
+...\hbox(0.39998+17.60019)x6.66669, shifted -11.1001
+....\OMX/cmex/m/n/10 n
+...\vbox(11.49997+6.49995)x0.0
+...\hbox(0.0+0.0)x0.0, shifted -2.5
+..\mathoff
+.\OML/cmm/m/it/10 x
+.\glue(\thickmuskip) 2.77771 plus 2.77771
+.\hbox(11.50009+6.50009)x3.33333
+..\mathon
+..\hbox(11.50009+6.50009)x3.33333
+...\vbox(0.0+18.00018)x3.33333, shifted -11.50009
+....\hbox(0.0+6.00006)x3.33333
+.....\OMX/cmex/m/n/10 ^^L
+....\hbox(0.0+6.00006)x3.33333
+.....\OMX/cmex/m/n/10 ^^L
+....\hbox(0.0+6.00006)x3.33333
+.....\OMX/cmex/m/n/10 ^^L
+...\vbox(11.49997+6.49995)x0.0
+...\hbox(0.0+0.0)x0.0, shifted -2.5
+..\mathoff
+.\glue(\thickmuskip) 2.77771 plus 2.77771
+.\OML/cmm/m/it/10 p
+.\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+.\OMS/cmsy/m/n/10 ^
+.\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+.\OML/cmm/m/it/10 q
+.\kern0.35878
+.\hbox(11.50008+6.50009)x6.66669
+..\mathon
+..\hbox(11.50008+6.50009)x6.66669
+...\hbox(0.39998+17.60019)x6.66669, shifted -11.1001
+....\OMX/cmex/m/n/10 o
+...\vbox(11.49997+6.49995)x0.0
+...\hbox(0.0+0.0)x0.0, shifted -2.5
+..\mathoff
+.\mathoff
+! OK.
+<to be read again> 
+                   \tex_let:D 
+l. ...  \setupset{separator=:}
+                             \SHOW{\set<big>{x}[p]}}
+> \box...=
+\hbox(8.50005+3.50006)x29.63536
+.\mathon
+.\hbox(8.50005+3.50006)x5.83336
+..\mathon
+..\hbox(8.50005+3.50006)x5.83336
+...\hbox(0.39998+11.60013)x5.83336, shifted -8.10007
+....\OMX/cmex/m/n/10 ^^H
+...\vbox(8.49998+3.49997)x0.0
+...\hbox(0.0+0.0)x0.0, shifted -2.5
+..\mathoff
+.\OML/cmm/m/it/10 x
+.\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+.\hbox(4.30554+0.0)x2.77779
+..\OT1/cmr/m/n/10 :
+.\glue(\medmuskip) 2.22217 plus 1.11108 minus 2.22217
+.\OML/cmm/m/it/10 p
+.\hbox(8.50005+3.50006)x5.83336
+..\mathon
+..\hbox(8.50005+3.50006)x5.83336
+...\hbox(0.39998+11.60013)x5.83336, shifted -8.10007
+....\OMX/cmex/m/n/10 ^^I
+...\vbox(8.49998+3.49997)x0.0
+...\hbox(0.0+0.0)x0.0, shifted -2.5
+..\mathoff
+.\mathoff
+! OK.
+<to be read again> 
+                   }
+l. ......tupset{separator=:}\SHOW{\set<big>{x}[p]}}
 ============ seqname
 > \box...=
 \hbox(6.86111+0.0)x8.65547

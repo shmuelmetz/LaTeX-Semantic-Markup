@@ -56,7 +56,13 @@ whether such a package already exists on CTAN.
      `\intersection`; `\set` collides with `braket.sty`.
    - Choose an expl3 prefix (`l3prefixes` advises against short ones
      such as `lsm`) and register it with the LaTeX team.
-   - Generalize `\Id`/`\ID`; check package options for orthogonality.
+   - Options checked for orthogonality 2026-11-11 (see the commit
+     history). `\Id`/`\ID`: the package has the general commands
+     (`\morphId`, `\morphIncl` for a morphism; `\morphSeqId`,
+     `\morphSeqIncl` for a sequence of morphisms). Moving the papers
+     onto them waits for step 1 (decision of 2026-11-11): if this
+     package goes to CTAN, the papers use its names; if it is folded
+     into another package, the papers use that package's names.
    - Bump the version and date; give the `test-*.tex` files expected
      output, so that they work as regression tests.
    - Decide whether to keep the name `shmuelsemtex`, which may read as
