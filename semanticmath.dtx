@@ -249,12 +249,10 @@
 % collection of things of one kind. This documentation uses three terms
 % for such collections, always in these senses:
 % \begin{description}
-% \item[tuple] a set built by induction from ordered pairs, written
-%   with brackets, e.g.\ $[f_1, f_2, f_3]$. The ordered pair is
-%   Kelley's (Definition~48 in \cite{kelley}), with brackets:
-%   $[x, y] = \{\{x\}, \{x, y\}\}$; longer tuples nest to the
-%   right, $[x_1, x_2, \dots, x_n] = [x_1, [x_2, \dots, x_n]]$, e.g.\
-%   $[f_1, f_2, f_3] = [f_1, [f_2, f_3]]$;
+% \item[tuple] a set written with brackets, e.g.\ $[f_1, f_2, f_3]$,
+%   a generalization of Kelley's ordered pair (Definition~48 in
+%   \cite{kelley}), written with brackets:
+%   $[x, y] = \{\{x\}, \{x, y\}\}$;
 % \item[sequence] a map from a segment of $\mathbb{N}$, written with
 %   parentheses, e.g.\ $(f_1, f_2, f_3)$ or
 %   $(f_n)_{n \in \mathbb{N}}$;
@@ -833,7 +831,7 @@
 % Set-builder notation: \meta{elements} in braces, followed, when
 % \meta{propositions} is given, by the separator and the
 % propositions. \meta{propositions} is a comma list; each comma is
-% typeset as $\land$, so \texttt{\textbackslash set\{x\}[p,q]}
+% typeset as $\land$, so \texttt{\textbackslash setBuild\{x\}[p,q]}
 % renders as $\{x \mid p \land q\}$. The starred form
 % splits the line between the elements and the propositions, for use
 % inside a \env{multline} environment, since \LaTeX{} cannot otherwise
