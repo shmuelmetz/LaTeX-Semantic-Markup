@@ -21,8 +21,8 @@
 \HEAD{subscript=none, parentheses=single, separator}{%
   \setupquant{subscript=none, parentheses=single, separator}\QUANT}
 \HEAD{set}{%
-  \SHOW{\set{x}}\SHOW{\set{x}[p,q]}%
-  \setupset{separator=:}\SHOW{\set{x}[p]}}
+  \SHOW{\setBuild{x}}\SHOW{\setBuild{x}[p,q]}%
+  \setupset{separator=:}\SHOW{\setBuild{x}[p]}}
 \HEAD{union and intersection}{%
   \SHOW{\union{S}}\SHOW{\union[i,j]{S}}\SHOW{\intersection[i]{S}}%
   \setupset{subscript=multiple}\SHOW{\union[i,j]{S}}}
@@ -33,8 +33,8 @@
   \setupset{subscript=stackbelow}\SHOW{\union{S}}\SHOW{\union[i,j]{S}}%
   \setupset{subscript=stackunder}\SHOW{\intersection[i \in I]{S_i}}}
 \HEAD{set with an explicit size}{%
-  \SHOW{\set<big>{x}}\SHOW{\set<Big>{x}[p,q]}%
-  \setupset{separator=:}\SHOW{\set<big>{x}[p]}}
+  \SHOW{\setBuild<big>{x}}\SHOW{\setBuild<Big>{x}[p,q]}%
+  \setupset{separator=:}\SHOW{\setBuild<big>{x}[p]}}
 \HEAD{seqname}{\SHOW{\seqname{A}}\SHOW{\seqname{AB}}}
 \HEAD{settings are local to a group}{%
   \setupquant{subscript=none, parentheses=none, separator=}%
@@ -43,5 +43,5 @@
     \setupquant{subscript=stacked, parentheses=single}%
     \setupset{subscript=multiple, separator=:}%
   \endgroup
-  \QUANT\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+  \QUANT\SHOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}}
 \END

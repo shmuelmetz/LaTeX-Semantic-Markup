@@ -52,8 +52,9 @@ whether such a package already exists on CTAN.
      [CTAN marks deprecated](https://ctan.org/pkg/l3keys2e), to the
      kernel's `\ProcessKeyOptions`; dropped `xparse`. The package now
      needs LaTeX 2022-06-01 or later.
-   - Review the generic command names `\set`, `\union` and
-     `\intersection`; `\set` collides with `braket.sty`.
+   - Done 2026-11-16: `\set` (which collides with `braket.sty`) is now
+     `\setBuild`, for set-builder notation; `\union` and `\intersection`
+     keep their names.
    - Done 2026-11-16: the expl3 prefix is `semanticmath`, the package's
      name (`l3prefixes` advises against short ones such as `lsm`, the old
      prefix). Registration requested from the LaTeX team

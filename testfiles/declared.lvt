@@ -39,12 +39,12 @@
   \TYPE{\IfSemanticSymbolTF{XY}{symbol}{name}}}
 \HEAD{journalq sets quantifiers and sets}{%
   \setupsemanticmarkup{style=journalq}%
-  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+  \SHOW{\equant{x,y}{P}}\SHOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}}
 \HEAD{setupquant adjusts within the style}{%
   \setupquant{subscript=multiple}\SHOW{\equant{x,y}{P}}}
 \HEAD{selecting default resets them}{%
   \setupsemanticmarkup{style=default}%
-  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+  \SHOW{\equant{x,y}{P}}\SHOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}}
 \HEAD{errors}{%
   \DeclareSemanticStyle{bad}{base = nosuch, nosuchcommand = x}%
   \setupsemanticmarkup{style=nosuch}}

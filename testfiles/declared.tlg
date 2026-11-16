@@ -244,8 +244,8 @@ l. ......e{C}}\SHOW{\morphEpi}\SHOW{\morphCompose}}
 ! OK.
 <to be read again> 
                    \setbox 
-l. ...  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}
-                                              \SHOW{\union[i,j]{S}}}
+l. ......HOW{\equant{x,y}{P}}\SHOW{\setBuild{x}[p]}
+                                                  \SHOW{\union[i,j]{S}}}
 > \box...=
 \hbox(7.5+2.5)x27.96867
 .\mathon
@@ -264,7 +264,7 @@ l. ...  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}
 ! OK.
 <to be read again> 
                    \setbox 
-l. ......{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
+l. ......SHOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}
                                                   }
 > \box...=
 \hbox(7.50006+4.36115)x26.12614
@@ -283,7 +283,7 @@ l. ......{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
 ! OK.
 <to be read again> 
                    }
-l. ......P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+l. ......HOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}}
 ============ setupquant adjusts within the style
 > \box...=
 \hbox(8.3333+2.86108)x30.98383
@@ -339,8 +339,8 @@ l. ......subscript=multiple}\SHOW{\equant{x,y}{P}}}
 ! OK.
 <to be read again> 
                    \setbox 
-l. ...  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}
-                                              \SHOW{\union[i,j]{S}}}
+l. ......HOW{\equant{x,y}{P}}\SHOW{\setBuild{x}[p]}
+                                                  \SHOW{\union[i,j]{S}}}
 > \box...=
 \hbox(7.5+2.5)x22.4827
 .\mathon
@@ -375,7 +375,7 @@ l. ...  \SHOW{\equant{x,y}{P}}\SHOW{\set{x}[p]}
 ! OK.
 <to be read again> 
                    \setbox 
-l. ......{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
+l. ......SHOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}
                                                   }
 > \box...=
 \hbox(21.75012+8.25653)x35.08856
@@ -422,7 +422,7 @@ l. ......{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
 ! OK.
 <to be read again> 
                    }
-l. ......P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+l. ......HOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}}
 ============ errors
 ! Package semanticmath Error: `nosuchcommand' is not a command a style can set.
 Type <return> to continue.

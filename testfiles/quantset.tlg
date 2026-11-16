@@ -342,8 +342,8 @@ l. ......one, parentheses=single, separator}\QUANT}
 ! OK.
 <to be read again> 
                    \setbox 
-l. ...  \SHOW{\set{x}}\SHOW{\set{x}[p,q]}
-                                        %
+l. ...  \SHOW{\setBuild{x}}\SHOW{\setBuild{x}[p,q]}
+                                                  %
 > \box...=
 \hbox(7.5+2.5)x38.76395
 .\mathon
@@ -384,7 +384,7 @@ l. ...  \SHOW{\set{x}}\SHOW{\set{x}[p,q]}
 <to be read again> 
                    \tex_let:D 
 l. ...  \setupset{separator=:}
-                             \SHOW{\set{x}[p]}}
+                             \SHOW{\setBuild{x}[p]}}
 > \box...=
 \hbox(7.5+2.5)x27.96867
 .\mathon
@@ -403,7 +403,7 @@ l. ...  \setupset{separator=:}
 ! OK.
 <to be read again> 
                    }
-l. ...  \setupset{separator=:}\SHOW{\set{x}[p]}}
+l. ......tupset{separator=:}\SHOW{\setBuild{x}[p]}}
 ============ union and intersection
 > \box...=
 \hbox(7.50006+2.50006)x16.7083
@@ -740,7 +740,7 @@ l. ......kunder}\SHOW{\intersection[i \in I]{S_i}}}
 ! OK.
 <to be read again> 
                    \setbox 
-l. ...  \SHOW{\set<big>{x}}\SHOW{\set<Big>{x}[p,q]}
+l. ......uild<big>{x}}\SHOW{\setBuild<Big>{x}[p,q]}
                                                   %
 > \box...=
 \hbox(11.50009+6.50009)x48.90257
@@ -788,7 +788,7 @@ l. ...  \SHOW{\set<big>{x}}\SHOW{\set<Big>{x}[p,q]}
 <to be read again> 
                    \tex_let:D 
 l. ...  \setupset{separator=:}
-                             \SHOW{\set<big>{x}[p]}}
+                             \SHOW{\setBuild<big>{x}[p]}}
 > \box...=
 \hbox(8.50005+3.50006)x29.63536
 .\mathon
@@ -818,7 +818,7 @@ l. ...  \setupset{separator=:}
 ! OK.
 <to be read again> 
                    }
-l. ......tupset{separator=:}\SHOW{\set<big>{x}[p]}}
+l. ......t{separator=:}\SHOW{\setBuild<big>{x}[p]}}
 ============ seqname
 > \box...=
 \hbox(6.86111+0.0)x8.65547
@@ -860,7 +860,7 @@ l. ......me}{\SHOW{\seqname{A}}\SHOW{\seqname{AB}}}
 <to be read again> 
                    \setbox 
 l. ...  \QUANT
-             \SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+             \SHOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}}
 > \box...=
 \hbox(6.94444+0.0)x19.07988
 .\mathon
@@ -872,8 +872,8 @@ l. ...  \QUANT
 ! OK.
 <to be read again> 
                    \setbox 
-l. ...  \QUANT\SHOW{\set{x}[p]}
-                              \SHOW{\union[i,j]{S}}}
+l. ...  \QUANT\SHOW{\setBuild{x}[p]}
+                                   \SHOW{\union[i,j]{S}}}
 > \box...=
 \hbox(7.5+2.5)x22.4827
 .\mathon
@@ -908,7 +908,7 @@ l. ...  \QUANT\SHOW{\set{x}[p]}
 ! OK.
 <to be read again> 
                    \setbox 
-l. ......UANT\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
+l. ......SHOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}
                                                   }
 > \box...=
 \hbox(21.75012+8.25653)x35.08856
@@ -955,4 +955,4 @@ l. ......UANT\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
 ! OK.
 <to be read again> 
                    }
-l. ......ANT\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
+l. ......HOW{\setBuild{x}[p]}\SHOW{\union[i,j]{S}}}

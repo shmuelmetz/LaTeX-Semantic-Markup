@@ -52,7 +52,7 @@
 % The category-theory naming layer above (\cs{catName}, \cs{morphName},
 % \cs{morphMono}\slash \cs{morphEpi}, etc.) is only part of the package.
 % Quantifiers (\cs{equant}\slash \cs{uquant}) and set-builder notation
-% (\cs{set}\slash \cs{union}\slash \cs{intersection}), documented in
+% (\cs{setBuild}\slash \cs{union}\slash \cs{intersection}), documented in
 % \pagecrefn{sec:quant-set} below, are general first-order-logic and
 % set-theory constructs, not specific to category theory, and are
 % equally usable in any mathematical document.
@@ -824,11 +824,11 @@
 %
 % \subsection{Set-builder notation}
 %
-% \begin{function}{\set}
+% \begin{function}{\setBuild}
 % \begin{syntax}
-% \cs{set}\marg{elements}\oarg{propositions}
-% \cs{set}\marg{elements}\oarg{propositions}*
-% \cs{set}<\meta{size}>\marg{elements}\oarg{propositions}
+% \cs{setBuild}\marg{elements}\oarg{propositions}
+% \cs{setBuild}\marg{elements}\oarg{propositions}*
+% \cs{setBuild}<\meta{size}>\marg{elements}\oarg{propositions}
 % \end{syntax}
 % Set-builder notation: \meta{elements} in braces, followed, when
 % \meta{propositions} is given, by the separator and the
@@ -843,8 +843,8 @@
 % The braces normally grow to fit their contents. The optional
 % \meta{size} in angle brackets, \texttt{big}, \texttt{Big},
 % \texttt{bigg} or \texttt{Bigg}, sets them, and a vertical-bar
-% separator, to that size instead: \verb|\set<Big>{x}[p,q]| gives
-% $\set<Big>{x}[p,q]$. It is a per-use override of presentation, for
+% separator, to that size instead: \verb|\setBuild<Big>{x}[p,q]| gives
+% $\setBuild<Big>{x}[p,q]$. It is a per-use override of presentation, for
 % the rare case where the automatic size looks wrong.
 % \end{function}
 %
@@ -852,23 +852,23 @@
 % \begin{syntax}
 % \cs{setupset}\marg{key=value list}
 % \end{syntax}
-% Sets the rendering of \cs{set}, \cs{union} and \cs{intersection}.
+% Sets the rendering of \cs{setBuild}, \cs{union} and \cs{intersection}.
 % The keys:
 % \begin{description}
 % \item[\texttt{separator}] The symbol between the elements and the
-%   propositions of \cs{set}, and of \cs{union} and \cs{intersection}
+%   propositions of \cs{setBuild}, and of \cs{union} and \cs{intersection}
 %   with \texttt{subscript=none}; initially $\mid$. A vertical bar,
 %   such as \cs{mid} or \cs{Vert}, is stretched to the height of the
 %   set's contents; any other separator is set at its normal size.
 % \item[\texttt{subscript}] Placement of the indices of \cs{union} and
 %   \cs{intersection}: \texttt{none}, after the operator, as
-%   set-builder notation like \cs{set}'s, with the indices as its
+%   set-builder notation like \cs{setBuild}'s, with the indices as its
 %   propositions; \texttt{stacked} (initial), an enlarged operator with
 %   the indices, one above another, as its subscript, at its lower
 %   right; \texttt{multiple}, a comma-separated subscript;
 %   \texttt{stackbelow}, or its synonym \texttt{stackunder}, the
 %   indices, one above another, centred under the operator. It does
-%   not affect \cs{set}.
+%   not affect \cs{setBuild}.
 % \end{description}
 % The settings are local to the current group, like the \texttt{style}
 % key. Selecting a style resets them to that style's settings.
@@ -883,21 +883,21 @@
 % \begin{center}
 % \renewcommand\arraystretch{2.2}\setlength\tabcolsep{4pt}\small
 % \begin{tabular}{lll}
-% Setting & \verb|\set{x}[p,q]| & \verb|\union[i \in I, j \in J]{S_{ij}}| \\
+% Setting & \verb|\setBuild{x}[p,q]| & \verb|\union[i \in I, j \in J]{S_{ij}}| \\
 % \hline
-% initial & $\set{x}[p,q]$ & $\union[i \in I, j \in J]{S_{ij}}$ \\
-% \verb|separator=:| & \setupset{separator=:}$\set{x}[p,q]$
+% initial & $\setBuild{x}[p,q]$ & $\union[i \in I, j \in J]{S_{ij}}$ \\
+% \verb|separator=:| & \setupset{separator=:}$\setBuild{x}[p,q]$
 %   & \setupset{separator=:}$\union[i \in I, j \in J]{S_{ij}}$ \\
-% \verb|subscript=none| & \setupset{subscript=none}$\set{x}[p,q]$
+% \verb|subscript=none| & \setupset{subscript=none}$\setBuild{x}[p,q]$
 %   & \setupset{subscript=none}$\union[i \in I, j \in J]{S_{ij}}$ \\
 % \verb|subscript=none, separator=:|
-%   & \setupset{subscript=none, separator=:}$\set{x}[p,q]$
+%   & \setupset{subscript=none, separator=:}$\setBuild{x}[p,q]$
 %   & \setupset{subscript=none, separator=:}$\union[i \in I, j \in J]{S_{ij}}$ \\
-% \verb|subscript=stacked| & \setupset{subscript=stacked}$\set{x}[p,q]$
+% \verb|subscript=stacked| & \setupset{subscript=stacked}$\setBuild{x}[p,q]$
 %   & \setupset{subscript=stacked}$\union[i \in I, j \in J]{S_{ij}}$ \\
-% \verb|subscript=multiple| & \setupset{subscript=multiple}$\set{x}[p,q]$
+% \verb|subscript=multiple| & \setupset{subscript=multiple}$\setBuild{x}[p,q]$
 %   & \setupset{subscript=multiple}$\union[i \in I, j \in J]{S_{ij}}$ \\
-% \verb|subscript=stackbelow| & \setupset{subscript=stackbelow}$\set{x}[p,q]$
+% \verb|subscript=stackbelow| & \setupset{subscript=stackbelow}$\setBuild{x}[p,q]$
 %   & \setupset{subscript=stackbelow}$\union[i \in I, j \in J]{S_{ij}}$ \\
 % \end{tabular}
 % \end{center}
@@ -1568,13 +1568,13 @@
 % \label{sec:quant-set-impl}
 %
 % The public interface of these commands (\cs{equant}, \cs{uquant},
-% \cs{set}, \cs{setupquant}, \cs{setupset}, \cs{union},
+% \cs{setBuild}, \cs{setupquant}, \cs{setupset}, \cs{union},
 % \cs{intersection}, \cs{seqname}) is documented above;
 % \cs{setupquant} and \cs{setupset} are the model for
 % \cs{setupsemanticmarkup} (see the discussion in
 % \pagecrefn{sec:style-impl}). Each macro family has its own scoped,
 % uniquely named scratch variables, so one family nested inside
-% another's argument (e.g.\ a \cs{union} inside a \cs{set} predicate)
+% another's argument (e.g.\ a \cs{union} inside a \cs{setBuild} predicate)
 % is safe.
 %
 % \begin{variable}[no-user-doc]{\l_@@_quant_tmp_clist, \l_@@_quant_tmp_fp,
@@ -1678,10 +1678,10 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\set, \setupset}
-% Set-builder notation, \cs{set}\marg{elements}\oarg{propositions},
+% \begin{macro}{\setBuild, \setupset}
+% Set-builder notation, \cs{setBuild}\marg{elements}\oarg{propositions},
 % with an optional star after the arguments
-% (\cs{set}\marg{elements}\oarg{propositions}\texttt{*}) that splits the
+% (\cs{setBuild}\marg{elements}\oarg{propositions}\texttt{*}) that splits the
 % line between elements and propositions -- useful inside a
 % \env{multline} environment, since \LaTeX{} cannot otherwise break a
 % line inside a macro argument. \cs{setupset}'s \texttt{separator} key
@@ -1696,7 +1696,7 @@
 \tl_new:N \l_@@_set_sep_tl
 \int_new:N \l_@@_set_subscr_int
 
-\NewDocumentCommand{\set}{D<>{}mos}
+\NewDocumentCommand{\setBuild}{D<>{}mos}
   {
     \tl_set:Nn \l_@@_set_size_tl {#1}
     \IfBooleanTF {#4}
@@ -1794,7 +1794,7 @@
 % above another in its subscript, as a comma-separated subscript, or
 % stacked centred under it) is
 % controlled by \cs{setupset}'s \texttt{subscript} key above, shared
-% with \cs{set} since both are the same family of indexed-operator
+% with \cs{setBuild} since both are the same family of indexed-operator
 % notation.
 %    \begin{macrocode}
 \NewDocumentCommand{\intersection}{om}
