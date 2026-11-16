@@ -121,8 +121,7 @@
 %
 % Every semantic macro in this package (\cs{catName}, \cs{morphMono},
 % \ldots) is a thin public wrapper around an internal \pkg{expl3}
-% function of the same shape (\cs{lsm_cat_name:n}, \cs{lsm_morph_mono:%
-% }, \ldots) that does the actual typesetting. Those internal
+% function of the same shape that does the actual typesetting. Those internal
 % functions are not fixed: each one is a \emph{presentation hook},
 % (re)definable as a group, all at once, by a named \emph{style}. This
 % hook architecture is not new machinery bolted on for style
@@ -152,7 +151,7 @@
 % \texttt{key=value} package options, \cs{ProcessKeyOptions}, with a
 % single \texttt{.choice:} key, \texttt{style}, in
 % the key family \texttt{lsm}. Each choice's code is one function
-% (\cs{lsm_style_default:}, \cs{lsm_style_plain:}) that reassigns
+% that reassigns
 % \emph{every} presentation hook in the package in one place, so a
 % style is always a complete, coherent bundle --- never a partial
 % patch the author has to assemble by hand from individual macro
@@ -167,7 +166,8 @@
 % \begin{description}
 % \item[\texttt{default}] The presentation choices already justified,
 %   macro by macro, in the sections below (script/bold-upright
-%   auto-detected category names, bold sequence names, tail/twohead
+%   auto-detected category names, bold names for tuple, sequence or ordinal sequences,
+%   tail/twohead
 %   arrows for mono/epi, \ldots).
 % \item[\texttt{plain}] Every \texttt{*Name} family macro
 %   (\cs{semName}, \cs{catName}, \cs{catSeqName}, \cs{objName},
@@ -235,11 +235,37 @@
 % \item[\texttt{obj}] Object
 % \item[\texttt{morph}] Morphism
 % \item[\texttt{coord}] Coordinate
-% \item[\texttt{seq}] Sequence (as in \cs{catSeqName}: a
-%   \emph{sequence of} the preceding concept, not that concept itself)
+% \item[\texttt{seq}] Sequence (as in \cs{catSeqName}: a tuple, sequence or ordinal sequence
+%   of the preceding concept, not that concept itself; see
+%   \pagecrefn{sec:nomenclature})
 % \item[\texttt{mono}] Monomorphism
 % \item[\texttt{epi}] Epimorphism
 % \end{description}
+%
+% \section{Nomenclature}
+% \label{sec:nomenclature}
+%
+% The \texttt{Seq} commands, and \cs{seqname}, name an ordered
+% collection of things of one kind. This documentation uses three terms
+% for such collections, always in these senses:
+% \begin{description}
+% \item[tuple] a set built by induction from ordered pairs, written
+%   with brackets, e.g.\ $[f_1, f_2, f_3]$. The ordered pair is
+%   Kelley's (Definition~48 in \cite{kelley}), with brackets:
+%   $[x, y] = \{\{x\}, \{x, y\}\}$; longer tuples nest to the
+%   right, $[x_1, x_2, \dots, x_n] = [x_1, [x_2, \dots, x_n]]$, e.g.\
+%   $[f_1, f_2, f_3] = [f_1, [f_2, f_3]]$;
+% \item[sequence] a map from a segment of $\mathbb{N}$, written with
+%   parentheses, e.g.\ $(f_1, f_2, f_3)$ or
+%   $(f_n)_{n \in \mathbb{N}}$;
+% \item[ordinal sequence] a map from an ordinal, e.g.\
+%   $(f_\alpha)_{\alpha < \lambda}$.
+% \end{description}
+% Sequences are special cases of ordinal sequences, with numbering
+% starting at~1.
+% A \texttt{Seq} command applies to all three, and the documentation
+% names all three wherever it describes one. A set of things is none of
+% these, so it is not marked with a \texttt{Seq} command.
 %
 % \section{User-level command families}
 %
@@ -334,10 +360,10 @@
 % \cs{catSeqName}\marg{text}
 % \end{syntax}
 % \cs{catSeqName}\Arg{text} (Cat = Category, Seq = Sequence) is the
-% display name of a \emph{sequence or family of categories}, e.g.
+% display name of a \emph{tuple, sequence or ordinal sequence of categories}, e.g.
 % $(\mathscr{A}_\alpha)_{\alpha \in A}$. This is deliberately a
 % distinct command from \cs{catName}, not a styling variant of it: a
-% sequence of categories is not itself a category, and collapsing the
+% tuple, sequence or ordinal sequence of categories is not itself a category, and collapsing the
 % two into one macro differentiated only by an optional ``bold''
 % switch would silently re-introduce the typography/semantics
 % conflation this package exists to remove.
@@ -401,26 +427,25 @@
 % \cs{morphSeqName}\marg{text}
 % \end{syntax}
 % \cs{morphSeqName}\Arg{text} (Morph = Morphism, Seq = Sequence) is
-% the display name of a \emph{sequence or tuple of morphisms/%
-% functions}, e.g.\ $\bm{f} \mathrel{:=} (f_1, f_2)$. Like
+% the display name of a \emph{tuple, sequence or ordinal sequence of morphisms},
+% e.g.\ $\bm{f} \mathrel{:=} (f_1, f_2)$. Like
 % \cs{catSeqName}
 % vs.\ \cs{catName}, this is a genuinely distinct \pkg{expl3} function
-% from \cs{morphName} (\cs{lsm_morph_seqname:n}, not
-% \cs{lsm_morph_name:n} with a flag): a sequence of functions is not
-% itself a function. Auto-detects the same way \cs{morphName} does,
+% from the one behind \cs{morphName}, not that function with a flag: a
+% tuple, sequence or ordinal sequence of functions is not itself a function. Auto-detects the same way \cs{morphName} does,
 % but bold throughout --- see the note on function symbols above.
 % See the discussion
 % below.
 % \end{function}
 %
 % \begin{quote}
-% \textbf{morphSeqName vs.\ morphName:} a sequence of
+% \textbf{morphSeqName vs.\ morphName:} a tuple, sequence or ordinal sequence of
 % functions is not a function, the same principle as the
 % \cs{catSeqName}\slash \cs{catName} and compose/compose-head/compose-tail
 % distinctions in this section. \cs{morphSeqName} is
 % built accordingly as a genuinely
-% distinct \pkg{expl3} function, \cs{lsm_morph_seqname:n}, not
-% \cs{lsm_morph_name:n} called with a different flag.
+% distinct \pkg{expl3} function, not the one behind \cs{morphName}
+% called with a different flag.
 % \end{quote}
 %
 % \begin{function}{\morphMono}
@@ -490,11 +515,9 @@
 % \textbf{Three distinct compositions:} plain composition, ``compose head,'' and ``compose
 % tail'' are genuinely different mathematical operations, not
 % glyph/styling variants of one operation. They are built accordingly
-% as three separate \pkg{expl3} functions ---
-% \cs{lsm_morph_compose:n}, \cs{lsm_morph_compose_head:n},
-% \cs{lsm_morph_compose_tail:n} --- each with its own presentation
-% hook, the same treatment already given to \cs{catName}/
-% \cs{catSeqName} (\cs{lsm_cat_name:n}\slash \cs{lsm_cat_seqname:n}): one
+% as three separate \pkg{expl3} functions, each with its own
+% presentation hook, the same treatment already given to \cs{catName}/
+% \cs{catSeqName}: one
 % function with a flag would have re-introduced the
 % typography/semantics conflation this package exists to remove.
 % \end{quote}
@@ -513,7 +536,7 @@
 % \begin{syntax}
 % \cs{morphSeqId}\oarg{object}
 % \end{syntax}
-% \cs{morphSeqId} is a sequence or tuple of identity morphisms, in
+% \cs{morphSeqId} is a tuple, sequence or ordinal sequence of identity morphisms, in
 % bold: $\operatorname{\mathbf{Id}}_A$. The optional \meta{object} is
 % written as in \cs{morphId}.
 % \end{function}
@@ -537,7 +560,7 @@
 % \begin{syntax}
 % \cs{morphSeqIncl}\oarg{included,containing}
 % \end{syntax}
-% \cs{morphSeqIncl} is a sequence or tuple of inclusion maps, in bold:
+% \cs{morphSeqIncl} is a tuple, sequence or ordinal sequence of inclusion maps, in bold:
 % $\operatorname{\mathbf{Id}}^A_B$. The optional argument is as in
 % \cs{morphIncl}.
 % \end{function}
@@ -566,13 +589,13 @@
 %
 % \begin{function}{\morphSeqDomain, \morphSeqCodomain, \morphSeqImage}
 % \begin{syntax}
-% \cs{morphSeqDomain}\marg{sequence of morphisms}
-% \cs{morphSeqCodomain}\marg{sequence of morphisms}
-% \cs{morphSeqImage}\marg{sequence of morphisms}
+% \cs{morphSeqDomain}\marg{morphisms}
+% \cs{morphSeqCodomain}\marg{morphisms}
+% \cs{morphSeqImage}\marg{morphisms}
 % \end{syntax}
-% The same for a sequence or tuple of morphisms: the sequence of their
-% domains, codomains or images; under the \texttt{default} style
-% $\morphSeqDomain{\morphSeqName{f}}$. A sequence of sets is not a set,
+% The same for a tuple, sequence or ordinal sequence of morphisms: the
+% tuple, sequence or ordinal sequence of their domains, codomains or images; under the \texttt{default} style
+% $\morphSeqDomain{\morphSeqName{f}}$. A tuple, sequence or ordinal sequence of sets is not a set,
 % so these are separate commands, as \cs{morphSeqName} is from
 % \cs{morphName}.
 % \end{function}
@@ -892,16 +915,16 @@
 % placement is set with \cs{setupset}'s \texttt{subscript} key.
 % \end{function}
 %
-% \subsection{Sequence names}
+% \subsection{Names of tuples, sequences and ordinal sequences}
 %
 % \begin{function}{\seqname}
 % \begin{syntax}
 % \cs{seqname}\marg{text}
 % \end{syntax}
-% The name of a sequence or tuple: bold upright for a
+% The name of a tuple, sequence or ordinal sequence: bold upright for a
 % multi-character name, bold italic for a single character, the same
 % length-based split \cs{catName} uses. It is a separate macro because
-% a sequence is a different kind of object from a category.
+% a tuple, sequence or ordinal sequence is a different kind of object from a category.
 % \end{function}
 %
 % \section{History}
@@ -955,6 +978,8 @@
 % \end{center}
 %
 % \begin{thebibliography}{9}
+% \bibitem{kelley} John L. Kelley, \emph{General Topology}, D. Van
+%   Nostrand Company, 1955.
 % \bibitem{lcs} Shmuel (Seymour J.) Metz, \emph{Local Coordinate Spaces: a
 %   proposed unification of manifolds and fiber bundles, and associated
 %   machinery}, arXiv:1801.05775v1 [math.AT], 17 January 2018.
@@ -1009,7 +1034,7 @@
 % \subsection{Internal variables}
 %
 % \begin{variable}[no-user-doc]{\l_@@_str_tl, \l_@@_upper_tl}
-% Scratch variables used by \cs{lsm_if_arbitrary_symbol:nTF} (below)
+% Scratch variables used by \cs{@@_if_arbitrary_symbol:nTF} (below)
 % to hold an argument's detokenized string and its uppercased form,
 % for comparison.
 %    \begin{macrocode}
@@ -1155,7 +1180,7 @@
 % Splits \texttt{\#2} into its base, everything before the first
 % superscript or subscript token, and its decoration, the rest with
 % braces kept, and passes the two to \texttt{\#1} as plain tokens.
-% \cs{lsm_script:nn} and \cs{lsm_bold_script:nn} then set only the
+% \cs{@@_script:nn} and \cs{@@_bold_script:nn} then set only the
 % base in script: \verb|\mathscr{C}^2|, not \verb|\mathscr{C^2}|. A
 % script font has no digits or lower-case letters, so the second form
 % loses them. The split comes first because \cs{bm} cannot take
@@ -1336,7 +1361,7 @@
 % unstyled; mono/epi/compose glyphs unchanged from \texttt{default}
 % (see the documentation above for why). Demonstrates that a style is
 % a real, independent, complete bundle, not a variant of
-% \cs{lsm_style_default:}.
+% \cs{@@_style_default:}.
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_style_plain:
   {
@@ -1385,7 +1410,7 @@
 % given at all, then re-applied if the author gives an
 % explicit \texttt{style=...} package option, or calls
 % \cs{setupsemanticmarkup} (below) at any later point. Every choice
-% goes through \cs{lsm_style_apply:n}. A name that is not yet a
+% goes through \cs{@@_style_apply:n}. A name that is not yet a
 % choice is kept while in the preamble, since \cs{DeclareSemanticStyle}
 % may still declare it, and applied at \verb|\begin{document}|; in the
 % body it is an error.
@@ -1429,7 +1454,7 @@
 %
 % \begin{macro}{\DeclareSemanticStyle}
 % Each command key stores its value as a function
-% \cs{lsm_user_\meta{style}_\meta{hook}}, whose signature (and so its
+% \cs{@@_user_\meta{style}_\meta{hook}}, whose signature (and so its
 % number of arguments) is that of the hook it replaces, and records a
 % \cs{cs_set_eq:NN} from the hook to it. The style's function calls the
 % base style's function and then those assignments, so the result is
@@ -1531,7 +1556,7 @@
 % \end{macro}
 %
 % \begin{macro}{\IfSemanticSymbolTF}
-% The document-level form of \cs{lsm_if_arbitrary_symbol:nTF}.
+% The document-level form of \cs{@@_if_arbitrary_symbol:nTF}.
 %    \begin{macrocode}
 \NewDocumentCommand \IfSemanticSymbolTF { m m m }
   { \@@_if_arbitrary_symbol:nTF {#1} {#2} {#3} }
@@ -1660,7 +1685,7 @@
 % \env{multline} environment, since \LaTeX{} cannot otherwise break a
 % line inside a macro argument. \cs{setupset}'s \texttt{separator} key
 % sets the symbol between elements and propositions, which
-% \cs{lsm_set_sep:n} stretches to the height of the contents when it is
+% \cs{@@_set_sep:n} stretches to the height of the contents when it is
 % a vertical-bar delimiter (\verb+|+, \cs{mid}, \cs{vert}, \cs{Vert},
 % \verb+\|+, \cs{parallel}, \cs{lvert}, \cs{rvert}) and otherwise sets
 % at its normal size; its
@@ -1816,7 +1841,7 @@
 % \end{macro}
 %
 % \begin{macro}{\seqname}
-% Render a sequence or tuple name: bold upright for a multi-character
+% Render the name of a tuple, sequence or ordinal sequence: bold upright for a multi-character
 % name, bold italic for a single character -- the same
 % length-based split \cs{catName} uses, kept as its own macro since it
 % is semantically a different kind of object (a sequence, not a
