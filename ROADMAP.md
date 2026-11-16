@@ -56,8 +56,8 @@ whether such a package already exists on CTAN.
      `\intersection`; `\set` collides with `braket.sty`.
    - Done 2026-11-16: the expl3 prefix is `semanticmath`, the package's
      name (`l3prefixes` advises against short ones such as `lsm`, the old
-     prefix). Still to do: register it with the LaTeX team
-     (modules@latex-project.org).
+     prefix). Registration requested from the LaTeX team
+     (modules@latex-project.org) on 2026-11-16; awaiting their reply.
    - Options checked for orthogonality 2026-11-11 (see the commit
      history). `\Id`/`\ID`: the package has the general commands
      (`\morphId`, `\morphIncl` for a morphism; `\morphSeqId`,
