@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %%
-%% shmuelsemtex.dtx
+%% semanticmath.dtx
 %%
 %% Copyright (C) 2026 Seymour J. Metz
 %%
@@ -8,7 +8,7 @@
 %% See the LICENSE file in the root of this distribution, or
 %% <https://github.com/shmuelmetz/LaTeX-Semantic-Markup>.
 %%
-%% This is the shmuelsemtex package, part of the
+%% This is the semanticmath package, part of the
 %% LaTeX-Semantic-Markup distribution.
 %%
 %<*driver>
@@ -21,16 +21,16 @@
 \TeXXeTstate=1
 \setlength\emergencystretch{3em}
 \usepackage{cleveref}
-\usepackage{shmuelsemtex}
+\usepackage{semanticmath}
 % "<cref> (<name>) on page <n>"
 \NewDocumentCommand\pagecrefn{m}{\cref{#1} (\nameref{#1}) on \cpageref{#1}}
 \begin{document}
-  \DocInput{shmuelsemtex.dtx}
+  \DocInput{semanticmath.dtx}
 \end{document}
 %</driver>
 % \fi
 %
-% \title{The \pkg{shmuelsemtex} package}
+% \title{The \pkg{semanticmath} package}
 % \author{Seymour J. Metz (H: Shmuel {\hebrewfont\beginR שמואל בן לייביש ולאה\endR}) \\ {\small \url{https://mason.gmu.edu/~smetz3}} \\ {\small arXiv: \url{http://arxiv.org/a/metz_s_1}} \\ {\small Stack Exchange: \url{https://stackexchange.com/users/8873368/shmuel}} \\ {\small \TeX{} Stack Exchange: \url{https://tex.stackexchange.com/users/110591/shmuel}}}
 % \date{2026-11-11}
 %
@@ -110,11 +110,11 @@
 %
 % \section{Internal naming}
 %
-% Package-internal \pkg{expl3} functions use the module prefix
-% \texttt{lsm} (for \LaTeX\ Semantic Markup), per the naming
-% convention \texttt{\textbackslash lsm\_}\emph{module}\texttt{\_}%
-% \emph{description}\texttt{:}\emph{args}. These are not intended for
-% direct use in documents.
+% Package-internal \pkg{expl3} functions and variables use the module
+% prefix \texttt{semanticmath}, the package's own name. They are private,
+% per the \pkg{expl3} naming convention: \texttt{\textbackslash\_\_semanticmath\_}%
+% \emph{description}\texttt{:}\emph{args}, and similarly for variables.
+% They are not intended for direct use in documents.
 %
 % \section{Style switching}
 % \label{sec:style-switching}
@@ -133,8 +133,8 @@
 %
 % A style is normally selected as a package option:
 % \begin{verbatim}
-% \usepackage[style=default]{shmuelsemtex}   % built in, default
-% \usepackage[style=plain]{shmuelsemtex}     % built in, alternate
+% \usepackage[style=default]{semanticmath}   % built in, default
+% \usepackage[style=plain]{semanticmath}     % built in, alternate
 % \end{verbatim}
 % and can also be changed anywhere in the document with
 % \cs{setupsemanticmarkup} (below). A style also sets how quantifiers
@@ -150,7 +150,7 @@
 % The mechanism is the \LaTeX{} kernel's processing of
 % \texttt{key=value} package options, \cs{ProcessKeyOptions}, with a
 % single \texttt{.choice:} key, \texttt{style}, in
-% the key family \texttt{lsm}. Each choice's code is one function
+% the key family \texttt{semanticmath}. Each choice's code is one function
 % that reassigns
 % \emph{every} presentation hook in the package in one place, so a
 % style is always a complete, coherent bundle --- never a partial
@@ -211,7 +211,7 @@
 % \setupsemanticmarkup {style=plain}
 % \end{verbatim}
 % Both forms are kept: \cs{ProcessKeyOptions} applies a package option
-% through the \texttt{lsm} key family, and \cs{setupsemanticmarkup}
+% through the \texttt{semanticmath} key family, and \cs{setupsemanticmarkup}
 % sets the same family at any point in the body.
 %
 % A style covers every macro at once, including how quantifiers and
@@ -664,10 +664,10 @@
 %
 % \begin{function}{style}
 % \begin{syntax}
-% \cs{usepackage}[style=\meta{name}]\{shmuelsemtex\}
+% \cs{usepackage}[style=\meta{name}]\{semanticmath\}
 % \end{syntax}
 % Selects the style, the complete set of presentation choices for
-% every macro in \pkg{shmuelsemtex}. The built-in styles are
+% every macro in \pkg{semanticmath}. The built-in styles are
 % \texttt{default}, used when no option is given, and \texttt{plain};
 % \pagecrefn{sec:style-switching} describes both. \meta{name} may also
 % be a style declared later in the preamble with
@@ -954,7 +954,7 @@
 %
 % \begin{center}
 % \begin{tabular}{ll}
-% In the papers & In \pkg{shmuelsemtex} \\
+% In the papers & In \pkg{semanticmath} \\
 % \hline
 % \texttt{\textbackslash catname}, \texttt{\textbackslash cat} & \cs{catName} \\
 % \texttt{\textbackslash catseqname} & \cs{catSeqName} \\
@@ -996,10 +996,10 @@
 % \section{Implementation}
 %
 %<*package>
-%<@@=lsm>
+%<@@=semanticmath>
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
-\ProvidesExplPackage{shmuelsemtex}{2026-11-11}{0.7.0}
+\ProvidesExplPackage{semanticmath}{2026-11-11}{0.7.0}
   {Semantic markup macros for LaTeX (LSM)}
 \RequirePackage{amsmath}
 \RequirePackage{bm}
@@ -1135,7 +1135,7 @@
 \NewDocumentCommand \morphEmbedArrow { } { \@@_morph_embed_arrow: }
 
 \clist_new:N \l_@@_incl_tmp_clist
-\msg_new:nnn { shmuelsemtex } { incl-items }
+\msg_new:nnn { semanticmath } { incl-items }
   { More~than~two~items~for~\c_backslash_str #1:~[#2] }
 \cs_new_protected:Npn \@@_incl_split:Nnn #1 #2 #3
   {
@@ -1156,7 +1156,7 @@
           }
       }
       {
-        \msg_error:nnnn { shmuelsemtex } { incl-items } {#2} {#3}
+        \msg_error:nnnn { semanticmath } { incl-items } {#2} {#3}
       }
   }
 \NewDocumentCommand \chartName { m } { \@@_chart_name:n {#1} }
@@ -1349,9 +1349,10 @@
 %    \begin{macrocode}
 \cs_new_protected:Npn \@@_style_quantset:
   {
-    \keys_set:nn { lsm-quant }
+    \keys_set:nn { semanticmath-quant }
       { subscript = none , parentheses = none , separator = }
-    \keys_set:nn { lsm-set } { subscript = stacked , separator = \mid }
+    \keys_set:nn { semanticmath-set }
+      { subscript = stacked , separator = \mid }
   }
 %    \end{macrocode}
 % \end{macro}
@@ -1404,7 +1405,7 @@
 % \subsection{Package options and runtime setup}
 %
 % \begin{macro}{style}
-% A single \texttt{.choice:} key in the \texttt{lsm} key family, set
+% A single \texttt{.choice:} key in the \texttt{semanticmath} key family, set
 % to \texttt{default} at the end of the package
 % (\pagecrefn{sec:initial-style}), so the package works with no options
 % given at all, then re-applied if the author gives an
@@ -1417,14 +1418,14 @@
 %    \begin{macrocode}
 \tl_new:N \g_@@_style_pending_tl
 \bool_new:N \g_@@_in_body_bool
-\msg_new:nnn { shmuelsemtex } { unknown-style }
+\msg_new:nnn { semanticmath } { unknown-style }
   { Unknown~style~`#1'. }
 \cs_new_protected:Npn \@@_style_apply:n #1
   {
     \tl_gclear:N \g_@@_style_pending_tl
     \use:c { @@_style_ #1 : }
   }
-\keys_define:nn { lsm }
+\keys_define:nn { semanticmath }
   {
     style .choice: ,
     style / default .code:n = { \@@_style_apply:n { default } } ,
@@ -1433,7 +1434,7 @@
       {
         \bool_if:NTF \g_@@_in_body_bool
           {
-            \msg_error:nnn { shmuelsemtex } { unknown-style } {#1}
+            \msg_error:nnn { semanticmath } { unknown-style } {#1}
           }
           { \tl_gset:Nn \g_@@_style_pending_tl {#1} }
       } ,
@@ -1448,7 +1449,7 @@
 % document body, not only on the \cs{usepackage} line.
 %    \begin{macrocode}
 \NewDocumentCommand \setupsemanticmarkup { m }
-  { \keys_set:nn { lsm } {#1} }
+  { \keys_set:nn { semanticmath } {#1} }
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1466,13 +1467,13 @@
 \tl_new:N \l_@@_decl_style_tl
 \tl_new:N \l_@@_decl_base_tl
 \tl_new:N \l_@@_decl_hooks_tl
-\msg_new:nnn { shmuelsemtex } { unknown-base }
+\msg_new:nnn { semanticmath } { unknown-base }
   { Unknown~base~style~`#1'~for~style~`#2';~using~`default'. }
-\msg_new:nnn { shmuelsemtex } { unknown-command }
+\msg_new:nnn { semanticmath } { unknown-command }
   { `#1'~is~not~a~command~a~style~can~set. }
 \cs_new_protected:Npn \@@_decl_hook_key:nn #1 #2
   {
-    \keys_define:nn { lsm / declare }
+    \keys_define:nn { semanticmath / declare }
       {
         #1 .code:n =
           {
@@ -1513,22 +1514,22 @@
 \@@_decl_hook_key:nn { morphSeqImage } { morph_seqimage:n }
 \@@_decl_hook_key:nn { morphRestrict } { morph_restrict:nnn }
 \@@_decl_hook_key:nn { morphEmbedArrow } { morph_embed_arrow: }
-\keys_define:nn { lsm / declare }
+\keys_define:nn { semanticmath / declare }
   {
     base .tl_set:N = \l_@@_decl_base_tl ,
     setupquant .code:n =
       {
         \tl_put_right:Nn \l_@@_decl_hooks_tl
-          { \keys_set:nn { lsm-quant } {#1} }
+          { \keys_set:nn { semanticmath-quant } {#1} }
       } ,
     setupset .code:n =
       {
         \tl_put_right:Nn \l_@@_decl_hooks_tl
-          { \keys_set:nn { lsm-set } {#1} }
+          { \keys_set:nn { semanticmath-set } {#1} }
       } ,
     unknown .code:n =
       {
-        \msg_error:nnV { shmuelsemtex } { unknown-command }
+        \msg_error:nnV { semanticmath } { unknown-command }
           \l_keys_key_str
       } ,
   }
@@ -1537,10 +1538,10 @@
     \tl_set:Nn \l_@@_decl_style_tl {#1}
     \tl_set:Nn \l_@@_decl_base_tl { default }
     \tl_clear:N \l_@@_decl_hooks_tl
-    \keys_set:nn { lsm / declare } {#2}
+    \keys_set:nn { semanticmath / declare } {#2}
     \cs_if_exist:cF { @@_style_ \l_@@_decl_base_tl : }
       {
-        \msg_error:nnVn { shmuelsemtex } { unknown-base }
+        \msg_error:nnVn { semanticmath } { unknown-base }
           \l_@@_decl_base_tl {#1}
         \tl_set:Nn \l_@@_decl_base_tl { default }
       }
@@ -1549,7 +1550,7 @@
         \exp_not:c { @@_style_ \l_@@_decl_base_tl : }
         \exp_not:V \l_@@_decl_hooks_tl
       }
-    \keys_define:nn { lsm }
+    \keys_define:nn { semanticmath }
       { style / #1 .code:n = { \@@_style_apply:n {#1} } }
   }
 %    \end{macrocode}
@@ -1600,7 +1601,7 @@
 % bound variables) via \cs{setupquant}, independent of
 % \cs{setupsemanticmarkup} above; it is
 % kept as its own key family rather than folded into
-% \texttt{lsm}'s, since it predates and is unrelated to the
+% \texttt{semanticmath}'s, since it predates and is unrelated to the
 % default/plain style choice.
 %    \begin{macrocode}
 \int_new:N \l_@@_quant_parens_int
@@ -1614,9 +1615,9 @@
   { \@@_quant:nnn {\forall} {#1} {#2} }
 
 \NewDocumentCommand \setupquant {m}
-  { \keys_set:nn {lsm-quant} {#1} }
+  { \keys_set:nn {semanticmath-quant} {#1} }
 
-\keys_define:nn {lsm-quant}
+\keys_define:nn {semanticmath-quant}
  {
   subscript   .choices:nn =
     {
@@ -1705,9 +1706,9 @@
   }
 
 \NewDocumentCommand \setupset {m}
-  { \keys_set:nn {lsm-set} {#1} }
+  { \keys_set:nn {semanticmath-set} {#1} }
 
-\keys_define:nn {lsm-set}
+\keys_define:nn {semanticmath-set}
   {
     separator .tl_set:N  = \l_@@_set_sep_tl,
     separator .initial:n = {\mid},
@@ -1872,9 +1873,9 @@
 % next; a style they name that is not declared yet is applied at
 % \verb|\begin{document}|.
 %    \begin{macrocode}
-\keys_set:nn { lsm } { style = default }
-\ProcessKeyOptions [ lsm ]
-\hook_gput_code:nnn { begindocument } { shmuelsemtex }
+\keys_set:nn { semanticmath } { style = default }
+\ProcessKeyOptions [ semanticmath ]
+\hook_gput_code:nnn { begindocument } { semanticmath }
   {
     \bool_gset_true:N \g_@@_in_body_bool
     \tl_if_empty:NF \g_@@_style_pending_tl
@@ -1882,7 +1883,7 @@
         \cs_if_exist:cTF { @@_style_ \g_@@_style_pending_tl : }
           { \exp_args:NV \@@_style_apply:n \g_@@_style_pending_tl }
           {
-            \msg_error:nnV { shmuelsemtex } { unknown-style }
+            \msg_error:nnV { semanticmath } { unknown-style }
               \g_@@_style_pending_tl
           }
       }

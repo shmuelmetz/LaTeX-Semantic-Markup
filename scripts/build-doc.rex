@@ -1,7 +1,7 @@
 #!/usr/bin/env rexx
 /* build-doc.rex -- typeset a .dtx package documentation file
  *
- * Usage: rexx build-doc.rex [file.dtx]      (default: shmuelsemtex.dtx)
+ * Usage: rexx build-doc.rex [file.dtx]      (default: semanticmath.dtx)
  *
  * Runs in the directory that holds the .dtx file.  Extracts the .sty
  * with TeX from the matching .ins file, then runs XeLaTeX as many
@@ -10,7 +10,7 @@
  * Requires ooRexx 5 (ADDRESS ... WITH).
  */
 parse arg dtx .
-if dtx = '' then dtx = 'shmuelsemtex.dtx'
+if dtx = '' then dtx = 'semanticmath.dtx'
 full = stream(dtx, 'C', 'QUERY EXISTS')
 if full = '' then do
   say 'build-doc: cannot find' dtx

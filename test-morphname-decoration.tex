@@ -4,10 +4,10 @@
 % funcname/funcseqname call sites (11 unique arguments across 5409
 % combined calls) -- including funcseqname{f^2}, the one real site a
 % single-token-only test would have mis-classified (see
-% shmuelsemtex.dtx, the "Tightened, 2026-09-01" correction under
+% semanticmath.dtx, the "Tightened, 2026-09-01" correction under
 % \morphName's documentation).
 \documentclass{article}
-\usepackage{shmuelsemtex}
+\usepackage{semanticmath}
 
 \ExplSyntaxOn
 
@@ -19,7 +19,7 @@
 % \bm (from the bm package) does its own internal re-scanning of its
 % argument that doesn't tolerate the side-effecting \mathit/\mathrm
 % redefinitions above -- irrelevant to what this test actually checks
-% (which branch \lsm_if_arbitrary_symbol:nTF took), so bypass it with
+% (which branch \__semanticmath_if_arbitrary_symbol:nTF took), so bypass it with
 % a transparent pass-through for the duration of this test only.
 \renewcommand{\bm}[1]{#1}
 

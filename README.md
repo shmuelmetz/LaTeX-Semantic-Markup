@@ -34,14 +34,14 @@ Copy the `.sty` file(s) into your project directory.
 ### System-wide (TeX Live)
 
 ```sh
-cp *.sty $(kpsewhich -var-value TEXMFHOME)/tex/latex/shmuelsemtex/
+cp *.sty $(kpsewhich -var-value TEXMFHOME)/tex/latex/semanticmath/
 mktexlsr
 ```
 
 ## Usage
 
 ```latex
-\usepackage{shmuelsemtex}
+\usepackage{semanticmath}
 ```
 
 ```latex
@@ -57,7 +57,7 @@ $\chartName{U}$ $\atlasName{A}$ $\coordName{x}$  % charts/atlases/coordinates
 
 The full macro set, including which abbreviations each name uses and
 several open mathematical questions not yet settled, is documented
-in `shmuelsemtex.dtx` (see "Building" below for the typeset
+in `semanticmath.dtx` (see "Building" below for the typeset
 manual).
 
 ## Design goal: house-style portability
@@ -71,8 +71,8 @@ Only *setup* changes. The overall style is set as a package option
 or with `\setupsemanticmarkup`:
 
 ```latex
-\usepackage[style=default]{shmuelsemtex}   % at load time, built in
-\usepackage[style=plain]{shmuelsemtex}     % at load time, built in
+\usepackage[style=default]{semanticmath}   % at load time, built in
+\usepackage[style=plain]{semanticmath}     % at load time, built in
 ```
 ```latex
 \setupsemanticmarkup{style=plain}             % anywhere in the body
@@ -86,7 +86,7 @@ built-in style reassigns the package's complete set of internal
 presentation hooks as one coherent bundle -- never a partial patch
 the author assembles by hand -- so adding a real journal's house
 style later means adding one more style, not touching any document
-body. See `shmuelsemtex.dtx`, "Style switching", for the full
+body. See `semanticmath.dtx`, "Style switching", for the full
 mechanism and design rationale. A document can declare its own style
 in the preamble with `\DeclareSemanticStyle`, starting from an
 existing one and changing only the commands that differ.
@@ -112,7 +112,7 @@ With `l3build` (part of TeX Live and MiKTeX), configured in `build.lua`:
 
 ```sh
 l3build check   # regression tests in testfiles/
-l3build ctan    # tests, documentation, and shmuelsemtex-ctan.zip for upload
+l3build ctan    # tests, documentation, and semanticmath-ctan.zip for upload
 ```
 
 `make check` and `make ctan` run the same. The tests compare the
@@ -123,22 +123,22 @@ after an intended change, check the new output and record it with
 The documentation alone:
 
 ```sh
-rexx scripts/build-doc.rex shmuelsemtex.dtx
+rexx scripts/build-doc.rex semanticmath.dtx
 ```
 
 `scripts/build-doc.rex` (ooRexx 5) works in the directory holding the
-`.dtx`. It extracts `shmuelsemtex.sty` with `tex shmuelsemtex.ins`,
-runs `xelatex shmuelsemtex.dtx`, builds the index and change history
+`.dtx`. It extracts `semanticmath.sty` with `tex semanticmath.ins`,
+runs `xelatex semanticmath.dtx`, builds the index and change history
 with `makeindex`, and reruns XeLaTeX until the cross-references and
 page references settle (normally three passes in all). By hand:
 
 ```sh
-tex shmuelsemtex.ins
-xelatex shmuelsemtex.dtx
-makeindex -s gind.ist -o shmuelsemtex.ind shmuelsemtex.idx
-makeindex -s gglo.ist -o shmuelsemtex.gls shmuelsemtex.glo
-xelatex shmuelsemtex.dtx
-xelatex shmuelsemtex.dtx
+tex semanticmath.ins
+xelatex semanticmath.dtx
+makeindex -s gind.ist -o semanticmath.ind semanticmath.idx
+makeindex -s gglo.ist -o semanticmath.gls semanticmath.glo
+xelatex semanticmath.dtx
+xelatex semanticmath.dtx
 ```
 
 The documentation loads `fontspec` for the Hebrew in the author
@@ -146,9 +146,9 @@ line, so it needs XeLaTeX (or LuaLaTeX); `pdflatex` stops with a
 fontspec error. It also loads `cleveref`, and writes cross-references
 as "section N (Title) on page P", as the papers do.
 
-The generated `shmuelsemtex.sty` is not committed to this
+The generated `semanticmath.sty` is not committed to this
 repository (see `.gitignore`) -- it is reproducible from
-`shmuelsemtex.dtx` via the `.ins` file above, per standard
+`semanticmath.dtx` via the `.ins` file above, per standard
 practice for `.dtx`-based packages.
 
 In the `.dtx`, every `\begin{macrocode}` and `\end{macrocode}` line
@@ -160,13 +160,13 @@ reads on to the end of the file (`! File ended while scanning use of
 ## Repository structure
 
 ```
-shmuelsemtex.dtx    -- documented source (macros + documentation)
-shmuelsemtex.ins    -- docstrip installer; extracts the .sty
+semanticmath.dtx    -- documented source (macros + documentation)
+semanticmath.ins    -- docstrip installer; extracts the .sty
 test-doc.tex            -- manual smoke test exercising every macro
 test-body.tex           -- shared document body for the style tests below
-test-style-default.tex  -- \usepackage[style=default]{shmuelsemtex} + test-body.tex
-test-style-plain.tex    -- \usepackage[style=plain]{shmuelsemtex} + test-body.tex
-test-style-noopts.tex   -- \usepackage{shmuelsemtex} (no options) + test-body.tex
+test-style-default.tex  -- \usepackage[style=default]{semanticmath} + test-body.tex
+test-style-plain.tex    -- \usepackage[style=plain]{semanticmath} + test-body.tex
+test-style-noopts.tex   -- \usepackage{semanticmath} (no options) + test-body.tex
 test-style-declared.tex -- \DeclareSemanticStyle: a style named in the package
                            option before it is declared, a style based on
                            another, and a runtime switch

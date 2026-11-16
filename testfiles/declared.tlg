@@ -424,7 +424,7 @@ l. ......{P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}
                    }
 l. ......P}}\SHOW{\set{x}[p]}\SHOW{\union[i,j]{S}}}
 ============ errors
-! Package shmuelsemtex Error: `nosuchcommand' is not a command a style can set.
+! Package semanticmath Error: `nosuchcommand' is not a command a style can set.
 Type <return> to continue.
  ...                                              
 l. ......yle{bad}{base = nosuch, nosuchcommand = x}
@@ -432,7 +432,7 @@ l. ......yle{bad}{base = nosuch, nosuchcommand = x}
 LaTeX does not know anything more about this error, sorry.
 Try typing <return> to proceed.
 If that doesn't work, type X <return> to quit.
-! Package shmuelsemtex Error: Unknown base style `nosuch' for style `bad'; usin
+! Package semanticmath Error: Unknown base style `nosuch' for style `bad'; usin
 g `default'.
 Type <return> to continue.
  ...                                              
@@ -441,7 +441,7 @@ l. ......yle{bad}{base = nosuch, nosuchcommand = x}
 LaTeX does not know anything more about this error, sorry.
 Try typing <return> to proceed.
 If that doesn't work, type X <return> to quit.
-! Package shmuelsemtex Error: Unknown style `nosuch'.
+! Package semanticmath Error: Unknown style `nosuch'.
 Type <return> to continue.
  ...                                              
 l. ...  \setupsemanticmarkup{style=nosuch}

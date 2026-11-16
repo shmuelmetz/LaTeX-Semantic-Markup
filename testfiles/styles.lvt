@@ -3,7 +3,7 @@
 \input{regression-test}
 \documentclass{article}
 \usepackage{amsmath}
-\usepackage{shmuelsemtex}
+\usepackage{semanticmath}
 % regression-test.tex lets \@@end to \END; bm.sty uses \@@end as a
 % sentinel (\ifx#1\@@end), so \bm loops without the primitive back.
 \makeatletter\let\@@end\@@@end\makeatother

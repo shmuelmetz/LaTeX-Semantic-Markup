@@ -1,18 +1,18 @@
-# GNUmakefile -- build and install the shmuelsemtex package
+# GNUmakefile -- build and install the semanticmath package
 #
 # Directory structure (all repositories side by side under one parent):
 #   ../texmf/tex/latex/        STYDIR: the one directory for .sty files,
 #                              shared with the papers (Local-Coordinate-Spaces)
-#   LaTeX-Semantic-Markup/     this repository: shmuelsemtex.dtx and .ins
+#   LaTeX-Semantic-Markup/     this repository: semanticmath.dtx and .ins
 #   Local-Coordinate-Spaces/   the papers, which load the package from STYDIR
 #
 # Targets:
-#   sty       extract shmuelsemtex.sty from shmuelsemtex.dtx (default)
-#   install   copy shmuelsemtex.sty into STYDIR
-#   doc       typeset shmuelsemtex.pdf (scripts/build-doc.rex)
+#   sty       extract semanticmath.sty from semanticmath.dtx (default)
+#   install   copy semanticmath.sty into STYDIR
+#   doc       typeset semanticmath.pdf (scripts/build-doc.rex)
 #   check     run the regression tests in testfiles/ (l3build check)
 #   ctan      check, typeset and zip the CTAN upload as
-#             shmuelsemtex-ctan.zip (l3build ctan; see build.lua)
+#             semanticmath-ctan.zip (l3build ctan; see build.lua)
 #   clean     remove TeX build leftovers
 #
 # Files are copied, never linked (no symlinks on JFS or FAT32).
@@ -24,19 +24,19 @@ L3BUILD ?= l3build
 
 .PHONY: sty install doc check ctan clean
 
-sty: shmuelsemtex.sty
+sty: semanticmath.sty
 
-shmuelsemtex.sty: shmuelsemtex.dtx shmuelsemtex.ins
-	$(TEX) shmuelsemtex.ins
+semanticmath.sty: semanticmath.dtx semanticmath.ins
+	$(TEX) semanticmath.ins
 
-install: $(STYDIR)/shmuelsemtex.sty
+install: $(STYDIR)/semanticmath.sty
 
-$(STYDIR)/shmuelsemtex.sty: shmuelsemtex.sty
+$(STYDIR)/semanticmath.sty: semanticmath.sty
 	mkdir -p $(STYDIR)
-	cp shmuelsemtex.sty $@
+	cp semanticmath.sty $@
 
-doc: shmuelsemtex.sty
-	$(REXX) scripts/build-doc.rex shmuelsemtex.dtx
+doc: semanticmath.sty
+	$(REXX) scripts/build-doc.rex semanticmath.dtx
 
 check:
 	$(L3BUILD) check

@@ -54,8 +54,10 @@ whether such a package already exists on CTAN.
      needs LaTeX 2022-06-01 or later.
    - Review the generic command names `\set`, `\union` and
      `\intersection`; `\set` collides with `braket.sty`.
-   - Choose an expl3 prefix (`l3prefixes` advises against short ones
-     such as `lsm`) and register it with the LaTeX team.
+   - Done 2026-11-16: the expl3 prefix is `semanticmath`, the package's
+     name (`l3prefixes` advises against short ones such as `lsm`, the old
+     prefix). Still to do: register it with the LaTeX team
+     (modules@latex-project.org).
    - Options checked for orthogonality 2026-11-11 (see the commit
      history). `\Id`/`\ID`: the package has the general commands
      (`\morphId`, `\morphIncl` for a morphism; `\morphSeqId`,
@@ -65,8 +67,8 @@ whether such a package already exists on CTAN.
      into another package, the papers use that package's names.
    - Bump the version and date; give the `test-*.tex` files expected
      output, so that they work as regression tests.
-   - Decide whether to keep the name `shmuelsemtex`, which may read as
-     a personal macro set. A rename is cheap only before submission.
+   - Done 2026-11-16: renamed from `shmuelsemtex` to `semanticmath`.
+     CTAN advises naming a package for its purpose, not its author.
 3. **Package it**, per
    [CTAN's upload rules](https://ctan.org/help/upload-pkg): one
    directory named after the package, as a zip, holding the `.dtx`,
@@ -92,7 +94,7 @@ Searched the CTAN catalogue (7,101 packages, via
 of mathematical notation from its typography. Findings, from each
 package's own CTAN description:
 
-| Package | Version, date | License | Approach | Overlap with shmuelsemtex |
+| Package | Version, date | License | Approach | Overlap with semanticmath |
 |---|---|---|---|---|
 | `mathsemantics` (Bergmann) | 1.0.0, 2022-05-06 | MIT | Semantic commands such as `\inner{x}{y}`, grouped by topic; notation can be adapted per user | Closest in philosophy and structure. Topics (one `.sty` each): syntax, semantic, manifolds, optimization, plus abbreviations and software names. The semantic topic has some set notation (`\setDef`, `\setMid`, `\card`, `\dotcup`, `\dom`, `\image`, `\restr`). The manifolds topic is Riemannian (tangent and cotangent spaces, geodesics, exponential and logarithm maps, parallel and vector transport); it has no charts or atlases. No category-theory topic, quantifiers, or indexed unions and intersections. Repository on GitHub (kellertuer/MathSemantics.sty). |
 | `semantex` (Ørsted) | 0.525, 2023-01-23 | LPPL 1.3c | Keyval-based object system for writing maths semantically; companion `stripsemantex` removes the markup for publication | Same goal, very different syntax; still beta. |
