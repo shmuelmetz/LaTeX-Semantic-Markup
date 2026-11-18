@@ -69,7 +69,7 @@ whether such a package already exists on CTAN.
      `\morphSeqIncl` for a sequence of morphisms). Rule of 2026-11-11:
      if this package goes to CTAN, the papers use its names. Step 1 is
      now decided (separate), so the papers are to move onto them.
-   - Bump the version and date.
+   - Done 2026-11-18: version 1.0.0, dated 2026-11-18.
    - Done 2026-11-18: the loose `test-*.tex` files are gone. The
      auto-detection checks became `testfiles/decoration.lvt`; the rest
      were already covered by `styles.lvt` and `declared.lvt`, and the
