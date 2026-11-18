@@ -96,15 +96,12 @@ existing one and changing only the commands that differ.
 from the use sites, which also works mid-document, where a package
 option cannot.
 
-`test-body.tex` plus `test-style-default.tex` / `test-style-plain.tex`
-/ `test-style-noopts.tex` demonstrate and verify the package-option
-form: the same `\input{test-body.tex}` body, unmodified, renders
-differently under each `\usepackage[style=...]` line, and the
-no-options case matches `style=default` exactly. `test-setup-runtime.tex`
-demonstrates and verifies the runtime form: the same macro use sites
-render under `default`, then `plain`, then back to `default`, purely
-by way of three `\setupsemanticmarkup{...}` calls placed away from
-the use sites, mirroring the papers' own `\setupquant` usage.
+The regression tests in `testfiles/` verify both forms:
+`styles.lvt` renders the same use sites under `default`, then `plain`,
+then back to `default`, by way of `\setupsemanticmarkup{...}` calls
+placed away from the use sites, mirroring the papers' own
+`\setupquant` usage; `declared.lvt` selects a style through the
+package option.
 
 ## Building
 
@@ -162,20 +159,19 @@ reads on to the end of the file (`! File ended while scanning use of
 ```
 semanticmath.dtx    -- documented source (macros + documentation)
 semanticmath.ins    -- docstrip installer; extracts the .sty
-test-doc.tex            -- manual smoke test exercising every macro
-test-body.tex           -- shared document body for the style tests below
-test-style-default.tex  -- \usepackage[style=default]{semanticmath} + test-body.tex
-test-style-plain.tex    -- \usepackage[style=plain]{semanticmath} + test-body.tex
-test-style-noopts.tex   -- \usepackage{semanticmath} (no options) + test-body.tex
-test-style-declared.tex -- \DeclareSemanticStyle: a style named in the package
-                           option before it is declared, a style based on
-                           another, and a runtime switch
-test-setup-runtime.tex  -- \setupsemanticmarkup{...} called mid-document
-test-catname-decoration.tex -- regression test for \catName's auto-detection
-                             against every real argument found in the source
-                             papers (17 unique arguments, 3413 call sites)
-test-morphname-decoration.tex -- same regression test for \morphName/
-                             \morphSeqName (11 unique arguments, 5409 calls)
+build.lua           -- l3build configuration (tests, documentation, CTAN zip)
+testfiles/styles.lvt     -- every user command under the built-in styles,
+                            and switching between them at run time
+testfiles/declared.lvt   -- \DeclareSemanticStyle: a style named in the package
+                            option before it is declared, a style based on
+                            another, and a runtime switch
+testfiles/quantset.lvt   -- quantifiers, set-builder notation, indexed union
+                            and intersection, and sequence names, under
+                            every setup
+testfiles/decoration.lvt -- \catName, \morphName and \morphSeqName
+                            auto-detection against every real argument found
+                            in the source papers (17 for \catName, 3413 call
+                            sites; 11 for the morphisms, 5409 calls)
 scripts/check_arg_consistency.py -- reusable tool: given a macro name and
                              one or more real .tex files, checks every
                              unique real argument against

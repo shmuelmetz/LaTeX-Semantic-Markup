@@ -1,0 +1,53 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============ catName: single letters (script)
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line ...
+.
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/jknappen\ursfs.fd
+File: ursfs.fd ....-..-.. rsfs font definition file (jk)
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line ....
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd ....-..-.. v... AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line ....
+(C:\Users\Owner\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd ....-..-.. v... AMS symbols B
+)
+\catName\{A\} -> ok script
+\catName\{B\} -> ok script
+\catName\{C\} -> ok script
+\catName\{E\} -> ok script
+\catName\{G\} -> ok script
+\catName\{M\} -> ok script
+\catName\{S\} -> ok script
+\catName\{T\} -> ok script
+\catName\{U\} -> ok script
+\catName\{V\} -> ok script
+\catName\{X\} -> ok script
+\catName\{Y\} -> ok script
+============ catName: long names (bold)
+\catName\{Set\} -> ok bold
+\catName\{Top\} -> ok bold
+============ catName: decorated or concatenated symbols (script)
+\catName\{C^2\} -> ok script
+\catName\{E^i\} -> ok script
+\catName\{XY\} -> ok script
+============ morphName and morphSeqName: single tokens (italic)
+\morphName\{F\} -> ok italic
+\morphSeqName\{F\} -> ok italic
+\morphSeqName\{G\} -> ok italic
+\morphName\{\pi \} -> ok italic
+\morphSeqName\{\pi \} -> ok italic
+\morphSeqName\{\rho \} -> ok italic
+\morphName\{f\} -> ok italic
+\morphSeqName\{f\} -> ok italic
+\morphName\{g\} -> ok italic
+\morphSeqName\{g\} -> ok italic
+\morphName\{i\} -> ok italic
+\morphName\{m\} -> ok italic
+\morphSeqName\{m\} -> ok italic
+\morphName\{s\} -> ok italic
+\morphName\{t\} -> ok italic
+============ morphSeqName: decorated symbol (italic)
+\morphSeqName\{f^2\} -> ok italic

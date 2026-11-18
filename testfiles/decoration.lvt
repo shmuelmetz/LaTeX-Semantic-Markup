@@ -1,0 +1,75 @@
+% Auto-detection of \catName, \morphName and \morphSeqName on every
+% distinct argument found in the two source papers (LCS.arXiv.V2.tex,
+% M-atlas.tex): each must reproduce the papers' own choice of
+% typeface. Includes the decorated and concatenated arguments
+% (C^2, E^i, XY, f^2) that a single-token test mis-classified.
+% Formerly test-catname-decoration.tex and test-morphname-decoration.tex.
+\input{regression-test}
+\documentclass{article}
+\usepackage{semanticmath}
+% regression-test.tex lets \@@end to \END; bm.sty uses \@@end as a
+% sentinel (\ifx#1\@@end), so \bm loops without the primitive back.
+\makeatletter\let\@@end\@@@end\makeatother
+
+\ExplSyntaxOn
+\tl_new:N \l_semtest_got_tl
+\cs_new_protected:Npn \semtest_mark:nNn #1#2#3
+  { \tl_gset:Nn \l_semtest_got_tl {#1} #2 {#3} }
+\cs_set_eq:NN \semtest_mathscr:n \mathscr
+\cs_set_eq:NN \semtest_mathbf:n  \mathbf
+\cs_set_eq:NN \semtest_mathit:n  \mathit
+\cs_set_eq:NN \semtest_mathrm:n  \mathrm
+\RenewDocumentCommand \mathscr { m } { \semtest_mark:nNn {script} \semtest_mathscr:n {#1} }
+\RenewDocumentCommand \mathbf  { m } { \semtest_mark:nNn {bold}   \semtest_mathbf:n  {#1} }
+\RenewDocumentCommand \mathit  { m } { \semtest_mark:nNn {italic} \semtest_mathit:n {#1} }
+\RenewDocumentCommand \mathrm  { m } { \semtest_mark:nNn {roman}  \semtest_mathrm:n {#1} }
+% \bm re-scans its argument and does not tolerate the side-effecting
+% redefinitions above; the test checks only which branch the
+% detection took, so \bm is a pass-through here.
+\RenewDocumentCommand \bm { m } {#1}
+% #1 = command, #2 = argument, #3 = expected typeface
+\NewDocumentCommand \CHECK { m m m }
+  {
+    \tl_gclear:N \l_semtest_got_tl
+    \hbox_set:Nn \l_tmpa_box { $ #1 {#2} $ }
+    \tl_if_eq:NnTF \l_semtest_got_tl {#3}
+      { \tl_set:Nn \l_tmpb_tl { ok ~ #3 } }
+      { \tl_set:Ne \l_tmpb_tl { FAIL ~ expected ~ #3 ~ got ~ \l_semtest_got_tl } }
+    \TYPE
+      {
+        \token_to_str:N #1 \{ \tl_to_str:n {#2} \} ~ -> ~ \l_tmpb_tl
+      }
+  }
+\ExplSyntaxOff
+
+\begin{document}
+\START
+\newcommand\HEAD[1]{\TYPE{============ #1}}
+
+\HEAD{catName: single letters (script)}
+\CHECK\catName{A}{script}\CHECK\catName{B}{script}\CHECK\catName{C}{script}
+\CHECK\catName{E}{script}\CHECK\catName{G}{script}\CHECK\catName{M}{script}
+\CHECK\catName{S}{script}\CHECK\catName{T}{script}\CHECK\catName{U}{script}
+\CHECK\catName{V}{script}\CHECK\catName{X}{script}\CHECK\catName{Y}{script}
+
+\HEAD{catName: long names (bold)}
+\CHECK\catName{Set}{bold}\CHECK\catName{Top}{bold}
+
+\HEAD{catName: decorated or concatenated symbols (script)}
+\CHECK\catName{C^2}{script}\CHECK\catName{E^i}{script}\CHECK\catName{XY}{script}
+
+\HEAD{morphName and morphSeqName: single tokens (italic)}
+\CHECK\morphName{F}{italic}\CHECK\morphSeqName{F}{italic}
+\CHECK\morphSeqName{G}{italic}
+\CHECK\morphName{\pi}{italic}\CHECK\morphSeqName{\pi}{italic}
+\CHECK\morphSeqName{\rho}{italic}
+\CHECK\morphName{f}{italic}\CHECK\morphSeqName{f}{italic}
+\CHECK\morphName{g}{italic}\CHECK\morphSeqName{g}{italic}
+\CHECK\morphName{i}{italic}
+\CHECK\morphName{m}{italic}\CHECK\morphSeqName{m}{italic}
+\CHECK\morphName{s}{italic}\CHECK\morphName{t}{italic}
+
+\HEAD{morphSeqName: decorated symbol (italic)}
+\CHECK\morphSeqName{f^2}{italic}
+
+\END

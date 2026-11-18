@@ -33,6 +33,10 @@ whether such a package already exists on CTAN.
    That repository has had no push since May 2022 and its board has
    only the welcome post, so a reply may not come; if none comes
    within a set time, go ahead separately.
+   - Decided: a separate package. In the author's words (2026-11-18):
+     "It's been separate ever since I realized that he was more
+     presentational" -- `mathsemantics` is oriented to presentation.
+     Its maintainer replied on 2026-11-12 (discussion 6).
 2. **Fix what a reviewer would hit first.**
    - Done 2026-11-11: `\DeclareSemanticStyle` declares a style in a
      preamble. Still to do: one real journal's house style as a
@@ -62,12 +66,14 @@ whether such a package already exists on CTAN.
    - Options checked for orthogonality 2026-11-11 (see the commit
      history). `\Id`/`\ID`: the package has the general commands
      (`\morphId`, `\morphIncl` for a morphism; `\morphSeqId`,
-     `\morphSeqIncl` for a sequence of morphisms). Moving the papers
-     onto them waits for step 1 (decision of 2026-11-11): if this
-     package goes to CTAN, the papers use its names; if it is folded
-     into another package, the papers use that package's names.
-   - Bump the version and date; give the `test-*.tex` files expected
-     output, so that they work as regression tests.
+     `\morphSeqIncl` for a sequence of morphisms). Rule of 2026-11-11:
+     if this package goes to CTAN, the papers use its names. Step 1 is
+     now decided (separate), so the papers are to move onto them.
+   - Bump the version and date.
+   - Done 2026-11-18: the loose `test-*.tex` files are gone. The
+     auto-detection checks became `testfiles/decoration.lvt`; the rest
+     were already covered by `styles.lvt` and `declared.lvt`, and the
+     documentation build exercises every command.
    - Done 2026-11-16: renamed from `shmuelsemtex` to `semanticmath`.
      CTAN advises naming a package for its purpose, not its author.
 3. **Package it**, per
